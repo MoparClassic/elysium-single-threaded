@@ -19,26 +19,32 @@ public final class World {
      * The maximum height of the map (944 squares per level)
      */
     public static final int MAX_HEIGHT = 3776;
-    /**
-     * The maximum width of the map
-     */
+    public static final int MAX_NPCS = 5000;
+    public static final int MAX_PLAYERS = 1000;
     public static final int MAX_WIDTH = 944;
     private static final EntityFactory ENTITY_FACTORY = new DefaultEntityFactory();
     private static final World INSTANCE;
-    private final List<Npc> npcList = new ArrayList<>();
+    private final List<Npc> npcList = new ArrayList<>(MAX_NPCS);
 
     static {
         INSTANCE = new World();
     }
 
     private final TileValue outsideWorld = new TileValue();
-    // TODO: Don't use CopyOnWriteArrayList for the players.
-    private final List<Player> playerList = new ArrayList<>();
+    private final List<Player> playerList = new ArrayList<>(MAX_PLAYERS);
     private final TileValue[][] tileType = new TileValue[MAX_WIDTH][MAX_HEIGHT];
+
+    private int currentPlayerCount = 0;
 
     private World() {
         this.outsideWorld.mapValue = Byte.MAX_VALUE;
         this.outsideWorld.objectValue = Byte.MAX_VALUE;
+
+        // Populate the lists with null values so we can use
+        // get() and set() calls on them to insert players
+        // and npcs.
+        for (int i = 0; i < MAX_PLAYERS; i++) playerList.add(null);
+        for (int i = 0; i < MAX_NPCS; i++) npcList.add(null);
     }
 
     public static EntityFactory getEntityFactory() {
@@ -73,18 +79,38 @@ public final class World {
     }
 
     public boolean registerNpc(Npc npc) {
-        return npcList.add(npc);
+        for (int i = 0; i < MAX_NPCS; i++) {
+            if (npcList.get(i) == null) {
+                npcList.set(i, npc);
+                npc.setIndex(i);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean registerPlayer(Player p) {
-        return playerList.add(p);
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (playerList.get(i) == null) {
+                playerList.set(i, p);
+                p.setIndex(i);
+                currentPlayerCount++;
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean unregisterPlayer(Player p) {
         if (p == null) return false;
 
         p.setLoggedIn(false);
-        playerList.remove(p);
+        playerList.set(p.getIndex(), null);
+        currentPlayerCount--;
 
         Point location = p.getLocation();
         if (location != null) {

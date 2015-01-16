@@ -34,7 +34,11 @@ public final class ElysiumConnectionHandler extends SimpleChannelInboundHandler<
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
 
-        UnregistrableSession us = new UnregistrableSession(session, true);
+        // Only apply the penalty if the exception was thrown after
+        // the player successfully logged in. If they aren't logged
+        // in yet then just boot them immediately.
+        boolean applyPenalty = session.getPlayer() != null;
+        UnregistrableSession us = new UnregistrableSession(session, applyPenalty);
         Server.getInstance().queueUnregisterSession(us);
     }
 

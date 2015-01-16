@@ -40,15 +40,15 @@ public final class StatefulEntityCollection<T> {
         return temp;
     }
 
-    public Collection<T> getKnownEntities() {
+    public Set<T> getKnownEntities() {
         return knownEntities;
     }
 
-    public Collection<T> getNewEntities() {
+    public Set<T> getNewEntities() {
         return newEntities;
     }
 
-    public Collection<T> getRemovingEntities() {
+    public Set<T> getRemovingEntities() {
         return entitiesToRemove;
     }
 

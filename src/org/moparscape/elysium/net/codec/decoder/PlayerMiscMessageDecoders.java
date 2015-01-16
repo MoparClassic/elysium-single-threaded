@@ -1,6 +1,7 @@
 package org.moparscape.elysium.net.codec.decoder;
 
 import io.netty.buffer.ByteBuf;
+import org.moparscape.elysium.entity.Appearance;
 import org.moparscape.elysium.net.codec.decoder.message.*;
 
 /**
@@ -15,7 +16,22 @@ public final class PlayerMiscMessageDecoders {
         }
 
         public AppearanceUpdateMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException("Not yet implemented");
+            int headGender = buffer.readByte();
+            int headType = buffer.readByte();
+            int bodyGender = buffer.readByte();
+            int unknown = buffer.readByte();
+            int hairColour = buffer.readByte();
+            int topColour = buffer.readByte();
+            int trouserColour = buffer.readByte();
+            int skinColour = buffer.readByte();
+
+            int headSprite = headType + 1;
+            int bodySprite = bodyGender + 1;
+            boolean male = headGender == 1;
+
+            // TODO: Can't make my avatar female. Fix.
+            Appearance app = new Appearance(hairColour, topColour, trouserColour, skinColour, headSprite, bodySprite, male);
+            return new AppearanceUpdateMessage(app);
         }
     }
 

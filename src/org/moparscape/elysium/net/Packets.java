@@ -10,7 +10,7 @@ import org.moparscape.elysium.entity.component.Skills;
 import org.moparscape.elysium.util.Formulae;
 import org.moparscape.elysium.world.Point;
 
-import java.util.Queue;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -114,7 +114,7 @@ public final class Packets {
 
     public static ChannelFuture sendFriendList(Player player) {
         Communication com = player.getCommunication();
-        Queue<Long> friendList = com.getFriendList();
+        List<Long> friendList = com.getFriendList();
         int size = friendList.size();
 
         PacketBuilder pb = new PacketBuilder(1 + (size * 9));
@@ -141,7 +141,7 @@ public final class Packets {
 
     public static ChannelFuture sendIgnoreList(Player player) {
         Communication com = player.getCommunication();
-        Queue<Long> ignoreList = com.getIgnoreList();
+        List<Long> ignoreList = com.getIgnoreList();
         int size = ignoreList.size();
 
         PacketBuilder pb = new PacketBuilder(1 + (size * 8));

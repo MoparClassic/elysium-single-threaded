@@ -5,12 +5,7 @@ import org.moparscape.elysium.util.StatefulEntityCollection;
 import org.moparscape.elysium.world.Point;
 import org.moparscape.elysium.world.Region;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,15 +14,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public final class Observer extends AbstractComponent {
 
-    private final Queue<Bubble> bubbles = new ConcurrentLinkedQueue<Bubble>();
-    private final Map<Integer, Integer> knownPlayerAppearanceIds = new ConcurrentHashMap<Integer, Integer>();
-    private final Queue<Npc> npcHitUpdates = new ConcurrentLinkedQueue<Npc>();
-    private final Queue<Player> playerHitUpdates = new ConcurrentLinkedQueue<Player>();
-    private final Queue<Projectile> projectiles = new ConcurrentLinkedQueue<Projectile>();
-    private final StatefulEntityCollection<Item> watchedItems = new StatefulEntityCollection<Item>();
-    private final StatefulEntityCollection<Npc> watchedNpcs = new StatefulEntityCollection<Npc>();
-    private final StatefulEntityCollection<GameObject> watchedObjects = new StatefulEntityCollection<GameObject>();
-    private final StatefulEntityCollection<Player> watchedPlayers = new StatefulEntityCollection<Player>();
+    private final List<Bubble> bubbles = new ArrayList<>();
+    private final Map<Integer, Integer> knownPlayerAppearanceIds = new HashMap<>();
+    private final List<Npc> npcHitUpdates = new ArrayList<>();
+    private final List<Player> playerHitUpdates = new ArrayList<>();
+    private final List<Projectile> projectiles = new ArrayList<>();
+    private final StatefulEntityCollection<Item> watchedItems = new StatefulEntityCollection<>();
+    private final StatefulEntityCollection<Npc> watchedNpcs = new StatefulEntityCollection<>();
+    private final StatefulEntityCollection<GameObject> watchedObjects = new StatefulEntityCollection<>();
+    private final StatefulEntityCollection<Player> watchedPlayers = new StatefulEntityCollection<>();
     private Player owner;
 
     private Sprite sprite;
@@ -50,16 +45,19 @@ public final class Observer extends AbstractComponent {
         bubbles.clear();
     }
 
-    public Queue<Bubble> getBubblesNeedingDisplayed() {
+    public List<Bubble> getBubblesNeedingDisplayed() {
         return bubbles;
     }
 
-    public Queue<Npc> getNpcHitUpdates() {
+    public List<Npc> getNpcHitUpdates() {
         return npcHitUpdates;
     }
 
     public List<Player> getPlayerAppearanceUpdates() {
-        List<Player> needingUpdates = new LinkedList<Player>();
+        Set<Player> newEntities = watchedPlayers.getNewEntities();
+        Set<Player> knownEntities = watchedPlayers.getKnownEntities();
+        List<Player> needingUpdates = new ArrayList<>(newEntities.size() + knownEntities.size());
+
         needingUpdates.addAll(watchedPlayers.getNewEntities());
         if (sprite.appearanceChanged()) {
             needingUpdates.add(owner);
@@ -74,11 +72,11 @@ public final class Observer extends AbstractComponent {
         return needingUpdates;
     }
 
-    public Queue<Player> getPlayerHitUpdates() {
+    public List<Player> getPlayerHitUpdates() {
         return playerHitUpdates;
     }
 
-    public Queue<Projectile> getProjectilesNeedingDisplayed() {
+    public List<Projectile> getProjectilesNeedingDisplayed() {
         return projectiles;
     }
 

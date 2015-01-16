@@ -66,7 +66,7 @@ public final class Session {
     }
 
     public <T extends Message> void messageReceived(T message) {
-        System.out.println(message);
+        System.out.printf("Message = %s\n", message);
         synchronized (messages) {
             messages.add(message);
         }

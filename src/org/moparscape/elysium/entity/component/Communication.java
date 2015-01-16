@@ -2,9 +2,10 @@ package org.moparscape.elysium.entity.component;
 
 import org.moparscape.elysium.entity.ChatMessage;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,20 +23,20 @@ public final class Communication extends AbstractComponent {
      * This means that only one thread (the thread handling the incoming
      * packet from the player) will modify this list at a time.
      */
-    private final Queue<Long> friends = new LinkedList<Long>();
+    private final List<Long> friends = new ArrayList<>();
     /**
      * This should be fine as a standard linked list as the only time it is
      * modified is when a player explicitly adds another player to the list.
      * This means that only one thread (the thread handling the incoming
      * packet from the player) will modify this list at a time.
      */
-    private final Queue<Long> ignores = new LinkedList<Long>();
-    private final Queue<ChatMessage> messages = new ConcurrentLinkedQueue<ChatMessage>();
-    private final Queue<ChatMessage> messagesToDisplay = new ConcurrentLinkedQueue<ChatMessage>();
-    private final Queue<ChatMessage> npcMessagesToDisplay = new ConcurrentLinkedQueue<ChatMessage>();
+    private final List<Long> ignores = new ArrayList<>();
+    private final Queue<ChatMessage> messages = new LinkedList<>();
+    private final List<ChatMessage> messagesToDisplay = new ArrayList<>();
+    private final List<ChatMessage> npcMessagesToDisplay = new ArrayList<>();
 
     public void addChatMessage(ChatMessage message) {
-        messages.offer(message);
+        messages.add(message);
     }
 
     public boolean addFriend(long usernameHash) {
@@ -62,15 +63,15 @@ public final class Communication extends AbstractComponent {
         npcMessagesToDisplay.clear();
     }
 
-    public Queue<ChatMessage> getChatMessagesNeedingDisplayed() {
+    public List<ChatMessage> getChatMessagesNeedingDisplayed() {
         return messagesToDisplay;
     }
 
-    public Queue<Long> getFriendList() {
+    public List<Long> getFriendList() {
         return friends;
     }
 
-    public Queue<Long> getIgnoreList() {
+    public List<Long> getIgnoreList() {
         return ignores;
     }
 
@@ -78,16 +79,16 @@ public final class Communication extends AbstractComponent {
         return messages.poll();
     }
 
-    public Queue<ChatMessage> getNpcMessagesNeedingDisplayed() {
+    public List<ChatMessage> getNpcMessagesNeedingDisplayed() {
         return npcMessagesToDisplay;
     }
 
     public void informOfChatMessage(ChatMessage message) {
-        messagesToDisplay.offer(message); // Use offer, it doesn't block
+        messagesToDisplay.add(message); // Use offer, it doesn't block
     }
 
     public void informOfNpcChatMessage(ChatMessage message) {
-        npcMessagesToDisplay.offer(message);
+        npcMessagesToDisplay.add(message);
     }
 
     public boolean isFriendsWith(long usernameHash) {

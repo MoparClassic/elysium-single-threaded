@@ -19,23 +19,25 @@ public final class Appearance {
     private final int body;
     private final byte hairColour;
     private final int head;
+    private final boolean male;
     private final byte skinColour;
     private final byte topColour;
     private final byte trouserColour;
 
     public Appearance() {
         this(DEFAULT_HAIR_COLOUR, DEFAULT_TOP_COLOUR, DEFAULT_TROUSER_COLOUR,
-                DEFAULT_SKIN_COLOUR, DEFAULT_HEAD, DEFAULT_BODY);
+                DEFAULT_SKIN_COLOUR, DEFAULT_HEAD, DEFAULT_BODY, true);
     }
 
     public Appearance(int hairColour, int topColour, int trouserColour,
-                      int skinColour, int head, int body) {
+                      int skinColour, int head, int body, boolean male) {
         this.hairColour = (byte) hairColour;
         this.topColour = (byte) topColour;
         this.trouserColour = (byte) trouserColour;
         this.skinColour = (byte) skinColour;
         this.head = head;
         this.body = body;
+        this.male = male;
     }
 
     public byte getHairColour() {
@@ -69,6 +71,10 @@ public final class Appearance {
 
     public byte getTrouserColour() {
         return trouserColour;
+    }
+
+    public boolean isMale() {
+        return male;
     }
 
     public boolean isValid() {

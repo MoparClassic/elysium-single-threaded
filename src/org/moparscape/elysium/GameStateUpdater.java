@@ -23,11 +23,13 @@ public final class GameStateUpdater {
     public void updateCollections() throws Exception {
         // TODO: Unregister any players that have logged out
         for (Player p : playerList) {
-
+            if (p == null) break;
         }
 
         // Update the player collections, and clear their display lists
         for (Player p : playerList) {
+            if (p == null) break;
+
             UpdateProxy proxy = p.getUpdateProxy();
 
             proxy.updateEntityLists();
@@ -40,12 +42,16 @@ public final class GameStateUpdater {
 
         // TODO: Reset the npcs
         for (Npc n : npcList) {
+            if (n == null) break;
+
 
         }
     }
 
     private void updateNpcPositions() throws Exception {
         for (Npc n : npcList) {
+            if (n == null) break;
+
             n.resetMoved();
             n.updatePosition();
             // TODO: Is updating the npc's appearance id necessary here?
@@ -54,6 +60,8 @@ public final class GameStateUpdater {
 
     private void updatePlayers() throws Exception {
         for (Player p : playerList) {
+            if (p == null) break;
+
             UpdateProxy proxy = p.getUpdateProxy();
 
             proxy.resetMoved();
@@ -62,6 +70,8 @@ public final class GameStateUpdater {
         }
 
         for (Player p : playerList) {
+            if (p == null) break;
+
             UpdateProxy proxy = p.getUpdateProxy();
 
             proxy.revalidateWatchedEntities();
@@ -69,6 +79,8 @@ public final class GameStateUpdater {
         }
 
         for (Player p : playerList) {
+            if (p == null) break;
+
             try {
                 UpdateProxy proxy = p.getUpdateProxy();
                 ChatMessage message = proxy.getNextChatMessage();

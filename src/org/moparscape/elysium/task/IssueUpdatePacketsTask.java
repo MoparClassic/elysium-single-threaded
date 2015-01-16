@@ -11,7 +11,6 @@ import org.moparscape.elysium.world.Point;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,11 +30,11 @@ public final class IssueUpdatePacketsTask implements Runnable {
             for (Session s : sessions) {
                 Player p = s.getPlayer();
                 if (p == null) {
-                    System.out.println("Null player");
+                    //System.out.println("Null player");
                     continue;
                 }
                 if (!p.isLoggedIn()) {
-                    System.out.println("Player not logged in");
+                    //System.out.println("Player not logged in");
                     continue;
                 }
                 UpdateProxy proxy = p.getUpdateProxy();
@@ -125,8 +124,8 @@ public final class IssueUpdatePacketsTask implements Runnable {
     }
 
     private void updateNpcAppearances(Session s, Player p, UpdateProxy proxy) {
-        Queue<ChatMessage> messages = proxy.getNpcMessagesNeedingDisplayed();
-        Queue<Npc> hitUpdates = proxy.getNpcHitUpdates();
+        List<ChatMessage> messages = proxy.getNpcMessagesNeedingDisplayed();
+        List<Npc> hitUpdates = proxy.getNpcHitUpdates();
 
         int messageCount = messages.size();
         int hitUpdateCount = hitUpdates.size();
@@ -196,11 +195,11 @@ public final class IssueUpdatePacketsTask implements Runnable {
     }
 
     private void updatePlayerAppearances(Session s, Player player, UpdateProxy proxy) {
-        Queue<Bubble> bubbles = proxy.getBubblesNeedingDisplayed();
-        Queue<ChatMessage> chatMessages = proxy.getChatMessagesNeedingDisplayed();
-        Queue<Player> playerHitUpdates = proxy.getPlayerHitUpdates();
+        List<Bubble> bubbles = proxy.getBubblesNeedingDisplayed();
+        List<ChatMessage> chatMessages = proxy.getChatMessagesNeedingDisplayed();
+        List<Player> playerHitUpdates = proxy.getPlayerHitUpdates();
 
-        Queue<Projectile> projectiles = proxy.getProjectilesNeedingDisplayed();
+        List<Projectile> projectiles = proxy.getProjectilesNeedingDisplayed();
         List<Player> playerAppearanceUpdates = proxy.getPlayerAppearanceUpdates();
 
 

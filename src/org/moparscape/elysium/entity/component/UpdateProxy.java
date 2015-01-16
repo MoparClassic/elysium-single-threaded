@@ -4,7 +4,6 @@ import org.moparscape.elysium.entity.*;
 import org.moparscape.elysium.util.StatefulEntityCollection;
 
 import java.util.List;
-import java.util.Queue;
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,11 +47,11 @@ public final class UpdateProxy extends AbstractComponent {
         return sprite.getAppearanceId();
     }
 
-    public Queue<Bubble> getBubblesNeedingDisplayed() {
+    public List<Bubble> getBubblesNeedingDisplayed() {
         return observer.getBubblesNeedingDisplayed();
     }
 
-    public Queue<ChatMessage> getChatMessagesNeedingDisplayed() {
+    public List<ChatMessage> getChatMessagesNeedingDisplayed() {
         return communication.getChatMessagesNeedingDisplayed();
     }
 
@@ -76,11 +75,11 @@ public final class UpdateProxy extends AbstractComponent {
         return communication.getNextChatMessage();
     }
 
-    public Queue<Npc> getNpcHitUpdates() {
+    public List<Npc> getNpcHitUpdates() {
         return observer.getNpcHitUpdates();
     }
 
-    public Queue<ChatMessage> getNpcMessagesNeedingDisplayed() {
+    public List<ChatMessage> getNpcMessagesNeedingDisplayed() {
         return communication.getNpcMessagesNeedingDisplayed();
     }
 
@@ -88,11 +87,11 @@ public final class UpdateProxy extends AbstractComponent {
         return observer.getPlayerAppearanceUpdates();
     }
 
-    public Queue<Player> getPlayerHitUpdates() {
+    public List<Player> getPlayerHitUpdates() {
         return observer.getPlayerHitUpdates();
     }
 
-    public Queue<Projectile> getProjectilesNeedingDisplayed() {
+    public List<Projectile> getProjectilesNeedingDisplayed() {
         return observer.getProjectilesNeedingDisplayed();
     }
 
