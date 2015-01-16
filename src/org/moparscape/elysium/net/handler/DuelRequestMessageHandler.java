@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.DuelRequestMessage;
  */
 public final class DuelRequestMessageHandler extends MessageHandler<DuelRequestMessage> {
     @Override
-    public void handle(Session session, Player player, DuelRequestMessage message) {
+    public boolean handle(Session session, Player player, DuelRequestMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

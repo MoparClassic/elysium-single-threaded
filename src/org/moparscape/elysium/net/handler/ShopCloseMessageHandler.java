@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.ShopCloseMessage;
  */
 public final class ShopCloseMessageHandler extends MessageHandler<ShopCloseMessage> {
     @Override
-    public void handle(Session session, Player player, ShopCloseMessage message) {
+    public boolean handle(Session session, Player player, ShopCloseMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

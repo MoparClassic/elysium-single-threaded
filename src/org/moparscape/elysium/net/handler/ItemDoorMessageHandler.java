@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.ItemDoorMessage;
  */
 public final class ItemDoorMessageHandler extends MessageHandler<ItemDoorMessage> {
     @Override
-    public void handle(Session session, Player player, ItemDoorMessage message) {
+    public boolean handle(Session session, Player player, ItemDoorMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

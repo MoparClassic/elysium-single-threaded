@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.GameSettingMessage;
  */
 public final class GameSettingMessageHandler extends MessageHandler<GameSettingMessage> {
     @Override
-    public void handle(Session session, Player player, GameSettingMessage message) {
+    public boolean handle(Session session, Player player, GameSettingMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

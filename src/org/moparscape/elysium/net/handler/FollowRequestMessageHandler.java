@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.FollowRequestMessage;
  */
 public final class FollowRequestMessageHandler extends MessageHandler<FollowRequestMessage> {
     @Override
-    public void handle(Session session, Player player, FollowRequestMessage message) {
+    public boolean handle(Session session, Player player, FollowRequestMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

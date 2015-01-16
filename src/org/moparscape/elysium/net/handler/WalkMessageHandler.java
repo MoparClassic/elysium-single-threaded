@@ -14,11 +14,13 @@ import org.moparscape.elysium.net.codec.decoder.message.WalkMessage;
 public final class WalkMessageHandler extends MessageHandler<WalkMessage> {
 
     @Override
-    public void handle(Session session, Player player, WalkMessage message) {
+    public boolean handle(Session session, Player player, WalkMessage message) {
         player.incrementActionCount();
 
         Movement movement = player.getMovement();
         Path path = new Path(message);
         movement.setPath(path);
+
+        return true;
     }
 }

@@ -11,7 +11,7 @@ import org.moparscape.elysium.net.codec.decoder.message.DuelAcceptMessage;
  */
 public final class DuelAcceptMessageHandler extends MessageHandler<DuelAcceptMessage> {
 
-    public void handle(Session session, Player player, DuelAcceptMessage message) {
-
+    public boolean handle(Session session, Player player, DuelAcceptMessage message) {
+        return true;
     }
 }

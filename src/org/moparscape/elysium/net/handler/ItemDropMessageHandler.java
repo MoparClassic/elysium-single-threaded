@@ -14,8 +14,10 @@ import org.moparscape.elysium.task.timed.ItemDropTask;
 public final class ItemDropMessageHandler extends MessageHandler<ItemDropMessage> {
 
     @Override
-    public void handle(Session session, Player player, ItemDropMessage message) {
+    public boolean handle(Session session, Player player, ItemDropMessage message) {
         int actionCount = player.incrementActionCount();
         Server.getInstance().submitTimedTask(new ItemDropTask(player, message.getIndex(), actionCount));
+
+        return true;
     }
 }

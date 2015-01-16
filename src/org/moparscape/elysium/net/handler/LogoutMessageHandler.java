@@ -14,7 +14,7 @@ import org.moparscape.elysium.net.codec.decoder.message.LogoutMessage;
 public final class LogoutMessageHandler extends MessageHandler<LogoutMessage> {
 
     @Override
-    public void handle(Session session, Player player, LogoutMessage message) {
+    public boolean handle(Session session, Player player, LogoutMessage message) {
         Server server = Server.getInstance();
 
         // TODO: Verify that permission to logout has been granted before removing them from the world
@@ -26,10 +26,7 @@ public final class LogoutMessageHandler extends MessageHandler<LogoutMessage> {
             UnregistrableSession us = new UnregistrableSession(session, true);
             server.queueUnregisterSession(us);
         }
-    }
 
-    @Override
-    public boolean shouldContinuePacketProcessing() {
         return false;
     }
 }

@@ -11,7 +11,7 @@ import org.moparscape.elysium.net.codec.decoder.message.BankCloseMessage;
  */
 public final class BankCloseMessageHandler extends MessageHandler<BankCloseMessage> {
 
-    public void handle(Session session, Player player, BankCloseMessage message) {
-
+    public boolean handle(Session session, Player player, BankCloseMessage message) {
+        return true;
     }
 }

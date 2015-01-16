@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.FriendAddMessage;
  */
 public final class FriendAddMessageHandler extends MessageHandler<FriendAddMessage> {
     @Override
-    public void handle(Session session, Player player, FriendAddMessage message) {
+    public boolean handle(Session session, Player player, FriendAddMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

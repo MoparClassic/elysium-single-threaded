@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.SpellPlayerMessage;
  */
 public final class SpellPlayerMessageHandler extends MessageHandler<SpellPlayerMessage> {
     @Override
-    public void handle(Session session, Player player, SpellPlayerMessage message) {
+    public boolean handle(Session session, Player player, SpellPlayerMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

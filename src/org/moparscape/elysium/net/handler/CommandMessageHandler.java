@@ -13,7 +13,7 @@ import org.moparscape.elysium.world.Region;
  */
 public final class CommandMessageHandler extends MessageHandler<CommandMessage> {
 
-    public void handle(Session session, Player player, CommandMessage message) {
+    public boolean handle(Session session, Player player, CommandMessage message) {
         System.out.println("Command received: " + message.getCommand());
         String[] args = message.getArguments();
 
@@ -32,12 +32,14 @@ public final class CommandMessageHandler extends MessageHandler<CommandMessage> 
             Region r = Region.getRegion(player.getLocation());
             r.addItem(new Item(10, 2000, player.getLocation(), null));
             r.addItem(new Item(11, 1, player.getLocation(), null));
-            return;
+            return true;
         }
 
         if (message.getCommand().equals("region")) {
             System.out.println(Region.getRegion(player.getLocation()));
-            return;
+            return true;
         }
+
+        return true;
     }
 }

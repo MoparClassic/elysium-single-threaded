@@ -12,7 +12,7 @@ import org.moparscape.elysium.net.codec.decoder.message.LogoutRequestMessage;
  */
 public final class LogoutRequestMessageHandler extends MessageHandler<LogoutRequestMessage> {
     @Override
-    public void handle(final Session session, Player player, LogoutRequestMessage message) {
+    public boolean handle(final Session session, Player player, LogoutRequestMessage message) {
         // TODO: Determine if the player is allowed to logout, and respond accordingly
         if (true /* The player is allowed to log out */) {
             session.setAllowedToDisconnect(true);
@@ -21,5 +21,7 @@ public final class LogoutRequestMessageHandler extends MessageHandler<LogoutRequ
             session.setAllowedToDisconnect(false);
             Packets.sendCantLogout(player);
         }
+
+        return true;
     }
 }

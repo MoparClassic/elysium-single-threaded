@@ -11,7 +11,7 @@ import org.moparscape.elysium.net.codec.decoder.message.AppearanceUpdateMessage;
  */
 public final class AppearanceUpdateMessageHandler extends MessageHandler<AppearanceUpdateMessage> {
 
-    public void handle(Session session, Player player, AppearanceUpdateMessage message) {
-
+    public boolean handle(Session session, Player player, AppearanceUpdateMessage message) {
+        return true;
     }
 }

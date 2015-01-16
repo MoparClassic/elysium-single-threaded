@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.DummyMessage;
  */
 public final class DummyMessageHandler extends MessageHandler<DummyMessage> {
     @Override
-    public void handle(Session session, Player player, DummyMessage message) {
+    public boolean handle(Session session, Player player, DummyMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

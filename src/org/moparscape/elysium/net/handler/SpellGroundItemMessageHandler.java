@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.SpellGroundItemMessage;
  */
 public final class SpellGroundItemMessageHandler extends MessageHandler<SpellGroundItemMessage> {
     @Override
-    public void handle(Session session, Player player, SpellGroundItemMessage message) {
+    public boolean handle(Session session, Player player, SpellGroundItemMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

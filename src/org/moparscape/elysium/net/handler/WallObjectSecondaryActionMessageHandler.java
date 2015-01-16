@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.WallObjectSecondaryActio
  */
 public final class WallObjectSecondaryActionMessageHandler extends MessageHandler<WallObjectSecondaryActionMessage> {
     @Override
-    public void handle(Session session, Player player, WallObjectSecondaryActionMessage message) {
+    public boolean handle(Session session, Player player, WallObjectSecondaryActionMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

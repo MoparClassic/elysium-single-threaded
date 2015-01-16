@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.ReportMessage;
  */
 public final class ReportMessageHandler extends MessageHandler<ReportMessage> {
     @Override
-    public void handle(Session session, Player player, ReportMessage message) {
+    public boolean handle(Session session, Player player, ReportMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

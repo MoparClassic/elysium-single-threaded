@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.NpcChatMessage;
  */
 public final class NpcChatMessageHandler extends MessageHandler<NpcChatMessage> {
     @Override
-    public void handle(Session session, Player player, NpcChatMessage message) {
+    public boolean handle(Session session, Player player, NpcChatMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

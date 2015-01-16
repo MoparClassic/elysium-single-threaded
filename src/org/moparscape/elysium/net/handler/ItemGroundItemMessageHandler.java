@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.ItemGroundItemMessage;
  */
 public final class ItemGroundItemMessageHandler extends MessageHandler<ItemGroundItemMessage> {
     @Override
-    public void handle(Session session, Player player, ItemGroundItemMessage message) {
+    public boolean handle(Session session, Player player, ItemGroundItemMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

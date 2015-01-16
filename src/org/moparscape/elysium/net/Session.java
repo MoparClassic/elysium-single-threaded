@@ -91,9 +91,8 @@ public final class Session {
             MessageHandler<Message> handler = (MessageHandler<Message>) HandlerLookupService.getHandler(message.getClass());
             if (handler != null) {
                 try {
-                    handler.handle(this, getPlayer(), message);
-
-                    if (!handler.shouldContinuePacketProcessing()) return true;
+                    boolean continueProccessingPackets = handler.handle(this, getPlayer(), message);
+                    if (!continueProccessingPackets) return true;
                 } catch (Exception e) {
                     System.out.printf("Player Index: %d - Failure during handling of %s\n",
                             getPlayer() == null ? -1 : getPlayer().getIndex(),

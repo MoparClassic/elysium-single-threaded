@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.ObjectSecondaryActionMes
  */
 public final class ObjectSecondaryActionMessageHandler extends MessageHandler<ObjectSecondaryActionMessage> {
     @Override
-    public void handle(Session session, Player player, ObjectSecondaryActionMessage message) {
+    public boolean handle(Session session, Player player, ObjectSecondaryActionMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

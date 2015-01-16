@@ -11,7 +11,7 @@ import org.moparscape.elysium.net.codec.decoder.message.BankDepositMessage;
  */
 public final class BankDepositMessageHandler extends MessageHandler<BankDepositMessage> {
 
-    public void handle(Session session, Player player, BankDepositMessage message) {
-
+    public boolean handle(Session session, Player player, BankDepositMessage message) {
+        return true;
     }
 }

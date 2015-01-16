@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.MenuActionMessage;
  */
 public final class MenuActionMessageHandler extends MessageHandler<MenuActionMessage> {
     @Override
-    public void handle(Session session, Player player, MenuActionMessage message) {
+    public boolean handle(Session session, Player player, MenuActionMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.NpcActionMessage;
  */
 public final class NpcActionMessageHandler extends MessageHandler<NpcActionMessage> {
     @Override
-    public void handle(Session session, Player player, NpcActionMessage message) {
+    public boolean handle(Session session, Player player, NpcActionMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

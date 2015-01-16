@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.WallObjectPrimaryActionM
  */
 public final class WallObjectPrimaryActionMessageHandler extends MessageHandler<WallObjectPrimaryActionMessage> {
     @Override
-    public void handle(Session session, Player player, WallObjectPrimaryActionMessage message) {
+    public boolean handle(Session session, Player player, WallObjectPrimaryActionMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

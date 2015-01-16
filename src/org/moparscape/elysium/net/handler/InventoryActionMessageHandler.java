@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.InventoryActionMessage;
  */
 public final class InventoryActionMessageHandler extends MessageHandler<InventoryActionMessage> {
     @Override
-    public void handle(Session session, Player player, InventoryActionMessage message) {
+    public boolean handle(Session session, Player player, InventoryActionMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

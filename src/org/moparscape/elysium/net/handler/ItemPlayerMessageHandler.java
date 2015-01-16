@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.ItemPlayerMessage;
  */
 public final class ItemPlayerMessageHandler extends MessageHandler<ItemPlayerMessage> {
     @Override
-    public void handle(Session session, Player player, ItemPlayerMessage message) {
+    public boolean handle(Session session, Player player, ItemPlayerMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

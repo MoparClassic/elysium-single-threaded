@@ -18,13 +18,13 @@ import org.moparscape.elysium.world.World;
 public final class LoginMessageHandler extends MessageHandler<LoginMessage> {
 
     @Override
-    public void handle(Session session, Player player, LoginMessage message) {
+    public boolean handle(Session session, Player player, LoginMessage message) {
         if (message.isReconnecting()) {
             System.out.println("Reconnecting player -- rejecting them");
 
             UnregistrableSession us = new UnregistrableSession(session, false);
             Server.getInstance().queueUnregisterSession(us);
-            return;
+            return false;
         }
 
         System.out.printf("Login message received! %d %d %s %s\n",
@@ -54,5 +54,7 @@ public final class LoginMessageHandler extends MessageHandler<LoginMessage> {
 
         session.setAllowedToDisconnect(false);
         p.setLoggedIn(true);
+
+        return true;
     }
 }

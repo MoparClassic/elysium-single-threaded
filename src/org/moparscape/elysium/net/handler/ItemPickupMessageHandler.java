@@ -17,7 +17,7 @@ import org.moparscape.elysium.world.Region;
 public final class ItemPickupMessageHandler extends MessageHandler<ItemPickupMessage> {
 
     @Override
-    public void handle(Session session, Player player, ItemPickupMessage message) {
+    public boolean handle(Session session, Player player, ItemPickupMessage message) {
         Point itemLoc = message.getLocation();
         Region r = Region.getRegion(itemLoc);
         Item targetItem = r.getItem(message.getItemId(), itemLoc);
@@ -26,5 +26,7 @@ public final class ItemPickupMessageHandler extends MessageHandler<ItemPickupMes
             int actionCount = player.incrementActionCount();
             Server.getInstance().submitTimedTask(new ItemPickupTask(player, targetItem, actionCount));
         }
+
+        return true;
     }
 }

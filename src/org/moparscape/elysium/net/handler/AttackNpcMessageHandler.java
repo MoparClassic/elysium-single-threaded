@@ -11,7 +11,7 @@ import org.moparscape.elysium.net.codec.decoder.message.AttackNpcMessage;
  */
 public final class AttackNpcMessageHandler extends MessageHandler<AttackNpcMessage> {
 
-    public void handle(Session session, Player player, AttackNpcMessage message) {
-
+    public boolean handle(Session session, Player player, AttackNpcMessage message) {
+        return true;
     }
 }

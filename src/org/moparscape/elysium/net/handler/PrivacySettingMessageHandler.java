@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.PrivacySettingMessage;
  */
 public final class PrivacySettingMessageHandler extends MessageHandler<PrivacySettingMessage> {
     @Override
-    public void handle(Session session, Player player, PrivacySettingMessage message) {
+    public boolean handle(Session session, Player player, PrivacySettingMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.SleepwordMessage;
  */
 public final class SleepwordMessageHandler extends MessageHandler<SleepwordMessage> {
     @Override
-    public void handle(Session session, Player player, SleepwordMessage message) {
+    public boolean handle(Session session, Player player, SleepwordMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

@@ -11,7 +11,7 @@ import org.moparscape.elysium.net.codec.decoder.message.DuelDeclineMessage;
  */
 public final class DuelDeclineMessageHandler extends MessageHandler<DuelDeclineMessage> {
 
-    public void handle(Session session, Player player, DuelDeclineMessage message) {
-
+    public boolean handle(Session session, Player player, DuelDeclineMessage message) {
+        return true;
     }
 }

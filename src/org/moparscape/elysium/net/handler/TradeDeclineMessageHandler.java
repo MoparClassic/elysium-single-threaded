@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.TradeDeclineMessage;
  */
 public final class TradeDeclineMessageHandler extends MessageHandler<TradeDeclineMessage> {
     @Override
-    public void handle(Session session, Player player, TradeDeclineMessage message) {
+    public boolean handle(Session session, Player player, TradeDeclineMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

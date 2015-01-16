@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.ShopBuyMessage;
  */
 public final class ShopBuyMessageHandler extends MessageHandler<ShopBuyMessage> {
     @Override
-    public void handle(Session session, Player player, ShopBuyMessage message) {
+    public boolean handle(Session session, Player player, ShopBuyMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

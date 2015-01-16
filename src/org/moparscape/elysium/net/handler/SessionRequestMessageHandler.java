@@ -14,12 +14,14 @@ import org.moparscape.elysium.util.Formulae;
  */
 public final class SessionRequestMessageHandler extends MessageHandler<SessionRequestMessage> {
     @Override
-    public void handle(Session session, Player player, SessionRequestMessage message) {
+    public boolean handle(Session session, Player player, SessionRequestMessage message) {
         System.out.printf("SessionRequest: %s %d\n", message.getClassName(), message.getUserByte());
 
         long serverKey = Formulae.generateSessionKey(message.getUserByte());
         ByteBuf buffer = Unpooled.buffer(8);
         buffer.writeLong(serverKey);
         session.write(buffer);
+
+        return true;
     }
 }

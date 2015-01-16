@@ -12,7 +12,8 @@ import org.moparscape.elysium.net.codec.decoder.message.ItemWieldMessage;
 public final class ItemWieldMessageHandler extends MessageHandler<ItemWieldMessage> {
 
     @Override
-    public void handle(Session session, Player player, ItemWieldMessage message) {
+    public boolean handle(Session session, Player player, ItemWieldMessage message) {
         System.out.println("Wield item at index " + message.getItemIndex());
+        return true;
     }
 }

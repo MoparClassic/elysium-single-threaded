@@ -12,10 +12,12 @@ import org.moparscape.elysium.net.codec.decoder.message.PublicChatMessage;
  */
 public final class PublicChatMessageHandler extends MessageHandler<PublicChatMessage> {
     @Override
-    public void handle(Session session, Player player, PublicChatMessage message) {
+    public boolean handle(Session session, Player player, PublicChatMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
         System.out.println("Public chat message received!");
         ChatMessage cm = new ChatMessage(player, message.getMessagePayload());
         player.getCommunication().addChatMessage(cm);
+
+        return true;
     }
 }

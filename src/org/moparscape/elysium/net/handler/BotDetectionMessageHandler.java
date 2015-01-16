@@ -11,7 +11,7 @@ import org.moparscape.elysium.net.codec.decoder.message.BotDetectionMessage;
  */
 public final class BotDetectionMessageHandler extends MessageHandler<BotDetectionMessage> {
 
-    public void handle(Session session, Player player, BotDetectionMessage message) {
-
+    public boolean handle(Session session, Player player, BotDetectionMessage message) {
+        return true;
     }
 }

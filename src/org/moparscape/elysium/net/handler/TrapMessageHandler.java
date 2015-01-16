@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.TrapMessage;
  */
 public final class TrapMessageHandler extends MessageHandler<TrapMessage> {
     @Override
-    public void handle(Session session, Player player, TrapMessage message) {
+    public boolean handle(Session session, Player player, TrapMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }

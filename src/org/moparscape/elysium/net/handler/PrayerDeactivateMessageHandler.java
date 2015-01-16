@@ -11,7 +11,8 @@ import org.moparscape.elysium.net.codec.decoder.message.PrayerDeactivateMessage;
  */
 public final class PrayerDeactivateMessageHandler extends MessageHandler<PrayerDeactivateMessage> {
     @Override
-    public void handle(Session session, Player player, PrayerDeactivateMessage message) {
+    public boolean handle(Session session, Player player, PrayerDeactivateMessage message) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }
