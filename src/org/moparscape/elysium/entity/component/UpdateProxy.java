@@ -6,7 +6,6 @@ import org.moparscape.elysium.util.StatefulEntityCollection;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 
 /**
  * Created by IntelliJ IDEA.
@@ -115,7 +114,7 @@ public final class UpdateProxy extends AbstractComponent {
         return observer.getWatchedPlayers();
     }
 
-    public AtomicIntegerArray getWornItems() {
+    public int[] getWornItems() {
         return sprite.getWornItems();
     }
 

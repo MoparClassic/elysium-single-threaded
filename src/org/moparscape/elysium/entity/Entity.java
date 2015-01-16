@@ -2,31 +2,28 @@ package org.moparscape.elysium.entity;
 
 import org.moparscape.elysium.world.Point;
 
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-
 /**
  * @author lothy
  */
 public class Entity implements Indexable, Locatable {
 
-    private final AtomicInteger index = new AtomicInteger(0);
-    private final AtomicReference<Point> location = new AtomicReference<Point>();
+    private int index;
+    private Point location = null;
 
     public int getIndex() {
-        return index.get();
+        return index;
     }
 
     public void setIndex(int index) {
-        this.index.getAndSet(index);
+        this.index = index;
     }
 
     public Point getLocation() {
-        return location.get();
+        return location;
     }
 
     public void setLocation(Point location) {
-        this.location.getAndSet(location);
+        this.location = location;
     }
 
     @Override

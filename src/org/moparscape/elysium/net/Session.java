@@ -9,8 +9,6 @@ import org.moparscape.elysium.net.handler.MessageHandler;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,8 +19,8 @@ public final class Session {
 
     private final Channel channel;
     private final Queue<Message> messageQueue = new ConcurrentLinkedQueue<Message>();
-    private final AtomicReference<Player> player = new AtomicReference<Player>();
-    private final AtomicBoolean removing = new AtomicBoolean(false);
+    private Player player;
+    private boolean removing = false;
 
     public Session(Channel channel) {
         this.channel = channel;
@@ -33,11 +31,11 @@ public final class Session {
     }
 
     public Player getPlayer() {
-        return player.get();
+        return player;
     }
 
     public void setPlayer(Player player) {
-        this.player.getAndSet(player);
+        this.player = player;
     }
 
     @Override
@@ -51,11 +49,11 @@ public final class Session {
     }
 
     public boolean isRemoving() {
-        return removing.get();
+        return removing;
     }
 
     public void setRemoving(boolean removing) {
-        this.removing.getAndSet(removing);
+        this.removing = removing;
     }
 
     public <T extends Message> void messageReceived(T message) {

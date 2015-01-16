@@ -21,7 +21,7 @@ public class ItemDropTask extends AbstractTimedTask {
     private final Movement movement;
     private final Player owner;
     private final int slot;
-    private volatile boolean finished = false;
+    private boolean finished = false;
 
     public ItemDropTask(Player owner, int slot, int actionCount) {
         super(0, 0);

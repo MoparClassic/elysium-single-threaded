@@ -1,7 +1,5 @@
 package org.moparscape.elysium.task.timed;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 /**
  * Created by IntelliJ IDEA.
  *
@@ -9,12 +7,11 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public abstract class AbstractTimedTask implements TimedTask {
 
-    private final AtomicLong execTime = new AtomicLong();
-
     private final long recurringTime;
+    private long execTime = 0L;
 
     public AbstractTimedTask(long firstRunTime, long recurringTime) {
-        this.execTime.set(firstRunTime);
+        this.execTime = firstRunTime;
         this.recurringTime = recurringTime;
     }
 
@@ -32,7 +29,7 @@ public abstract class AbstractTimedTask implements TimedTask {
     }
 
     public long getExecutionTime() {
-        return execTime.get();
+        return execTime;
     }
 
     /**
@@ -45,7 +42,7 @@ public abstract class AbstractTimedTask implements TimedTask {
      *                     task was last executed
      */
     public final void setNextRunningTime(long lastExecuted) {
-        execTime.set(lastExecuted + recurringTime);
+        execTime = lastExecuted + recurringTime;
     }
 
     /**

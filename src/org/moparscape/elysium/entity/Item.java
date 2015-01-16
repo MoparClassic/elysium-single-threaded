@@ -22,8 +22,8 @@ public final class Item implements Locatable, Heartbeat {
     private final AtomicBoolean removed = new AtomicBoolean(false);
     private final int secondsUntilRespawn;
     private final long spawned;
-    private volatile boolean heartbeatCancelled = false;
-    private volatile long pulseTime = 0;
+    private boolean heartbeatCancelled = false;
+    private long pulseTime = 0;
 
     public Item(int itemId, int amount, Point loc, Player owner) {
         this(itemId, amount, loc, owner, -1);
@@ -70,13 +70,13 @@ public final class Item implements Locatable, Heartbeat {
     }
 
     @Override
-    public void pulse() {
-
+    public boolean isCancelled() {
+        return heartbeatCancelled;
     }
 
     @Override
-    public boolean isCancelled() {
-        return heartbeatCancelled;
+    public void pulse() {
+
     }
 
     @Override

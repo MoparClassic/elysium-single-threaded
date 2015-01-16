@@ -28,7 +28,7 @@ public class Server {
 
     private static final Object INSTANCE_LOCK = new Object();
 
-    private static volatile Server INSTANCE;
+    private static Server INSTANCE;
 
     private final EventLoopGroup bossGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
     private final ExecutorService dataExecutorService = Executors.newSingleThreadExecutor();
@@ -47,15 +47,15 @@ public class Server {
      * An epoch timestamp (set using System.currentTimeMillis()) that can be used
      * for storing and comparing database timestamps.
      */
-    private volatile long epochTimestamp = System.currentTimeMillis();
+    private long epochTimestamp = System.currentTimeMillis();
     /**
      * A higher resolution (on most systems) timer that is used to accurately detect
      * when an update should be performed.
      */
-    private volatile long highResolutionTimestamp = System.nanoTime() / 1000000;
-    private volatile long lastPulse = 0L;
+    private long highResolutionTimestamp = System.nanoTime() / 1000000;
+    private long lastPulse = 0L;
 
-    private volatile boolean running = true;
+    private boolean running = true;
 
     private Server() {
         int cores = Runtime.getRuntime().availableProcessors();

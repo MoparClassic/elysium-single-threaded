@@ -12,7 +12,7 @@ import org.moparscape.elysium.net.Session;
  */
 public final class ElysiumConnectionHandler extends SimpleChannelInboundHandler<Message> {
 
-    private volatile Session session;
+    private Session session;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {

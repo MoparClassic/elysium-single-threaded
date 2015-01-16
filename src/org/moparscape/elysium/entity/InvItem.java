@@ -2,9 +2,6 @@ package org.moparscape.elysium.entity;
 
 import org.moparscape.elysium.def.ItemDef;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * Created by IntelliJ IDEA.
  *
@@ -12,21 +9,21 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public final class InvItem {
 
-    private final AtomicInteger amount = new AtomicInteger();
     private final int id;
-    private final AtomicBoolean wielded = new AtomicBoolean(false);
+    private int amount;
+    private boolean wielded = false;
 
     public InvItem(int itemId, int amount) {
         this.id = itemId;
-        this.amount.getAndSet(amount);
+        this.amount = amount;
     }
 
     public int getAmount() {
-        return amount.get();
+        return amount;
     }
 
     public void setAmount(int amount) {
-        this.amount.getAndSet(amount);
+        this.amount = amount;
     }
 
     public ItemDef getDef() {
@@ -62,10 +59,10 @@ public final class InvItem {
     }
 
     public boolean isWielded() {
-        return wielded.get();
+        return wielded;
     }
 
     public void setWielded(boolean wield) {
-        wielded.getAndSet(wield);
+        wielded = wield;
     }
 }

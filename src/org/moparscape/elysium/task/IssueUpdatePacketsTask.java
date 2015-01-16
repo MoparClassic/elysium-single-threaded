@@ -12,7 +12,6 @@ import org.moparscape.elysium.world.Point;
 import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 
 /**
  * Created by IntelliJ IDEA.
@@ -253,10 +252,10 @@ public final class IssueUpdatePacketsTask implements Runnable {
                 System.out.println("Sending appearance update to " + player.getCredentials().getUsername() +
                         " for player " + targetProxy.getUsername() + " (Target AID: " + targetProxy.getAppearanceId() + ")");
 
-                AtomicIntegerArray wornItems = targetProxy.getWornItems();
-                pb.writeByte(wornItems.length());
-                for (int i = 0; i < wornItems.length(); i++) {
-                    pb.writeByte(wornItems.get(i));
+                int[] wornItems = targetProxy.getWornItems();
+                pb.writeByte(wornItems.length);
+                for (int i = 0; i < wornItems.length; i++) {
+                    pb.writeByte(wornItems[i]);
                 }
 
                 Appearance app = targetProxy.getAppearance();

@@ -17,7 +17,7 @@ public final class ItemPickupTask extends AbstractTimedTask {
     private final int expectedActionCount;
     private final Item item;
     private final Player owner;
-    private volatile boolean finished = false;
+    private boolean finished = false;
 
     public ItemPickupTask(Player owner, Item item, int actionCount) {
         super(0, 0);

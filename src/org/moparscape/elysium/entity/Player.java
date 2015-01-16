@@ -5,10 +5,6 @@ import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.world.Point;
 import org.moparscape.elysium.world.Region;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-
 /**
  * Created by IntelliJ IDEA.
  *
@@ -16,20 +12,20 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public final class Player extends Entity {
 
-    private final AtomicInteger actionCount = new AtomicInteger(0);
     private final Bank bank = new Bank(this);
     private final Combat combat = new Combat();
     private final Communication communication = new Communication();
     private final Credentials credentials = new Credentials();
     private final Inventory inventory = new Inventory(this);
-    private final AtomicBoolean loggedIn = new AtomicBoolean(false);
-    private final AtomicReference<Region> region = new AtomicReference<Region>();
     private final Session session;
     private final Skills skills = new Skills();
     private final Sprite sprite = new Sprite(this);
     private final Movement movement = new Movement(this, sprite);
     private final Observer observer = new Observer(this, sprite);
     private final UpdateProxy updateProxy = new UpdateProxy();
+    private int actionCount = 0;
+    private boolean loggedIn = false;
+    private Region region = null;
 
     public Player(Session session) {
         this.session = session;
@@ -37,7 +33,7 @@ public final class Player extends Entity {
     }
 
     public int getActionCount() {
-        return actionCount.get();
+        return actionCount;
     }
 
     public Bank getBank() {
@@ -95,21 +91,21 @@ public final class Player extends Entity {
     }
 
     public int incrementActionCount() {
-        return actionCount.incrementAndGet();
+        return ++actionCount;
     }
 
     public boolean isLoggedIn() {
-        return loggedIn.get();
+        return loggedIn;
     }
 
     public void setLoggedIn(boolean loggedIn) {
-        this.loggedIn.getAndSet(loggedIn);
+        this.loggedIn = loggedIn;
     }
 
     @Override
     public void setLocation(Point location) {
         Region r = Region.getRegion(location);
-        Region cur = region.get();
+        Region cur = region;
 
         if (cur != r) {
             if (cur != null) {
@@ -117,7 +113,7 @@ public final class Player extends Entity {
             }
 
             r.addPlayer(this);
-            region.getAndSet(r);
+            region = r;
         }
 
         super.setLocation(location);

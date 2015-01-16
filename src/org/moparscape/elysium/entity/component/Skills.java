@@ -1,7 +1,5 @@
 package org.moparscape.elysium.entity.component;
 
-import java.util.concurrent.atomic.AtomicIntegerArray;
-
 /**
  * Created by IntelliJ IDEA.
  *
@@ -11,17 +9,17 @@ public final class Skills extends AbstractComponent {
 
     private static final int SKILL_COUNT = 18;
     private int combatLevel = 3;
-    private AtomicIntegerArray curStat = new AtomicIntegerArray(SKILL_COUNT);
-    private AtomicIntegerArray exp = new AtomicIntegerArray(SKILL_COUNT);
+    private int[] curStat = new int[SKILL_COUNT];
+    private int[] exp = new int[SKILL_COUNT];
     private int fatigue;
     private int lastDamage = 0;
-    private AtomicIntegerArray maxStat = new AtomicIntegerArray(SKILL_COUNT);
+    private int[] maxStat = new int[SKILL_COUNT];
 
     public Skills() {
         for (int i = 0; i < SKILL_COUNT; i++) {
-            curStat.getAndSet(i, 99);
-            maxStat.getAndSet(i, 99);
-            exp.getAndSet(i, 14000000);
+            curStat[i] = 99;
+            maxStat[i] = 99;
+            exp[i] = 14000000;
         }
     }
 
@@ -30,18 +28,18 @@ public final class Skills extends AbstractComponent {
     }
 
     public int getCurStat(int id) {
-        return curStat.get(id);
+        return curStat[id];
     }
 
-    public AtomicIntegerArray getCurStats() {
+    public int[] getCurStats() {
         return curStat;
     }
 
     public int getExp(int id) {
-        return exp.get(id);
+        return exp[id];
     }
 
-    public AtomicIntegerArray getExps() {
+    public int[] getExps() {
         return exp;
     }
 
@@ -54,7 +52,7 @@ public final class Skills extends AbstractComponent {
     }
 
     public int getHits() {
-        return curStat.get(3);
+        return curStat[3];
     }
 
     public int getLastDamage() {
@@ -62,14 +60,14 @@ public final class Skills extends AbstractComponent {
     }
 
     public int getMaxHits() {
-        return maxStat.get(3);
+        return maxStat[3];
     }
 
     public int getMaxStat(int id) {
-        return maxStat.get(id);
+        return maxStat[id];
     }
 
-    public AtomicIntegerArray getMaxStats() {
+    public int[] getMaxStats() {
         return maxStat;
     }
 }

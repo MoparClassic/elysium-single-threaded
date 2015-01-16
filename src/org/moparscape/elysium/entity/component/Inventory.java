@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,7 +30,7 @@ public class Inventory extends AbstractComponent {
     private final List<InvItem> items = new ArrayList<InvItem>();
     private final int maxItems;
     private final Player owner;
-    private final AtomicInteger reserved = new AtomicInteger(0);
+    private final int reserved = 0;
 
     public Inventory(Player owner) {
         this.owner = owner;

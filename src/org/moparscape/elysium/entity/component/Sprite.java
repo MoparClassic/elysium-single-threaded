@@ -4,11 +4,6 @@ import org.moparscape.elysium.entity.Appearance;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.world.Point;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicIntegerArray;
-import java.util.concurrent.atomic.AtomicReference;
-
 /**
  * Created by IntelliJ IDEA.
  *
@@ -17,85 +12,85 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class Sprite extends AbstractComponent {
 
     private static final int MAX_WORN_ITEMS = 12;
-    private final AtomicReference<Appearance> appearance = new AtomicReference<Appearance>(new Appearance());
-    private final AtomicBoolean appearanceChanged = new AtomicBoolean(true);
-    private final AtomicInteger appearanceId = new AtomicInteger(0);
     private final int[][] mobSprites = new int[][]{
             {3, 2, 1},
             {4, -1, 0},
             {5, 6, 7}
     };
-    private final AtomicBoolean skulled = new AtomicBoolean(false);
-    private final AtomicInteger sprite = new AtomicInteger(1);
-    private final AtomicBoolean spriteChanged = new AtomicBoolean(true);
-    private final AtomicIntegerArray wornItems = new AtomicIntegerArray(appearance.get().getSprites());
-    private volatile Player owner;
+    private Appearance appearance = new Appearance();
+    private final int[] wornItems = appearance.getSprites();
+    private boolean appearanceChanged = true;
+    private int appearanceId = 0;
+    private Player owner;
+    private boolean skulled = false;
+    private int sprite = 1;
+    private boolean spriteChanged = true;
 
     public Sprite(Player owner) {
         this.owner = owner;
     }
 
     public boolean appearanceChanged() {
-        return appearanceChanged.get();
+        return appearanceChanged;
     }
 
     public Appearance getAppearance() {
-        return appearance.get();
+        return appearance;
     }
 
     public void setAppearance(Appearance app) {
-        appearance.getAndSet(app);
+        appearance = app;
         setAppearanceChanged(true);
     }
 
     public int getAppearanceId() {
-        return appearanceId.get();
+        return appearanceId;
     }
 
     public int getSprite() {
-        return sprite.get();
+        return sprite;
     }
 
     public void setSprite(int sprite) {
-        spriteChanged.getAndSet(true);
-        this.sprite.getAndSet(sprite);
+        this.spriteChanged = true;
+        this.sprite = sprite;
     }
 
     public int[] getSprites() {
-        return appearance.get().getSprites();
+        return appearance.getSprites();
     }
 
-    public AtomicIntegerArray getWornItems() {
+    public int[] getWornItems() {
         return wornItems;
     }
 
     public boolean isSkulled() {
-        return skulled.get();
+        return skulled;
     }
 
     public void setSkulled(boolean skulled) {
-        this.skulled.getAndSet(skulled);
+        this.skulled = skulled;
     }
 
     public void resetSpriteChanged() {
-        this.spriteChanged.getAndSet(false);
+        this.spriteChanged = false;
     }
 
     public void setAppearanceChanged(boolean changed) {
-        this.appearanceChanged.getAndSet(changed);
+        this.appearanceChanged = changed;
     }
 
     public void setWornItem(int index, int itemId) {
-        wornItems.getAndSet(index, itemId);
+        wornItems[index] = itemId;
     }
 
     public boolean spriteChanged() {
-        return spriteChanged.get();
+        return spriteChanged;
     }
 
     public void updateAppearanceId() {
-        if (appearanceChanged.get()) {
-            appearanceId.getAndIncrement();
+        if (appearanceChanged) {
+            appearanceId++;
         }
     }
 

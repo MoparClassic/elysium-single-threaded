@@ -14,12 +14,12 @@ import org.moparscape.elysium.world.World;
 public final class Movement extends AbstractComponent {
 
     private static final World world = World.getInstance();
-    private volatile int curWaypoint;
-    private volatile boolean hasMoved = false;
+    private int curWaypoint;
+    private boolean hasMoved = false;
 
-    private volatile Locatable owner;
+    private Locatable owner;
 
-    private volatile Path path;
+    private Path path;
     private Sprite sprite;
 
     public Movement(Locatable owner, Sprite sprite) {

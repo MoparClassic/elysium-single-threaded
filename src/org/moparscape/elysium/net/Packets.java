@@ -11,7 +11,6 @@ import org.moparscape.elysium.util.Formulae;
 import org.moparscape.elysium.world.Point;
 
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 
 /**
  * Created by IntelliJ IDEA.
@@ -247,19 +246,19 @@ public final class Packets {
         PacketBuilder pb = new PacketBuilder(108);
         pb.setId(180);
 
-        AtomicIntegerArray curStats = skills.getCurStats();
-        for (int i = 0; i < curStats.length(); i++) {
-            pb.writeByte(curStats.get(i));
+        int[] curStats = skills.getCurStats();
+        for (int i = 0; i < curStats.length; i++) {
+            pb.writeByte(curStats[i]);
         }
 
-        AtomicIntegerArray maxStats = skills.getMaxStats();
-        for (int i = 0; i < maxStats.length(); i++) {
-            pb.writeByte(maxStats.get(i));
+        int[] maxStats = skills.getMaxStats();
+        for (int i = 0; i < maxStats.length; i++) {
+            pb.writeByte(maxStats[i]);
         }
 
-        AtomicIntegerArray exps = skills.getExps();
-        for (int i = 0; i < exps.length(); i++) {
-            pb.writeInt(exps.get(i));
+        int[] exps = skills.getExps();
+        for (int i = 0; i < exps.length; i++) {
+            pb.writeInt(exps[i]);
         }
 
         return player.getSession().write(pb.toPacket());
