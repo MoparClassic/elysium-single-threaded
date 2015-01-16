@@ -4,7 +4,6 @@ import org.moparscape.elysium.entity.*;
 import org.moparscape.elysium.util.StatefulEntityCollection;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -20,6 +19,17 @@ public final class UpdateProxy extends AbstractComponent {
     private Observer observer;
     private Skills skills;
     private Sprite sprite;
+
+    public UpdateProxy(Communication communication, Credentials credentials,
+                       Movement movement, Observer observer, Skills skills,
+                       Sprite sprite) {
+        this.communication = communication;
+        this.credentials = credentials;
+        this.movement = movement;
+        this.observer = observer;
+        this.skills = skills;
+        this.sprite = sprite;
+    }
 
     public void clearChatLists() {
         communication.clearChatMessagesNeedingDisplayed();
@@ -144,15 +154,6 @@ public final class UpdateProxy extends AbstractComponent {
 
     public void resetSpriteChanged() {
         sprite.resetSpriteChanged();
-    }
-
-    public void resolveDependencies(Map<Class<? extends Component>, Component> components) {
-        this.sprite = Sprite.class.cast(components.get(Sprite.class));
-        this.communication = Communication.class.cast(components.get(Communication.class));
-        this.credentials = Credentials.class.cast(components.get(Credentials.class));
-        this.movement = Movement.class.cast(components.get(Movement.class));
-        this.observer = Observer.class.cast(components.get(Observer.class));
-        this.skills = Skills.class.cast(components.get(Skills.class));
     }
 
     public void revalidateWatchedEntities() {

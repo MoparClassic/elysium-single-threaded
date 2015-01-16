@@ -22,7 +22,7 @@ public final class Player extends Entity {
     private final Sprite sprite = new Sprite(this);
     private final Movement movement = new Movement(this, sprite);
     private final Observer observer = new Observer(this, sprite);
-    private final UpdateProxy updateProxy = new UpdateProxy();
+    private final UpdateProxy updateProxy = new UpdateProxy(communication, credentials, movement, observer, skills, sprite);
     private int actionCount = 0;
     private boolean loggedIn = false;
     private Region region = null;

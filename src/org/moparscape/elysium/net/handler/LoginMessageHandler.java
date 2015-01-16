@@ -3,6 +3,7 @@ package org.moparscape.elysium.net.handler;
 import org.moparscape.elysium.Server;
 import org.moparscape.elysium.entity.DefaultEntityFactory;
 import org.moparscape.elysium.entity.Player;
+import org.moparscape.elysium.entity.UnregistrableSession;
 import org.moparscape.elysium.entity.component.Credentials;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
@@ -15,12 +16,14 @@ import org.moparscape.elysium.world.World;
  * @author lothy
  */
 public final class LoginMessageHandler extends MessageHandler<LoginMessage> {
+
     @Override
     public void handle(Session session, Player player, LoginMessage message) {
         if (message.isReconnecting()) {
             System.out.println("Reconnecting player -- rejecting them");
-            Server.getInstance().unregisterSession(session);
-            session.close();
+
+            UnregistrableSession us = new UnregistrableSession(session, false);
+            Server.getInstance().queueUnregisterSession(us);
             return;
         }
 
@@ -49,6 +52,7 @@ public final class LoginMessageHandler extends MessageHandler<LoginMessage> {
         Packets.sendStats(p);
         Packets.sendLoginBox(p);
 
+        session.setAllowedToDisconnect(false);
         p.setLoggedIn(true);
     }
 }

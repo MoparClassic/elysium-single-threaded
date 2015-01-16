@@ -8,7 +8,7 @@ import org.moparscape.elysium.net.codec.decoder.message.*;
  */
 public final class TradeMessageDecoders {
 
-    public final class TradeAcceptMessageDecoder extends AbstractMessageDecoder<TradeAcceptMessage> {
+    public static final class TradeAcceptMessageDecoder extends AbstractMessageDecoder<TradeAcceptMessage> {
 
         public TradeAcceptMessageDecoder() {
             super(TradeAcceptMessage.class, 211);
@@ -19,7 +19,7 @@ public final class TradeMessageDecoders {
         }
     }
 
-    public final class TradeConfirmAcceptMessageDecoder extends AbstractMessageDecoder<TradeConfirmAcceptMessage> {
+    public static final class TradeConfirmAcceptMessageDecoder extends AbstractMessageDecoder<TradeConfirmAcceptMessage> {
 
         public TradeConfirmAcceptMessageDecoder() {
             super(TradeConfirmAcceptMessage.class, 53);
@@ -30,7 +30,7 @@ public final class TradeMessageDecoders {
         }
     }
 
-    public final class TradeDeclineMessageDecoder extends AbstractMessageDecoder<TradeDeclineMessage> {
+    public static final class TradeDeclineMessageDecoder extends AbstractMessageDecoder<TradeDeclineMessage> {
 
         public TradeDeclineMessageDecoder() {
             super(TradeDeclineMessage.class, 216);
@@ -41,7 +41,7 @@ public final class TradeMessageDecoders {
         }
     }
 
-    public final class TradeInformationMessageDecoder extends AbstractMessageDecoder<TradeInformationMessage> {
+    public static final class TradeInformationMessageDecoder extends AbstractMessageDecoder<TradeInformationMessage> {
 
         public TradeInformationMessageDecoder() {
             super(TradeInformationMessage.class, 70);
@@ -52,7 +52,7 @@ public final class TradeMessageDecoders {
         }
     }
 
-    public final class TradeRequestMessageDecoder extends AbstractMessageDecoder<TradeRequestMessage> {
+    public static final class TradeRequestMessageDecoder extends AbstractMessageDecoder<TradeRequestMessage> {
 
         public TradeRequestMessageDecoder() {
             super(TradeRequestMessage.class, 166);

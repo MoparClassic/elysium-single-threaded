@@ -9,7 +9,7 @@ import org.moparscape.elysium.util.BufferUtil;
  */
 public final class MiscMessageDecoders {
 
-    public final class BotDetectionMessageDecoder extends AbstractMessageDecoder<BotDetectionMessage> {
+    public static final class BotDetectionMessageDecoder extends AbstractMessageDecoder<BotDetectionMessage> {
 
         public BotDetectionMessageDecoder() {
             super(BotDetectionMessage.class, 69);
@@ -20,7 +20,7 @@ public final class MiscMessageDecoders {
         }
     }
 
-    public final class CommandMessageDecoder extends AbstractMessageDecoder<CommandMessage> {
+    public static final class CommandMessageDecoder extends AbstractMessageDecoder<CommandMessage> {
 
         public CommandMessageDecoder() {
             super(CommandMessage.class, 90);
@@ -41,7 +41,7 @@ public final class MiscMessageDecoders {
         }
     }
 
-    public final class DummyMessageDecoder extends AbstractMessageDecoder<DummyMessage> {
+    public static final class DummyMessageDecoder extends AbstractMessageDecoder<DummyMessage> {
 
         public DummyMessageDecoder() {
             super(DummyMessage.class, 0);
@@ -52,7 +52,7 @@ public final class MiscMessageDecoders {
         }
     }
 
-    public final class ExceptionMessageDecoder extends AbstractMessageDecoder<ExceptionMessage> {
+    public static final class ExceptionMessageDecoder extends AbstractMessageDecoder<ExceptionMessage> {
 
         public ExceptionMessageDecoder() {
             super(ExceptionMessage.class, 156);
@@ -63,7 +63,7 @@ public final class MiscMessageDecoders {
         }
     }
 
-    public final class InvalidMessageDecoder implements MessageDecoder<InvalidMessage> {
+    public static final class InvalidMessageDecoder implements MessageDecoder<InvalidMessage> {
 
         public int getOpcode() {
             throw new IllegalStateException("This message decoder should not be activated");
@@ -81,18 +81,18 @@ public final class MiscMessageDecoders {
         }
     }
 
-    public final class PingMessageDecoder extends AbstractMessageDecoder<PingMessage> {
+    public static final class PingMessageDecoder extends AbstractMessageDecoder<PingMessage> {
 
         public PingMessageDecoder() {
             super(PingMessage.class, 5);
         }
 
         public PingMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException("Not yet implemented");
+            return new PingMessage();
         }
     }
 
-    public final class ReportMessageDecoder extends AbstractMessageDecoder<ReportMessage> {
+    public static final class ReportMessageDecoder extends AbstractMessageDecoder<ReportMessage> {
 
         public ReportMessageDecoder() {
             super(ReportMessage.class, 7);
@@ -103,7 +103,7 @@ public final class MiscMessageDecoders {
         }
     }
 
-    public final class SleepwordMessageDecoder extends AbstractMessageDecoder<SleepwordMessage> {
+    public static final class SleepwordMessageDecoder extends AbstractMessageDecoder<SleepwordMessage> {
 
         public SleepwordMessageDecoder() {
             super(SleepwordMessage.class, 200);
@@ -114,7 +114,7 @@ public final class MiscMessageDecoders {
         }
     }
 
-    public final class TrapMessageDecoder extends AbstractMessageDecoder<TrapMessage> {
+    public static final class TrapMessageDecoder extends AbstractMessageDecoder<TrapMessage> {
 
         public TrapMessageDecoder() {
             super(TrapMessage.class, 3);

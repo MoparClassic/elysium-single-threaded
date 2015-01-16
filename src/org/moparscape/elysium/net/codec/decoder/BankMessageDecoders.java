@@ -10,7 +10,7 @@ import org.moparscape.elysium.net.codec.decoder.message.BankWithdrawMessage;
  */
 public final class BankMessageDecoders {
 
-    public final class BankCloseMessageDecoder extends AbstractMessageDecoder<BankCloseMessage> {
+    public static final class BankCloseMessageDecoder extends AbstractMessageDecoder<BankCloseMessage> {
 
         public BankCloseMessageDecoder() {
             super(BankCloseMessage.class, 48);
@@ -21,7 +21,7 @@ public final class BankMessageDecoders {
         }
     }
 
-    public final class BankDepositMessageDecoder extends AbstractMessageDecoder<BankDepositMessage> {
+    public static final class BankDepositMessageDecoder extends AbstractMessageDecoder<BankDepositMessage> {
 
         public BankDepositMessageDecoder() {
             super(BankDepositMessage.class, 198);
@@ -32,7 +32,7 @@ public final class BankMessageDecoders {
         }
     }
 
-    public final class BankWithdrawMessageDecoder extends AbstractMessageDecoder<BankWithdrawMessage> {
+    public static final class BankWithdrawMessageDecoder extends AbstractMessageDecoder<BankWithdrawMessage> {
 
         public BankWithdrawMessageDecoder() {
             super(BankWithdrawMessage.class, 183);

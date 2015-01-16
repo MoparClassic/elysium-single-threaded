@@ -10,7 +10,7 @@ import org.moparscape.elysium.net.codec.decoder.message.ShopSellMessage;
  */
 public final class ShopMessageDecoders {
 
-    public final class ShopBuyMessageDecoder extends AbstractMessageDecoder<ShopBuyMessage> {
+    public static final class ShopBuyMessageDecoder extends AbstractMessageDecoder<ShopBuyMessage> {
 
         public ShopBuyMessageDecoder() {
             super(ShopBuyMessage.class, 128);
@@ -21,7 +21,7 @@ public final class ShopMessageDecoders {
         }
     }
 
-    public final class ShopCloseMessageDecoder extends AbstractMessageDecoder<ShopCloseMessage> {
+    public static final class ShopCloseMessageDecoder extends AbstractMessageDecoder<ShopCloseMessage> {
 
         public ShopCloseMessageDecoder() {
             super(ShopCloseMessage.class, 253);
@@ -32,7 +32,7 @@ public final class ShopMessageDecoders {
         }
     }
 
-    public final class ShopSellMessageDecoder extends AbstractMessageDecoder<ShopSellMessage> {
+    public static final class ShopSellMessageDecoder extends AbstractMessageDecoder<ShopSellMessage> {
 
         public ShopSellMessageDecoder() {
             super(ShopSellMessage.class, 255);

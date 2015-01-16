@@ -8,7 +8,7 @@ import org.moparscape.elysium.net.codec.decoder.message.*;
  */
 public final class CombatMessageDecoders {
 
-    public final class AttackNpcMessageDecoder extends AbstractMessageDecoder<AttackNpcMessage> {
+    public static final class AttackNpcMessageDecoder extends AbstractMessageDecoder<AttackNpcMessage> {
 
         public AttackNpcMessageDecoder() {
             super(AttackNpcMessage.class, 73);
@@ -19,7 +19,7 @@ public final class CombatMessageDecoders {
         }
     }
 
-    public final class AttackPlayerMessageDecoder extends AbstractMessageDecoder<AttackPlayerMessage> {
+    public static final class AttackPlayerMessageDecoder extends AbstractMessageDecoder<AttackPlayerMessage> {
 
         public AttackPlayerMessageDecoder() {
             super(AttackPlayerMessage.class, 57);
@@ -30,7 +30,7 @@ public final class CombatMessageDecoders {
         }
     }
 
-    public final class AttackStyleMessageDecoder extends AbstractMessageDecoder<AttackStyleMessage> {
+    public static final class AttackStyleMessageDecoder extends AbstractMessageDecoder<AttackStyleMessage> {
 
         public AttackStyleMessageDecoder() {
             super(AttackStyleMessage.class, 42);
@@ -41,7 +41,7 @@ public final class CombatMessageDecoders {
         }
     }
 
-    public final class PrayerActivateMessageDecoder extends AbstractMessageDecoder<PrayerActivateMessage> {
+    public static final class PrayerActivateMessageDecoder extends AbstractMessageDecoder<PrayerActivateMessage> {
 
         public PrayerActivateMessageDecoder() {
             super(PrayerActivateMessage.class, 56);
@@ -52,7 +52,7 @@ public final class CombatMessageDecoders {
         }
     }
 
-    public final class PrayerDeactivateMessageDecoder extends AbstractMessageDecoder<PrayerDeactivateMessage> {
+    public static final class PrayerDeactivateMessageDecoder extends AbstractMessageDecoder<PrayerDeactivateMessage> {
 
         public PrayerDeactivateMessageDecoder() {
             super(PrayerDeactivateMessage.class, 248);

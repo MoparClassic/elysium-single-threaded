@@ -3,6 +3,7 @@ package org.moparscape.elysium.net.codec;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.moparscape.elysium.Server;
+import org.moparscape.elysium.entity.UnregistrableSession;
 import org.moparscape.elysium.net.Session;
 
 /**
@@ -19,20 +20,22 @@ public final class ElysiumConnectionHandler extends SimpleChannelInboundHandler<
         this.session = new Session(ctx.channel());
 
         Server server = Server.getInstance();
-        server.registerSession(session);
+        server.queueRegisterSession(session);
 
         System.out.println("Channel connected");
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        Session session = this.session;
-        System.out.println("Channel disconnected");
+        System.out.println("Channel inactive");
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        throw new IllegalStateException(cause);
+        cause.printStackTrace();
+
+        UnregistrableSession us = new UnregistrableSession(session, true);
+        Server.getInstance().queueUnregisterSession(us);
     }
 
     @Override

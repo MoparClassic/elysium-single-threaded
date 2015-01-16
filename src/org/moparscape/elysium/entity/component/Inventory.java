@@ -27,7 +27,7 @@ public class Inventory extends AbstractComponent {
     private static final World world = World.getInstance();
 
     private final int MAX_INVENTORY_ITEMS = 30;
-    private final List<InvItem> items = new ArrayList<InvItem>();
+    private final List<InvItem> items = new ArrayList<>();
     private final int maxItems;
     private final Player owner;
     private final int reserved = 0;
@@ -48,16 +48,14 @@ public class Inventory extends AbstractComponent {
         }
 
         if (item.getDef().isStackable()) {
-            synchronized (items) {
-                int index = items.indexOf(item);
-                if (index >= 0) {
-                    InvItem existing = items.get(index);
+            int index = items.indexOf(item);
+            if (index >= 0) {
+                InvItem existing = items.get(index);
 
-                    int newAmount = item.getAmount() + existing.getAmount();
-                    existing.setAmount(newAmount);
-                    updateInventoryItem(index, existing);
-                    return index;
-                }
+                int newAmount = item.getAmount() + existing.getAmount();
+                existing.setAmount(newAmount);
+                updateInventoryItem(index, existing);
+                return index;
             }
         } else {
             // If it isn't a stackable item, but it has an amount that is
@@ -80,36 +78,27 @@ public class Inventory extends AbstractComponent {
 
         // At this stage we know that the inventory can hold the new item,
         // so let's add it
-        synchronized (items) {
-            items.add(item);
-            sendInventory();
-            return items.size() - 1;
-        }
+        items.add(item);
+        sendInventory();
+        return items.size() - 1;
     }
 
     public final boolean canHold(InvItem item) {
-        synchronized (items) {
-            return (maxItems - items.size()) >= getRequiredSlots(item);
-        }
-
+        return (maxItems - items.size()) >= getRequiredSlots(item);
     }
 
     public final boolean contains(InvItem item) {
-        synchronized (items) {
-            return items.contains(item);
-        }
+        return items.contains(item);
     }
 
     public final int countById(int id) {
-        synchronized (items) {
-            int count = 0;
-            for (InvItem item : items) {
-                if (item.getItemId() == id) {
-                    count += item.getAmount();
-                }
+        int count = 0;
+        for (InvItem item : items) {
+            if (item.getItemId() == id) {
+                count += item.getAmount();
             }
-            return count;
         }
+        return count;
     }
 
     public void dropOnDeath(Entity killer, boolean skulled, boolean protectItem) {
@@ -129,103 +118,83 @@ public class Inventory extends AbstractComponent {
         Point victimLoc = owner.getLocation();
         Region region = Region.getRegion(victimLoc);
 
-        synchronized (items) {
-            InvItem item = null;
+        InvItem item = null;
 
-            if (keep == 0) {
-                // We aren't keeping any, so don't worry about sorting them
-                Iterator<InvItem> it = items.iterator();
-                while (it.hasNext()) {
-                    item = it.next();
+        if (keep == 0) {
+            // We aren't keeping any, so don't worry about sorting them
+            Iterator<InvItem> it = items.iterator();
+            while (it.hasNext()) {
+                item = it.next();
 
-                    region.addItem(new Item(item.getItemId(), item.getAmount(), victimLoc, pkiller));
-                    it.remove();
+                region.addItem(new Item(item.getItemId(), item.getAmount(), victimLoc, pkiller));
+                it.remove();
+            }
+        } else {
+            // Sort the list so that the most expensive are first
+            Collections.sort(items, new ItemByValueComparator());
+
+            int saved = 0;
+            Iterator<InvItem> it = items.iterator();
+            while (it.hasNext()) {
+                item = it.next();
+                if (saved++ < keep) {
+                    continue;
                 }
-            } else {
-                // Sort the list so that the most expensive are first
-                Collections.sort(items, new ItemByValueComparator());
 
-                int saved = 0;
-                Iterator<InvItem> it = items.iterator();
-                while (it.hasNext()) {
-                    item = it.next();
-                    if (saved++ < keep) {
-                        continue;
-                    }
-
-                    region.addItem(new Item(item.getItemId(), item.getAmount(), victimLoc, pkiller));
-                    it.remove();
-                }
+                region.addItem(new Item(item.getItemId(), item.getAmount(), victimLoc, pkiller));
+                it.remove();
             }
         }
     }
 
     public final InvItem get(int index) {
-        synchronized (items) {
-            return items.get(index);
-        }
+        return items.get(index);
     }
 
     public final InvItem getById(int itemId) {
-        synchronized (items) {
-            for (InvItem item : items) {
-                if (item.getItemId() == itemId) {
-                    return item;
-                }
+        for (InvItem item : items) {
+            if (item.getItemId() == itemId) {
+                return item;
             }
-            return null;
         }
+        return null;
     }
 
     public int getFreedSlots(InvItem item) {
-        synchronized (items) {
-            return item.getDef().isStackable() &&
-                    countById(item.getItemId()) > item.getAmount() ? 0 : 1;
-        }
+        return item.getDef().isStackable() &&
+                countById(item.getItemId()) > item.getAmount() ? 0 : 1;
     }
 
     public final int getFreedSlots(List<InvItem> items) {
-        synchronized (items) {
-            int count = 0;
-            for (InvItem item : items) {
-                count += getFreedSlots(item);
-            }
-            return count;
+        int count = 0;
+        for (InvItem item : items) {
+            count += getFreedSlots(item);
         }
+        return count;
     }
 
     public int getRequiredSlots(InvItem item) {
-        synchronized (items) {
-            return item.getDef().isStackable() && items.contains(item) ? 0 : 1;
-        }
+        return item.getDef().isStackable() && items.contains(item) ? 0 : 1;
     }
 
     public final int getRequiredSlots(List<InvItem> items) {
-        synchronized (items) {
-            int requiredSlots = 0;
-            for (InvItem item : items) {
-                requiredSlots += getRequiredSlots(item);
-            }
-            return requiredSlots;
+        int requiredSlots = 0;
+        for (InvItem item : items) {
+            requiredSlots += getRequiredSlots(item);
         }
+        return requiredSlots;
     }
 
     public final int indexOf(InvItem item) {
-        synchronized (items) {
-            return items.indexOf(item);
-        }
+        return items.indexOf(item);
     }
 
     public final boolean isEmpty() {
-        synchronized (items) {
-            return items.isEmpty();
-        }
+        return items.isEmpty();
     }
 
     public final boolean isFull() {
-        synchronized (items) {
-            return items.size() >= maxItems;
-        }
+        return items.size() >= maxItems;
     }
 
     public int remove(InvItem item) {
@@ -235,77 +204,68 @@ public class Inventory extends AbstractComponent {
     public int remove(int itemId, int amount) {
         InvItem target = null;
         int index = 0;
-        synchronized (items) {
-            Iterator<InvItem> it = items.iterator();
-            while (it.hasNext()) {
-                target = it.next();
 
-                if (target.getItemId() == itemId) {
-                    if (target.getDef().isStackable() && amount < target.getAmount()) {
-                        int newAmount = target.getAmount() - amount;
-                        target.setAmount(newAmount);
-                        return index;
-                    } else {
-                        it.remove();
-                        return index;
-                    }
+        Iterator<InvItem> it = items.iterator();
+        while (it.hasNext()) {
+            target = it.next();
+
+            if (target.getItemId() == itemId) {
+                if (target.getDef().isStackable() && amount < target.getAmount()) {
+                    int newAmount = target.getAmount() - amount;
+                    target.setAmount(newAmount);
+                    return index;
+                } else {
+                    it.remove();
+                    return index;
                 }
-
-                index++;
             }
+
+            index++;
         }
         return -1;
     }
 
     public InvItem remove(int index) {
-        synchronized (items) {
-            if (index >= items.size()) {
-                return null;
-            }
-
-            InvItem removed = items.remove(index);
-            sendRemoveItem(index);
-            return removed;
+        if (index >= items.size()) {
+            return null;
         }
+
+        InvItem removed = items.remove(index);
+        sendRemoveItem(index);
+        return removed;
     }
 
     public final ChannelFuture sendInventory() {
         Player p = owner;
 
-        synchronized (items) {
-            int size = items.size();
-            int packetSize = (size * 6) + 1;
+        int size = items.size();
+        int packetSize = (size * 6) + 1;
 
-            PacketBuilder pb = new PacketBuilder(packetSize);
-            pb.setId(114);
-            pb.writeByte(size);
-            for (InvItem item : items) {
-                pb.writeShort(item.getItemId());
-                if (item.getDef().isStackable()) {
-                    pb.writeInt(item.getAmount());
-                }
+        PacketBuilder pb = new PacketBuilder(packetSize);
+        pb.setId(114);
+        pb.writeByte(size);
+        for (InvItem item : items) {
+            pb.writeShort(item.getItemId());
+            if (item.getDef().isStackable()) {
+                pb.writeInt(item.getAmount());
             }
-
-            return p.getSession().write(pb.toPacket());
         }
+
+        return p.getSession().write(pb.toPacket());
     }
 
     public final ChannelFuture sendRemoveItem(int slot) {
         Player p = owner;
 
-        synchronized (items) {
-            PacketBuilder pb = new PacketBuilder(1);
-            pb.setId(191);
-            pb.writeByte(slot);
+        PacketBuilder pb = new PacketBuilder(1);
+        pb.setId(191);
+        pb.writeByte(slot);
 
-            return p.getSession().write(pb.toPacket());
-        }
+        return p.getSession().write(pb.toPacket());
     }
 
     public final int size() {
-        synchronized (items) {
-            return items.size();
-        }
+        return items.size();
     }
 
     public String toString() {
@@ -314,28 +274,24 @@ public class Inventory extends AbstractComponent {
         sb.append("Inventory contents for ");
         sb.append(creds.getUsername()).append("\n");
 
-        synchronized (items) {
-            for (InvItem item : items) {
-                sb.append("\t").append(item).append("\n");
-            }
-            sb.append("INVENTORY END");
-            return sb.toString();
+        for (InvItem item : items) {
+            sb.append("\t").append(item).append("\n");
         }
+        sb.append("INVENTORY END");
+        return sb.toString();
     }
 
     public final ChannelFuture updateInventoryItem(int slot, InvItem item) {
         Player p = owner;
 
-        synchronized (items) {
-            PacketBuilder pb = new PacketBuilder(7);
-            pb.setId(228);
-            pb.writeByte(slot);
-            pb.writeShort(item.getItemId() + (item.isWielded() ? 32768 : 0));
-            if (item.getDef().isStackable()) {
-                pb.writeInt(item.getAmount());
-            }
-
-            return p.getSession().write(pb.toPacket());
+        PacketBuilder pb = new PacketBuilder(7);
+        pb.setId(228);
+        pb.writeByte(slot);
+        pb.writeShort(item.getItemId() + (item.isWielded() ? 32768 : 0));
+        if (item.getDef().isStackable()) {
+            pb.writeInt(item.getAmount());
         }
+
+        return p.getSession().write(pb.toPacket());
     }
 }

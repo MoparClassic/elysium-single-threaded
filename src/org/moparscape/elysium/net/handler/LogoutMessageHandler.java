@@ -2,9 +2,9 @@ package org.moparscape.elysium.net.handler;
 
 import org.moparscape.elysium.Server;
 import org.moparscape.elysium.entity.Player;
+import org.moparscape.elysium.entity.UnregistrableSession;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.net.codec.decoder.message.LogoutMessage;
-import org.moparscape.elysium.world.World;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,13 +12,24 @@ import org.moparscape.elysium.world.World;
  * @author lothy
  */
 public final class LogoutMessageHandler extends MessageHandler<LogoutMessage> {
+
     @Override
     public void handle(Session session, Player player, LogoutMessage message) {
+        Server server = Server.getInstance();
+
         // TODO: Verify that permission to logout has been granted before removing them from the world
         // This ensures that they can't cheat by closing their client etc
-        player.setLoggedIn(false);
-        World.getInstance().unregisterPlayer(player);
-        Server.getInstance().unregisterSession(session);
-        session.close();
+        if (session.isAllowedToDisconnect()) {
+            UnregistrableSession us = new UnregistrableSession(session, false);
+            server.queueUnregisterSession(us);
+        } else {
+            UnregistrableSession us = new UnregistrableSession(session, true);
+            server.queueUnregisterSession(us);
+        }
+    }
+
+    @Override
+    public boolean shouldContinuePacketProcessing() {
+        return false;
     }
 }

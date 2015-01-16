@@ -9,7 +9,7 @@ import org.moparscape.elysium.net.codec.decoder.message.NpcChatMessage;
  */
 public final class NpcMessageDecoders {
 
-    public final class NpcActionMessageDecoder extends AbstractMessageDecoder<NpcActionMessage> {
+    public static final class NpcActionMessageDecoder extends AbstractMessageDecoder<NpcActionMessage> {
 
         public NpcActionMessageDecoder() {
             super(NpcActionMessage.class, 74);
@@ -20,7 +20,7 @@ public final class NpcMessageDecoders {
         }
     }
 
-    public final class NpcChatMessageDecoder extends AbstractMessageDecoder<NpcChatMessage> {
+    public static final class NpcChatMessageDecoder extends AbstractMessageDecoder<NpcChatMessage> {
 
         public NpcChatMessageDecoder() {
             super(NpcChatMessage.class, 177);

@@ -12,6 +12,6 @@ import org.moparscape.elysium.net.codec.decoder.message.PingMessage;
 public final class PingMessageHandler extends MessageHandler<PingMessage> {
     @Override
     public void handle(Session session, Player player, PingMessage message) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // Nothing needs to be done here.
     }
 }

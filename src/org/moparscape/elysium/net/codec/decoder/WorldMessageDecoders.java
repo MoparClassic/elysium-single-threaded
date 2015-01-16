@@ -11,7 +11,7 @@ import org.moparscape.elysium.net.codec.decoder.message.WallObjectSecondaryActio
  */
 public final class WorldMessageDecoders {
 
-    public final class ObjectPrimaryActionMessageDecoder extends AbstractMessageDecoder<ObjectPrimaryActionMessage> {
+    public static final class ObjectPrimaryActionMessageDecoder extends AbstractMessageDecoder<ObjectPrimaryActionMessage> {
 
         public ObjectPrimaryActionMessageDecoder() {
             super(ObjectPrimaryActionMessage.class, 51);
@@ -22,7 +22,7 @@ public final class WorldMessageDecoders {
         }
     }
 
-    public final class ObjectSecondaryActionMessageDecoder extends AbstractMessageDecoder<ObjectSecondaryActionMessage> {
+    public static final class ObjectSecondaryActionMessageDecoder extends AbstractMessageDecoder<ObjectSecondaryActionMessage> {
 
         public ObjectSecondaryActionMessageDecoder() {
             super(ObjectSecondaryActionMessage.class, 40);
@@ -33,7 +33,7 @@ public final class WorldMessageDecoders {
         }
     }
 
-    public final class WallObjectPrimaryActionMessageDecoder extends AbstractMessageDecoder<WallObjectPrimaryActionMessage> {
+    public static final class WallObjectPrimaryActionMessageDecoder extends AbstractMessageDecoder<WallObjectPrimaryActionMessage> {
 
         public WallObjectPrimaryActionMessageDecoder() {
             super(WallObjectPrimaryActionMessage.class, 126);
@@ -44,7 +44,7 @@ public final class WorldMessageDecoders {
         }
     }
 
-    public final class WallObjectSecondaryActionMessageDecoder extends AbstractMessageDecoder<WallObjectSecondaryActionMessage> {
+    public static final class WallObjectSecondaryActionMessageDecoder extends AbstractMessageDecoder<WallObjectSecondaryActionMessage> {
 
         public WallObjectSecondaryActionMessageDecoder() {
             super(WallObjectSecondaryActionMessage.class, 235);

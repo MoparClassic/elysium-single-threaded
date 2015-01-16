@@ -8,7 +8,7 @@ import org.moparscape.elysium.net.codec.decoder.message.*;
  */
 public final class ItemMessageDecoders {
 
-    public final class ItemDoorMessageDecoder extends AbstractMessageDecoder<ItemDoorMessage> {
+    public static final class ItemDoorMessageDecoder extends AbstractMessageDecoder<ItemDoorMessage> {
 
         public ItemDoorMessageDecoder() {
             super(ItemDoorMessage.class, 36);
@@ -19,7 +19,7 @@ public final class ItemMessageDecoders {
         }
     }
 
-    public final class ItemDropMessageDecoder extends AbstractMessageDecoder<ItemDropMessage> {
+    public static final class ItemDropMessageDecoder extends AbstractMessageDecoder<ItemDropMessage> {
 
         public ItemDropMessageDecoder() {
             super(ItemDropMessage.class, 147);
@@ -31,7 +31,7 @@ public final class ItemMessageDecoders {
         }
     }
 
-    public final class ItemGameObjectMessageDecoder extends AbstractMessageDecoder<ItemGameObjectMessage> {
+    public static final class ItemGameObjectMessageDecoder extends AbstractMessageDecoder<ItemGameObjectMessage> {
 
         public ItemGameObjectMessageDecoder() {
             super(ItemGameObjectMessage.class, 94);
@@ -42,7 +42,7 @@ public final class ItemMessageDecoders {
         }
     }
 
-    public final class ItemGroundItemMessageDecoder extends AbstractMessageDecoder<ItemGroundItemMessage> {
+    public static final class ItemGroundItemMessageDecoder extends AbstractMessageDecoder<ItemGroundItemMessage> {
 
         public ItemGroundItemMessageDecoder() {
             super(ItemGroundItemMessage.class, 34);
@@ -53,7 +53,7 @@ public final class ItemMessageDecoders {
         }
     }
 
-    public final class ItemItemMessageDecoder extends AbstractMessageDecoder<ItemItemMessage> {
+    public static final class ItemItemMessageDecoder extends AbstractMessageDecoder<ItemItemMessage> {
 
         public ItemItemMessageDecoder() {
             super(ItemItemMessage.class, 27);
@@ -64,7 +64,7 @@ public final class ItemMessageDecoders {
         }
     }
 
-    public final class ItemNpcMessageDecoder extends AbstractMessageDecoder<ItemNpcMessage> {
+    public static final class ItemNpcMessageDecoder extends AbstractMessageDecoder<ItemNpcMessage> {
 
         public ItemNpcMessageDecoder() {
             super(ItemNpcMessage.class, 142);
@@ -75,7 +75,7 @@ public final class ItemMessageDecoders {
         }
     }
 
-    public final class ItemPickupMessageDecoder extends AbstractMessageDecoder<ItemPickupMessage> {
+    public static final class ItemPickupMessageDecoder extends AbstractMessageDecoder<ItemPickupMessage> {
 
         public ItemPickupMessageDecoder() {
             super(ItemPickupMessage.class, 245);
@@ -89,7 +89,7 @@ public final class ItemMessageDecoders {
         }
     }
 
-    public final class ItemPlayerMessageDecoder extends AbstractMessageDecoder<ItemPlayerMessage> {
+    public static final class ItemPlayerMessageDecoder extends AbstractMessageDecoder<ItemPlayerMessage> {
 
         public ItemPlayerMessageDecoder() {
             super(ItemPlayerMessage.class, 16);
@@ -100,7 +100,7 @@ public final class ItemMessageDecoders {
         }
     }
 
-    public final class ItemUnwieldMessageDecoder extends AbstractMessageDecoder<ItemUnwieldMessage> {
+    public static final class ItemUnwieldMessageDecoder extends AbstractMessageDecoder<ItemUnwieldMessage> {
 
         public ItemUnwieldMessageDecoder() {
             super(ItemUnwieldMessage.class, 92);
@@ -112,7 +112,7 @@ public final class ItemMessageDecoders {
         }
     }
 
-    public final class ItemWieldMessageDecoder extends AbstractMessageDecoder<ItemWieldMessage> {
+    public static final class ItemWieldMessageDecoder extends AbstractMessageDecoder<ItemWieldMessage> {
 
         public ItemWieldMessageDecoder() {
             super(ItemWieldMessage.class, 181);

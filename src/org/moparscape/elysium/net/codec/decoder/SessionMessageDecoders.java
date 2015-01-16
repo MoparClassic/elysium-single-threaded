@@ -13,7 +13,7 @@ import org.moparscape.elysium.util.DataConversions;
  */
 public final class SessionMessageDecoders {
 
-    public final class LoginMessageDecoder extends AbstractMessageDecoder<LoginMessage> {
+    public static final class LoginMessageDecoder extends AbstractMessageDecoder<LoginMessage> {
 
         public LoginMessageDecoder() {
             super(LoginMessage.class, 0);
@@ -44,7 +44,7 @@ public final class SessionMessageDecoders {
         }
     }
 
-    public final class LogoutMessageDecoder extends AbstractMessageDecoder<LogoutMessage> {
+    public static final class LogoutMessageDecoder extends AbstractMessageDecoder<LogoutMessage> {
 
         public LogoutMessageDecoder() {
             super(LogoutMessage.class, 39);
@@ -55,7 +55,7 @@ public final class SessionMessageDecoders {
         }
     }
 
-    public final class LogoutRequestMessageDecoder extends AbstractMessageDecoder<LogoutRequestMessage> {
+    public static final class LogoutRequestMessageDecoder extends AbstractMessageDecoder<LogoutRequestMessage> {
 
         public LogoutRequestMessageDecoder() {
             super(LogoutRequestMessage.class, 129);
@@ -66,7 +66,7 @@ public final class SessionMessageDecoders {
         }
     }
 
-    public final class SessionRequestMessageDecoder extends AbstractMessageDecoder<SessionRequestMessage> {
+    public static final class SessionRequestMessageDecoder extends AbstractMessageDecoder<SessionRequestMessage> {
 
         public SessionRequestMessageDecoder() {
             super(SessionRequestMessage.class, 32);

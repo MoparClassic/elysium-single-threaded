@@ -7,8 +7,8 @@ import org.moparscape.elysium.net.codec.Message;
 import org.moparscape.elysium.net.handler.HandlerLookupService;
 import org.moparscape.elysium.net.handler.MessageHandler;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,7 +18,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public final class Session {
 
     private final Channel channel;
-    private final Queue<Message> messageQueue = new ConcurrentLinkedQueue<Message>();
+    private boolean allowedToDisconnect = true;
+    private List<Message> messages = new ArrayList<>();
     private Player player;
     private boolean removing = false;
 
@@ -48,6 +49,14 @@ public final class Session {
         return o == this;
     }
 
+    public boolean isAllowedToDisconnect() {
+        return allowedToDisconnect;
+    }
+
+    public void setAllowedToDisconnect(boolean allowed) {
+        this.allowedToDisconnect = allowed;
+    }
+
     public boolean isRemoving() {
         return removing;
     }
@@ -57,7 +66,10 @@ public final class Session {
     }
 
     public <T extends Message> void messageReceived(T message) {
-        messageQueue.offer(message);
+        System.out.println(message);
+        synchronized (messages) {
+            messages.add(message);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -66,28 +78,37 @@ public final class Session {
             return false;
         }
 
-        Message message;
-        int processed = 0;
+        List<Message> messagesToProcess = null;
 
-        // Process all of the messages that have been received from this player.
-        // Process the entire queue up to a maximum of 60 messages.
-        while ((message = messageQueue.poll()) != null && processed++ < 60) {
+        synchronized (messages) {
+            messagesToProcess = messages;
+
+            List<Message> replacementMessages = new ArrayList<>(messages.size());
+            messages = replacementMessages;
+        }
+
+        for (Message message : messagesToProcess) {
             MessageHandler<Message> handler = (MessageHandler<Message>) HandlerLookupService.getHandler(message.getClass());
             if (handler != null) {
                 try {
                     handler.handle(this, getPlayer(), message);
+
+                    if (!handler.shouldContinuePacketProcessing()) return true;
                 } catch (Exception e) {
                     System.out.printf("Player Index: %d - Failure during handling of %s\n",
                             getPlayer() == null ? -1 : getPlayer().getIndex(),
                             message.getClass().toString());
                     e.printStackTrace();
                 }
+            } else {
+                // TODO: Log non-existent handler.
             }
         }
+
         return true;
     }
 
     public ChannelFuture write(Object o) {
-        return channel.write(o);
+        return channel.writeAndFlush(o);
     }
 }

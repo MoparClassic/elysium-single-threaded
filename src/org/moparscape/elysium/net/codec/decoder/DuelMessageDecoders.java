@@ -8,7 +8,7 @@ import org.moparscape.elysium.net.codec.decoder.message.*;
  */
 public final class DuelMessageDecoders {
 
-    public final class DuelAcceptMessageDecoder extends AbstractMessageDecoder<DuelAcceptMessage> {
+    public static final class DuelAcceptMessageDecoder extends AbstractMessageDecoder<DuelAcceptMessage> {
 
         public DuelAcceptMessageDecoder() {
             super(DuelAcceptMessage.class, 252);
@@ -19,7 +19,7 @@ public final class DuelMessageDecoders {
         }
     }
 
-    public final class DuelConfirmAcceptMessageDecoder extends AbstractMessageDecoder<DuelConfirmAcceptMessage> {
+    public static final class DuelConfirmAcceptMessageDecoder extends AbstractMessageDecoder<DuelConfirmAcceptMessage> {
 
         public DuelConfirmAcceptMessageDecoder() {
             super(DuelConfirmAcceptMessage.class, 87);
@@ -30,7 +30,7 @@ public final class DuelMessageDecoders {
         }
     }
 
-    public final class DuelDeclineMessageDecoder extends AbstractMessageDecoder<DuelDeclineMessage> {
+    public static final class DuelDeclineMessageDecoder extends AbstractMessageDecoder<DuelDeclineMessage> {
 
         public DuelDeclineMessageDecoder() {
             super(DuelDeclineMessage.class, 35);
@@ -41,7 +41,7 @@ public final class DuelMessageDecoders {
         }
     }
 
-    public final class DuelInformationMessageDecoder extends AbstractMessageDecoder<DuelInformationMessage> {
+    public static final class DuelInformationMessageDecoder extends AbstractMessageDecoder<DuelInformationMessage> {
 
         public DuelInformationMessageDecoder() {
             super(DuelInformationMessage.class, 123);
@@ -52,7 +52,7 @@ public final class DuelMessageDecoders {
         }
     }
 
-    public final class DuelOptionsMessageDecoder extends AbstractMessageDecoder<DuelOptionsMessage> {
+    public static final class DuelOptionsMessageDecoder extends AbstractMessageDecoder<DuelOptionsMessage> {
 
         public DuelOptionsMessageDecoder() {
             super(DuelOptionsMessage.class, 225);
@@ -63,7 +63,7 @@ public final class DuelMessageDecoders {
         }
     }
 
-    public final class DuelRequestMessageDecoder extends AbstractMessageDecoder<DuelRequestMessage> {
+    public static final class DuelRequestMessageDecoder extends AbstractMessageDecoder<DuelRequestMessage> {
 
         public DuelRequestMessageDecoder() {
             super(DuelRequestMessage.class, 222);

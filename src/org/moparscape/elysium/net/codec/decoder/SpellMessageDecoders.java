@@ -8,7 +8,7 @@ import org.moparscape.elysium.net.codec.decoder.message.*;
  */
 public final class SpellMessageDecoders {
 
-    public final class SpellDoorMessageDecoder extends AbstractMessageDecoder<SpellDoorMessage> {
+    public static final class SpellDoorMessageDecoder extends AbstractMessageDecoder<SpellDoorMessage> {
 
         public SpellDoorMessageDecoder() {
             super(SpellDoorMessage.class, 67);
@@ -19,7 +19,7 @@ public final class SpellMessageDecoders {
         }
     }
 
-    public final class SpellGameObjectMessageDecoder extends AbstractMessageDecoder<SpellGameObjectMessage> {
+    public static final class SpellGameObjectMessageDecoder extends AbstractMessageDecoder<SpellGameObjectMessage> {
 
         public SpellGameObjectMessageDecoder() {
             super(SpellGameObjectMessage.class, 17);
@@ -30,7 +30,7 @@ public final class SpellMessageDecoders {
         }
     }
 
-    public final class SpellGroundItemMessageDecoder extends AbstractMessageDecoder<SpellGroundItemMessage> {
+    public static final class SpellGroundItemMessageDecoder extends AbstractMessageDecoder<SpellGroundItemMessage> {
 
         public SpellGroundItemMessageDecoder() {
             super(SpellGroundItemMessage.class, 104);
@@ -41,7 +41,7 @@ public final class SpellMessageDecoders {
         }
     }
 
-    public final class SpellGroundMessageDecoder extends AbstractMessageDecoder<SpellGroundMessage> {
+    public static final class SpellGroundMessageDecoder extends AbstractMessageDecoder<SpellGroundMessage> {
 
         public SpellGroundMessageDecoder() {
             super(SpellGroundMessage.class, 232);
@@ -52,7 +52,7 @@ public final class SpellMessageDecoders {
         }
     }
 
-    public final class SpellInvItemMessageDecoder extends AbstractMessageDecoder<SpellInvItemMessage> {
+    public static final class SpellInvItemMessageDecoder extends AbstractMessageDecoder<SpellInvItemMessage> {
 
         public SpellInvItemMessageDecoder() {
             super(SpellInvItemMessage.class, 49);
@@ -63,7 +63,7 @@ public final class SpellMessageDecoders {
         }
     }
 
-    public final class SpellNpcMessageDecoder extends AbstractMessageDecoder<SpellNpcMessage> {
+    public static final class SpellNpcMessageDecoder extends AbstractMessageDecoder<SpellNpcMessage> {
 
         public SpellNpcMessageDecoder() {
             super(SpellNpcMessage.class, 71);
@@ -74,7 +74,7 @@ public final class SpellMessageDecoders {
         }
     }
 
-    public final class SpellPlayerMessageDecoder extends AbstractMessageDecoder<SpellPlayerMessage> {
+    public static final class SpellPlayerMessageDecoder extends AbstractMessageDecoder<SpellPlayerMessage> {
 
         public SpellPlayerMessageDecoder() {
             super(SpellPlayerMessage.class, 55);
@@ -85,7 +85,7 @@ public final class SpellMessageDecoders {
         }
     }
 
-    public final class SpellSelfMessageDecoder extends AbstractMessageDecoder<SpellSelfMessage> {
+    public static final class SpellSelfMessageDecoder extends AbstractMessageDecoder<SpellSelfMessage> {
 
         public SpellSelfMessageDecoder() {
             super(SpellSelfMessage.class, 206);

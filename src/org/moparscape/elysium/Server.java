@@ -6,18 +6,20 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.moparscape.elysium.entity.EntityComparators;
+import org.moparscape.elysium.entity.Player;
+import org.moparscape.elysium.entity.UnregistrableSession;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.net.codec.ElysiumChannelInitializer;
-import org.moparscape.elysium.task.CountdownTaskExecutor;
 import org.moparscape.elysium.task.IssueUpdatePacketsTask;
-import org.moparscape.elysium.task.SessionPulseTask;
 import org.moparscape.elysium.task.timed.TimedTask;
+import org.moparscape.elysium.world.World;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.concurrent.*;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,15 +28,13 @@ import java.util.concurrent.*;
  */
 public class Server {
 
-    private static final Object INSTANCE_LOCK = new Object();
-
-    private static Server INSTANCE;
+    private static final Server INSTANCE = new Server();
 
     private final EventLoopGroup bossGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
     private final ExecutorService dataExecutorService = Executors.newSingleThreadExecutor();
-    private final ArrayBlockingQueue<Session> sessions = new ArrayBlockingQueue<>(1500);
-    private final ScheduledExecutorService taskExecutorService =
-            Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+    private final Set<Session> sessions = new HashSet<>(1500);
+    private final PriorityQueue<UnregistrableSession> sessionsToUnregister =
+            new PriorityQueue<>(new EntityComparators.HeartbeatComparator());
     /**
      * We used to use a PriorityBlockingQueue here. But upon inspecting the source code
      * I've learned that it acquires and release a lock EVERY TIME you peek/poll.
@@ -54,8 +54,8 @@ public class Server {
      */
     private long highResolutionTimestamp = System.nanoTime() / 1000000;
     private long lastPulse = 0L;
-
     private boolean running = true;
+    private Set<Session> sessionsToRegister = new HashSet<>(10);
 
     private Server() {
         int cores = Runtime.getRuntime().availableProcessors();
@@ -63,17 +63,7 @@ public class Server {
     }
 
     public static Server getInstance() {
-        Server result = INSTANCE;
-        if (result == null) {
-            synchronized (INSTANCE_LOCK) {
-                result = INSTANCE;
-                if (result == null) {
-                    INSTANCE = result = new Server();
-                }
-            }
-        }
-
-        return result;
+        return INSTANCE;
     }
 
     public static void main(String[] args) {
@@ -91,6 +81,8 @@ public class Server {
     private void gameLoop() {
         System.out.println("Game loop started");
 
+        World world = World.getInstance();
+
         ParentLoop:
         while (true) {
             try {
@@ -101,7 +93,7 @@ public class Server {
                     long stampDiff = highResolutionTimestamp - lastPulse;
                     if (stampDiff < 600) {
                         try {
-                            Thread.sleep(10); // Surrender this time slice
+                            Thread.sleep(1); // Surrender this time slice
                         } catch (InterruptedException e) {
                             System.err.println("Error occurred while sleeping between game pulses");
                         }
@@ -109,7 +101,10 @@ public class Server {
                         continue;
                     }
 
+                    registerNewSessions();
                     pulseSessions(); // This function blocks until all sessions have finished
+                    unregisterOldSessions();
+
                     processTasks(); // This function blocks until all events have been processed
                     updater.updateState(); // This function blocks until all updating has finished
                     issueUpdatePackets(); // This function blocks until all packets have been sent
@@ -149,19 +144,8 @@ public class Server {
     }
 
     private void issueUpdatePackets() throws Exception {
-        // TODO: Improve concurrency here. Currently it's sequential.
-        CountDownLatch latch = new CountDownLatch(1);
-        taskExecutorService.submit(new CountdownTaskExecutor(new IssueUpdatePacketsTask(sessions), latch));
-        latch.await();
-
-//        List<Iterable<Session>> sessionPartitions = sessions.divide(TASK_THREADS);
-//        CountDownLatch latch = new CountDownLatch(sessionPartitions.size());
-//
-//        for (Iterable<Session> s : sessionPartitions) {
-//            taskExecutorService.execute(new CountdownTaskExecutor(new IssueUpdatePacketsTask(s), latch));
-//        }
-//
-//        latch.await();
+        IssueUpdatePacketsTask task = new IssueUpdatePacketsTask(sessions);
+        task.run();
     }
 
     private ChannelFuture listen() {
@@ -184,77 +168,131 @@ public class Server {
 
     private void processTasks() throws Exception {
         long time = getHighResolutionTimestamp();
-        List<TimedTask> taskList = new ArrayList<>(taskQueue.size());
         TimedTask task = null;
 
-        synchronized (taskQueue) {
-            while ((task = taskQueue.peek()) != null && task.getExecutionTime() <= time) {
-                // This task is due to run -- remove from the priority queue
-                // and add it to the list of tasks to execute
-                task = taskQueue.poll();
-                taskList.add(task);
+        while ((task = taskQueue.peek()) != null && task.getExecutionTime() <= time) {
+            // This task is due to run -- remove from the priority queue
+            // and add it to the list of tasks to execute
+            task = taskQueue.poll();
+            try {
+                task.run();
+            } catch (Exception e) {
+                // TODO: Handle errors here somehow.
             }
-        }
 
-        // Create a countdown latch for the number of tasks to be executed,
-        // and then execute each of the tasks that were obtained from the queue.
-        CountDownLatch latch = new CountDownLatch(taskList.size());
-        for (Runnable r : taskList) {
-            taskExecutorService.execute(new CountdownTaskExecutor(r, latch));
-        }
-
-        // Wait for all priority queue tasks that have been schedule to run
-        // to complete their execution
-        latch.await();
-
-        // Any task that needs to be executed again should be re-added
-        // to the task priority queue
-        synchronized (taskQueue) {
-            for (TimedTask t : taskList) {
-                if (t.shouldRepeat()) {
-                    taskQueue.offer(t);
-                }
+            if (task.shouldRepeat()) {
+                taskQueue.offer(task);
             }
         }
     }
 
     private void pulseSessions() throws Exception {
-        // TODO: Improve concurrency here. Currently it's sequential.
-        CountDownLatch latch = new CountDownLatch(1);
-        taskExecutorService.submit(new CountdownTaskExecutor(new SessionPulseTask(sessions), latch));
-        latch.await();
-
-//        List<Iterable<Session>> sessionPartitions = sessions.divide(TASK_THREADS);
-//        CountDownLatch latch = new CountDownLatch(sessionPartitions.size());
-//
-//        for (Iterable<Session> s : sessionPartitions) {
-//            taskExecutorService.execute(new CountdownTaskExecutor(new SessionPulseTask(s), latch));
-//        }
-//
-//        // Block until session pulsing (and associated updating) has finished
-//        latch.await();
+        for (Session s : sessions) {
+            s.pulse();
+        }
     }
 
-    public void registerSession(Session session) {
-        sessions.add(session);
+    /**
+     * Requires synchronization as this method is called by netty threads.
+     *
+     * @param session
+     */
+    public void queueRegisterSession(Session session) {
+        if (session == null) return;
+
+        synchronized (sessionsToRegister) {
+            sessionsToRegister.add(session);
+        }
+    }
+
+    /**
+     * Requires synchronization as this method is called by netty threads.
+     *
+     * @param us
+     */
+    public void queueUnregisterSession(UnregistrableSession us) {
+        if (us == null) return;
+
+        Session s = us.getSession();
+        if (s.isRemoving()) return;
+
+        synchronized (sessionsToUnregister) {
+            if (s.isRemoving()) return;
+
+            s.setRemoving(true);
+            sessionsToUnregister.add(us);
+        }
+    }
+
+    /**
+     * Requires synchronization as this method accesses a field
+     * which is updated by netty threads.
+     */
+    private void registerNewSessions() {
+        Set<Session> temp = null;
+
+        synchronized (sessionsToRegister) {
+            int size = sessionsToRegister.size();
+            if (size == 0) return;
+
+            temp = sessionsToRegister;
+            sessionsToRegister = new HashSet<>(size);
+        }
+
+        for (Session s : temp) {
+            sessions.add(s);
+        }
+
+        temp.clear();
     }
 
     public void shutdown() {
         running = false;
     }
 
-    public Future<?> submitTask(Runnable r) {
-        return taskExecutorService.submit(r);
+    public void submitTimedTask(TimedTask task) {
+        taskQueue.offer(task);
     }
 
-    public void submitTimedTask(TimedTask task) {
-        synchronized (taskQueue) {
-            taskQueue.offer(task);
+    public void unregisterOldSessions() {
+        World world = World.getInstance();
+        List<Session> unregisterList = null;
+
+        synchronized (sessionsToUnregister) {
+            int size = sessionsToUnregister.size();
+            if (size == 0) return; // No work to do, release the lock quickly.
+
+            // Create the ArrayList large enough to hold everything.
+            // This ensures that there will be no extra copying due
+            // to the ArrayList needing to grow in size.
+            unregisterList = new ArrayList<>(size);
+            long time = getHighResolutionTimestamp();
+            UnregistrableSession us = null;
+
+            while ((us = sessionsToUnregister.peek()) != null &&
+                    us.getScheduledPulseTime() <= time) {
+                us = sessionsToUnregister.poll();
+
+                Session s = us.getSession();
+                unregisterList.add(s);
+            }
+        }
+
+        for (Session s : unregisterList) {
+            Player p = s.getPlayer();
+            if (p != null) {
+                world.unregisterPlayer(p);
+            }
+
+            sessions.remove(s);
+            s.close();
+            System.out.println("Session removed: " + s);
         }
     }
 
     public void unregisterSession(Session session) {
         System.out.println("Session removed: " + sessions.remove(session));
+        session.close();
     }
 
     private void updateTimestamps() {

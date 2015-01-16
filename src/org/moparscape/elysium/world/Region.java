@@ -5,11 +5,10 @@ import org.moparscape.elysium.entity.Item;
 import org.moparscape.elysium.entity.Npc;
 import org.moparscape.elysium.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,10 +26,10 @@ public final class Region {
     private static final int VERTICAL_REGIONS = (World.MAX_HEIGHT / REGION_SIZE) + 1;
 
     private static final Region[][] regions = new Region[HORIZONTAL_REGIONS][VERTICAL_REGIONS];
-    private final Queue<Item> items = new ConcurrentLinkedQueue<Item>();
-    private final Queue<Npc> npcs = new ConcurrentLinkedQueue<Npc>();
-    private final Queue<GameObject> objects = new ConcurrentLinkedQueue<GameObject>();
-    private final Queue<Player> players = new ConcurrentLinkedQueue<Player>();
+    private final List<Item> items = new ArrayList<>();
+    private final List<Npc> npcs = new ArrayList<>();
+    private final List<GameObject> objects = new ArrayList<>();
+    private final List<Player> players = new ArrayList<>();
 
     static {
         for (int x = 0; x < HORIZONTAL_REGIONS; x++) {

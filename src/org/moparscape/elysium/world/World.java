@@ -5,7 +5,8 @@ import org.moparscape.elysium.entity.EntityFactory;
 import org.moparscape.elysium.entity.Npc;
 import org.moparscape.elysium.entity.Player;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +25,7 @@ public final class World {
     public static final int MAX_WIDTH = 944;
     private static final EntityFactory ENTITY_FACTORY = new DefaultEntityFactory();
     private static final World INSTANCE;
-    private final CopyOnWriteArrayList<Npc> npcList = new CopyOnWriteArrayList<Npc>();
+    private final List<Npc> npcList = new ArrayList<>();
 
     static {
         INSTANCE = new World();
@@ -32,7 +33,7 @@ public final class World {
 
     private final TileValue outsideWorld = new TileValue();
     // TODO: Don't use CopyOnWriteArrayList for the players.
-    private final CopyOnWriteArrayList<Player> playerList = new CopyOnWriteArrayList<Player>();
+    private final List<Player> playerList = new ArrayList<>();
     private final TileValue[][] tileType = new TileValue[MAX_WIDTH][MAX_HEIGHT];
 
     private World() {
@@ -48,11 +49,11 @@ public final class World {
         return INSTANCE;
     }
 
-    public CopyOnWriteArrayList<Npc> getNpcs() {
+    public List<Npc> getNpcs() {
         return npcList;
     }
 
-    public CopyOnWriteArrayList<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return playerList;
     }
 
@@ -80,13 +81,18 @@ public final class World {
     }
 
     public boolean unregisterPlayer(Player p) {
-        if (playerList.remove(p)) {
-            Region r = Region.getRegion(p.getLocation());
+        if (p == null) return false;
+
+        p.setLoggedIn(false);
+        playerList.remove(p);
+
+        Point location = p.getLocation();
+        if (location != null) {
+            Region r = Region.getRegion(location);
             r.removePlayer(p);
-            return true;
         }
 
-        return false;
+        return true;
     }
 
     /**

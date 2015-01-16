@@ -125,8 +125,7 @@ public final class CodecLookupService {
         public ImmutableBindingBuilder() {
             // Add dummy invalid message handlers to the list.
             // These are replaced for appropriate opcodes.
-            MiscMessageDecoders decoderWrapper = new MiscMessageDecoders();
-            MiscMessageDecoders.InvalidMessageDecoder d = decoderWrapper.new InvalidMessageDecoder();
+            MiscMessageDecoders.InvalidMessageDecoder d = new MiscMessageDecoders.InvalidMessageDecoder();
             for (int i = 0; i < 255; i++) {
                 decoders.add(d);
             }

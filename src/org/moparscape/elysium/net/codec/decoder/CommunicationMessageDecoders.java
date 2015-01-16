@@ -8,7 +8,7 @@ import org.moparscape.elysium.net.codec.decoder.message.*;
  */
 public final class CommunicationMessageDecoders {
 
-    public final class FriendAddMessageDecoder extends AbstractMessageDecoder<FriendAddMessage> {
+    public static final class FriendAddMessageDecoder extends AbstractMessageDecoder<FriendAddMessage> {
 
         public FriendAddMessageDecoder() {
             super(FriendAddMessage.class, 168);
@@ -19,7 +19,7 @@ public final class CommunicationMessageDecoders {
         }
     }
 
-    public final class FriendPmMessageDecoder extends AbstractMessageDecoder<FriendPmMessage> {
+    public static final class FriendPmMessageDecoder extends AbstractMessageDecoder<FriendPmMessage> {
 
         public FriendPmMessageDecoder() {
             super(FriendPmMessage.class, 254);
@@ -30,7 +30,7 @@ public final class CommunicationMessageDecoders {
         }
     }
 
-    public final class FriendRemoveMessageDecoder extends AbstractMessageDecoder<FriendRemoveMessage> {
+    public static final class FriendRemoveMessageDecoder extends AbstractMessageDecoder<FriendRemoveMessage> {
 
         public FriendRemoveMessageDecoder() {
             super(FriendRemoveMessage.class, 52);
@@ -41,7 +41,7 @@ public final class CommunicationMessageDecoders {
         }
     }
 
-    public final class IgnoreAddMessageDecoder extends AbstractMessageDecoder<IgnoreAddMessage> {
+    public static final class IgnoreAddMessageDecoder extends AbstractMessageDecoder<IgnoreAddMessage> {
 
         public IgnoreAddMessageDecoder() {
             super(IgnoreAddMessage.class, 25);
@@ -52,7 +52,7 @@ public final class CommunicationMessageDecoders {
         }
     }
 
-    public final class IgnoreRemoveMessageDecoder extends AbstractMessageDecoder<IgnoreRemoveMessage> {
+    public static final class IgnoreRemoveMessageDecoder extends AbstractMessageDecoder<IgnoreRemoveMessage> {
 
         public IgnoreRemoveMessageDecoder() {
             super(IgnoreRemoveMessage.class, 108);
@@ -63,7 +63,7 @@ public final class CommunicationMessageDecoders {
         }
     }
 
-    public final class PrivacySettingMessageDecoder extends AbstractMessageDecoder<PrivacySettingMessage> {
+    public static final class PrivacySettingMessageDecoder extends AbstractMessageDecoder<PrivacySettingMessage> {
 
         public PrivacySettingMessageDecoder() {
             super(PrivacySettingMessage.class, 176);
@@ -74,7 +74,7 @@ public final class CommunicationMessageDecoders {
         }
     }
 
-    public final class PublicChatMessageDecoder extends AbstractMessageDecoder<PublicChatMessage> {
+    public static final class PublicChatMessageDecoder extends AbstractMessageDecoder<PublicChatMessage> {
 
         public PublicChatMessageDecoder() {
             super(PublicChatMessage.class, 145);

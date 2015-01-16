@@ -8,7 +8,7 @@ import org.moparscape.elysium.net.codec.decoder.message.*;
  */
 public final class PlayerMiscMessageDecoders {
 
-    public final class AppearanceUpdateMessageDecoder extends AbstractMessageDecoder<AppearanceUpdateMessage> {
+    public static final class AppearanceUpdateMessageDecoder extends AbstractMessageDecoder<AppearanceUpdateMessage> {
 
         public AppearanceUpdateMessageDecoder() {
             super(AppearanceUpdateMessage.class, 218);
@@ -19,7 +19,7 @@ public final class PlayerMiscMessageDecoders {
         }
     }
 
-    public final class AppearancesMessageDecoder extends AbstractMessageDecoder<AppearancesMessage> {
+    public static final class AppearancesMessageDecoder extends AbstractMessageDecoder<AppearancesMessage> {
 
         public AppearancesMessageDecoder() {
             super(AppearancesMessage.class, 83);
@@ -39,7 +39,7 @@ public final class PlayerMiscMessageDecoders {
         }
     }
 
-    public final class GameSettingMessageDecoder extends AbstractMessageDecoder<GameSettingMessage> {
+    public static final class GameSettingMessageDecoder extends AbstractMessageDecoder<GameSettingMessage> {
 
         public GameSettingMessageDecoder() {
             super(GameSettingMessage.class, 157);
@@ -50,7 +50,7 @@ public final class PlayerMiscMessageDecoders {
         }
     }
 
-    public final class InventoryActionMessageDecoder extends AbstractMessageDecoder<InventoryActionMessage> {
+    public static final class InventoryActionMessageDecoder extends AbstractMessageDecoder<InventoryActionMessage> {
 
         public InventoryActionMessageDecoder() {
             super(InventoryActionMessage.class, 89);
@@ -61,7 +61,7 @@ public final class PlayerMiscMessageDecoders {
         }
     }
 
-    public final class MenuActionMessageDecoder extends AbstractMessageDecoder<MenuActionMessage> {
+    public static final class MenuActionMessageDecoder extends AbstractMessageDecoder<MenuActionMessage> {
 
         public MenuActionMessageDecoder() {
             super(MenuActionMessage.class, 154);

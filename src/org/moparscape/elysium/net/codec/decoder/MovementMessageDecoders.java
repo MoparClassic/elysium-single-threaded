@@ -10,7 +10,7 @@ import org.moparscape.elysium.net.codec.decoder.message.WalkTargetMessage;
  */
 public final class MovementMessageDecoders {
 
-    public final class FollowRequestMessageDecoder extends AbstractMessageDecoder<FollowRequestMessage> {
+    public static final class FollowRequestMessageDecoder extends AbstractMessageDecoder<FollowRequestMessage> {
 
         public FollowRequestMessageDecoder() {
             super(FollowRequestMessage.class, 68);
@@ -21,7 +21,7 @@ public final class MovementMessageDecoders {
         }
     }
 
-    public final class WalkMessageDecoder extends AbstractMessageDecoder<WalkMessage> {
+    public static final class WalkMessageDecoder extends AbstractMessageDecoder<WalkMessage> {
 
         public WalkMessageDecoder() {
             super(WalkMessage.class, 132);
@@ -42,7 +42,7 @@ public final class MovementMessageDecoders {
         }
     }
 
-    public final class WalkTargetMessageDecoder extends AbstractMessageDecoder<WalkTargetMessage> {
+    public static final class WalkTargetMessageDecoder extends AbstractMessageDecoder<WalkTargetMessage> {
 
         public WalkTargetMessageDecoder() {
             super(WalkTargetMessage.class, 246);
