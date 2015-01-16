@@ -25,7 +25,6 @@ public class Derp {
         //System.out.printf("%d %s\n", progress, s);
         long end = time();
         System.out.println(end - start);
-        if (true) return;
 
         EntityComparators.HeartbeatComparator a = new EntityComparators.HeartbeatComparator();
         PriorityQueue<Heartbeat> pq = new PriorityQueue<>(new EntityComparators.HeartbeatComparator());
@@ -68,13 +67,13 @@ public class Derp {
         }
 
         @Override
-        public void pulse() {
-
+        public boolean isCancelled() {
+            return false;
         }
 
         @Override
-        public boolean isCancelled() {
-            return false;
+        public void pulse() {
+
         }
     }
 
