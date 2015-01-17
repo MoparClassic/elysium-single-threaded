@@ -62,7 +62,9 @@ public final class PlayerMiscMessageDecoders {
         }
 
         public GameSettingMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException("Not yet implemented");
+            int settingIndex = buffer.readByte();
+            boolean flag = buffer.readByte() == 1;
+            return new GameSettingMessage(settingIndex, flag);
         }
     }
 
@@ -73,7 +75,8 @@ public final class PlayerMiscMessageDecoders {
         }
 
         public InventoryActionMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int itemIndex = buffer.readShort();
+            return new InventoryActionMessage(itemIndex);
         }
     }
 
@@ -84,7 +87,8 @@ public final class PlayerMiscMessageDecoders {
         }
 
         public MenuActionMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int option = buffer.readByte();
+            return new MenuActionMessage(option);
         }
     }
 }

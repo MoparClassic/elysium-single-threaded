@@ -1,10 +1,10 @@
 package org.moparscape.elysium;
 
-import org.moparscape.elysium.entity.EntityComparators;
 import org.moparscape.elysium.entity.Heartbeat;
+import org.moparscape.elysium.entity.Indexable;
+import org.moparscape.elysium.util.EntityList;
 
-import java.util.PriorityQueue;
-import java.util.UUID;
+import java.util.ArrayList;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,29 +14,69 @@ import java.util.UUID;
 public class Derp {
 
     public static void main(String[] args) throws Exception {
-        long start = time();
-        String s = null;
-        int progress = 0;
-        for (int i = 0; i < 1000; i++) {
-            UUID id = UUID.randomUUID();
-            System.out.println(id);
-            progress++;
+        final int TEST_ITERATIONS = 20;
+        ArrayList<Long> timeTaken = new ArrayList<>(TEST_ITERATIONS);
+
+        for (int j = 0; j < 50; j++) {
+            long start = time();
+            EntityList<TestIndexable> elist = new EntityList<>(5000000);
+
+            for (int i = 0; i < 5000000; i++) {
+                elist.add(new TestIndexable());
+            }
+
+            Object cur = null;
+            for (int i = 400000; i < 500000; i++) {
+                elist.remove(i);
+            }
+
+            for (int i = 0; i < 75000; i++) {
+                elist.add(new TestIndexable());
+            }
+
+            //for (int i = 0; i < 10; i++) elist.add(new TestIndexable());
+
+            for (TestIndexable ti : elist) {
+                cur = ti; //System.out.println(ti);
+            }
+            System.out.println(cur);
+            long end = time();
+            long elapsed = end - start;
+            timeTaken.add(elapsed);
         }
-        //System.out.printf("%d %s\n", progress, s);
-        long end = time();
-        System.out.println(end - start);
 
-        EntityComparators.HeartbeatComparator a = new EntityComparators.HeartbeatComparator();
-        PriorityQueue<Heartbeat> pq = new PriorityQueue<>(new EntityComparators.HeartbeatComparator());
+        System.out.println();
+        long average = 0;
+        for (Long l : timeTaken) {
+            average += l;
+        }
+        average /= TEST_ITERATIONS;
+        System.out.printf("Average = %d\n", average);
 
-        pq.add(new HeartbeatImpl(1));
-        pq.add(new HeartbeatImpl(1000));
-        pq.add(new HeartbeatImpl(20));
-        pq.add(new HeartbeatImpl(15));
-        pq.add(new HeartbeatImpl(10));
-        pq.add(new HeartbeatImpl(0));
+//        long start = time();
+//        String s = null;
+//        int progress = 0;
+//        for (int i = 0; i < 1000; i++) {
+//            UUID id = UUID.randomUUID();
+//            System.out.println(id);
+//            progress++;
+//        }
+//        //System.out.printf("%d %s\n", progress, s);
+//        long end = time();
+//        System.out.println(end - start);
 
-        while (pq.peek() != null) System.out.println(pq.poll().getScheduledPulseTime());
+
+//        EntityComparators.HeartbeatComparator a = new EntityComparators.HeartbeatComparator();
+//        PriorityQueue<Heartbeat> pq = new PriorityQueue<>(new EntityComparators.HeartbeatComparator());
+//
+//        pq.add(new HeartbeatImpl(1));
+//        pq.add(new HeartbeatImpl(1000));
+//        pq.add(new HeartbeatImpl(20));
+//        pq.add(new HeartbeatImpl(15));
+//        pq.add(new HeartbeatImpl(10));
+//        pq.add(new HeartbeatImpl(0));
+//
+//        while (pq.peek() != null) System.out.println(pq.poll().getScheduledPulseTime());
     }
 
     public static void printSomething(Something s) {
@@ -100,6 +140,23 @@ public class Derp {
             if (!(o instanceof Something)) return false;
 
             return ((Something) o).index == this.index;
+        }
+    }
+
+    private static class TestIndexable implements Indexable {
+
+        private int index;
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+
+        public String toString() {
+            return String.valueOf(index);
         }
     }
 }

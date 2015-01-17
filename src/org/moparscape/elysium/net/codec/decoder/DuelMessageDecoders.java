@@ -3,6 +3,9 @@ package org.moparscape.elysium.net.codec.decoder;
 import io.netty.buffer.ByteBuf;
 import org.moparscape.elysium.net.codec.decoder.message.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by daniel on 14/01/2015.
  */
@@ -15,7 +18,7 @@ public final class DuelMessageDecoders {
         }
 
         public DuelAcceptMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            return new DuelAcceptMessage();
         }
     }
 
@@ -26,7 +29,7 @@ public final class DuelMessageDecoders {
         }
 
         public DuelConfirmAcceptMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            return new DuelConfirmAcceptMessage();
         }
     }
 
@@ -37,7 +40,7 @@ public final class DuelMessageDecoders {
         }
 
         public DuelDeclineMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            return new DuelDeclineMessage();
         }
     }
 
@@ -48,7 +51,18 @@ public final class DuelMessageDecoders {
         }
 
         public DuelInformationMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int itemCount = buffer.readByte();
+
+            List<DuelInformationMessage.DuelItem> items = new ArrayList<>(itemCount);
+            for (int i = 0; i < itemCount; i++) {
+                int itemId = buffer.readShort();
+                int amount = buffer.readInt();
+
+                DuelInformationMessage.DuelItem item = new DuelInformationMessage.DuelItem(itemId, amount);
+                items.add(item);
+            }
+
+            return new DuelInformationMessage(itemCount, items);
         }
     }
 
@@ -59,7 +73,12 @@ public final class DuelMessageDecoders {
         }
 
         public DuelOptionsMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            boolean noRetreating = buffer.readByte() == 1;
+            boolean noMagic = buffer.readByte() == 1;
+            boolean noPrayer = buffer.readByte() == 1;
+            boolean noWeapons = buffer.readByte() == 1;
+
+            return new DuelOptionsMessage(noRetreating, noMagic, noPrayer, noWeapons);
         }
     }
 
@@ -70,7 +89,8 @@ public final class DuelMessageDecoders {
         }
 
         public DuelRequestMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int playerIndex = buffer.readShort();
+            return new DuelRequestMessage(playerIndex);
         }
     }
 }

@@ -18,7 +18,9 @@ public final class WorldMessageDecoders {
         }
 
         public ObjectPrimaryActionMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionX = buffer.readShort();
+            int actionY = buffer.readShort();
+            return new ObjectPrimaryActionMessage(actionX, actionY);
         }
     }
 
@@ -29,7 +31,9 @@ public final class WorldMessageDecoders {
         }
 
         public ObjectSecondaryActionMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionX = buffer.readShort();
+            int actionY = buffer.readShort();
+            return new ObjectSecondaryActionMessage(actionX, actionY);
         }
     }
 
@@ -40,7 +44,10 @@ public final class WorldMessageDecoders {
         }
 
         public WallObjectPrimaryActionMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionX = buffer.readShort();
+            int actionY = buffer.readShort();
+            int actionType = buffer.readByte();
+            return new WallObjectPrimaryActionMessage(actionX, actionY, actionType);
         }
     }
 
@@ -51,7 +58,10 @@ public final class WorldMessageDecoders {
         }
 
         public WallObjectSecondaryActionMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionX = buffer.readShort();
+            int actionY = buffer.readShort();
+            int actionType = buffer.readByte();
+            return new WallObjectSecondaryActionMessage(actionX, actionY, actionType);
         }
     }
 }

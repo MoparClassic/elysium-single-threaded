@@ -8,4 +8,14 @@ import org.moparscape.elysium.net.codec.AbstractMessage;
  * @author lothy
  */
 public final class PrayerActivateMessage extends AbstractMessage {
+
+    private final int prayerIndex;
+
+    public PrayerActivateMessage(int prayerIndex) {
+        this.prayerIndex = prayerIndex;
+    }
+
+    public int getPrayerIndex() {
+        return prayerIndex;
+    }
 }

@@ -16,7 +16,8 @@ public final class NpcMessageDecoders {
         }
 
         public NpcActionMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int npcIndex = buffer.readShort();
+            return new NpcActionMessage(npcIndex);
         }
     }
 
@@ -27,7 +28,8 @@ public final class NpcMessageDecoders {
         }
 
         public NpcChatMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int npcIndex = buffer.readShort();
+            return new NpcChatMessage(npcIndex);
         }
     }
 }

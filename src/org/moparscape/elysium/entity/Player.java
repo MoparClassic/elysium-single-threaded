@@ -18,6 +18,7 @@ public final class Player extends Entity {
     private final Credentials credentials = new Credentials();
     private final Inventory inventory = new Inventory(this);
     private final Session session;
+    private final Settings settings = new Settings();
     private final Skills skills = new Skills();
     private final Sprite sprite = new Sprite(this);
     private final Movement movement = new Movement(this, sprite);
@@ -66,6 +67,10 @@ public final class Player extends Entity {
 
     public Session getSession() {
         return session;
+    }
+
+    public Settings getSettings() {
+        return settings;
     }
 
     public Skills getSkills() {

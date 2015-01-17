@@ -8,4 +8,14 @@ import org.moparscape.elysium.net.codec.AbstractMessage;
  * @author lothy
  */
 public final class AttackPlayerMessage extends AbstractMessage {
+
+    private final int playerIndex;
+
+    public AttackPlayerMessage(int playerIndex) {
+        this.playerIndex = playerIndex;
+    }
+
+    public int getPlayerIndex() {
+        return playerIndex;
+    }
 }

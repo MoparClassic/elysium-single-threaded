@@ -16,7 +16,7 @@ public final class MiscMessageDecoders {
         }
 
         public BotDetectionMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException("Not yet implemented");
+            throw new UnsupportedOperationException("No packet with opcode 69 in client");
         }
     }
 
@@ -41,17 +41,6 @@ public final class MiscMessageDecoders {
         }
     }
 
-    public static final class DummyMessageDecoder extends AbstractMessageDecoder<DummyMessage> {
-
-        public DummyMessageDecoder() {
-            super(DummyMessage.class, 0);
-        }
-
-        public DummyMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException("Not yet implemented");
-        }
-    }
-
     public static final class ExceptionMessageDecoder extends AbstractMessageDecoder<ExceptionMessage> {
 
         public ExceptionMessageDecoder() {
@@ -59,7 +48,10 @@ public final class MiscMessageDecoders {
         }
 
         public ExceptionMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            byte[] exceptionBytes = new byte[length];
+            buffer.readBytes(exceptionBytes);
+
+            return new ExceptionMessage(exceptionBytes);
         }
     }
 
@@ -74,10 +66,10 @@ public final class MiscMessageDecoders {
         }
 
         public InvalidMessage decode(ByteBuf buffer, int length) {
-            byte[] data = new byte[length];
-            buffer.readBytes(data, 0, length);
+            byte[] payload = new byte[length];
+            buffer.readBytes(payload, 0, length);
 
-            return new InvalidMessage();
+            return new InvalidMessage(payload);
         }
     }
 
@@ -99,7 +91,9 @@ public final class MiscMessageDecoders {
         }
 
         public ReportMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            long reportedHash = buffer.readLong();
+            byte reasonCode = buffer.readByte();
+            return new ReportMessage(reportedHash, reasonCode);
         }
     }
 
@@ -110,7 +104,7 @@ public final class MiscMessageDecoders {
         }
 
         public SleepwordMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("No packet with opcode 200 in client");
         }
     }
 
@@ -121,7 +115,7 @@ public final class MiscMessageDecoders {
         }
 
         public TrapMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException("Not yet implemented");
+            throw new UnsupportedOperationException("No packet with opcode 3 in client");
         }
     }
 }

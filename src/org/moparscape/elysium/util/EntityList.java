@@ -2,14 +2,14 @@ package org.moparscape.elysium.util;
 
 import org.moparscape.elysium.entity.Indexable;
 
-import java.util.AbstractList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
 /**
  * Created by daniel on 17/01/2015.
  */
-public final class EntityList<E extends Indexable> extends AbstractList<E> {
+public final class EntityList<E extends Indexable> implements Iterable<E> {
 
     private final PriorityQueue<Integer> availableIndicies;
     private final Object[] entities;
@@ -45,6 +45,10 @@ public final class EntityList<E extends Indexable> extends AbstractList<E> {
         return (E) entities[index];
     }
 
+    public Iterator<E> iterator() {
+        return new Itr();
+    }
+
     public E remove(int index) {
         Object value = entities[index];
         entities[index] = null;
@@ -53,10 +57,6 @@ public final class EntityList<E extends Indexable> extends AbstractList<E> {
         modCount++;
 
         return (E) value;
-    }
-
-    public Iterator<E> iterator() {
-        return new Itr();
     }
 
     public void remove(E e) {
@@ -74,6 +74,7 @@ public final class EntityList<E extends Indexable> extends AbstractList<E> {
     private class Itr<E extends Indexable> implements Iterator<E> {
 
         private final int creationModCount;
+        private final int highestIndexExclusive = highestIndexInUse + 1;
         private int curIndex = 0;
         private Object value;
 
@@ -81,18 +82,22 @@ public final class EntityList<E extends Indexable> extends AbstractList<E> {
             this.creationModCount = modCount;
         }
 
+        private void checkConcurrentModification() {
+            if (creationModCount != modCount) throw new ConcurrentModificationException();
+        }
+
         @Override
         public boolean hasNext() {
-            do {
+            while (curIndex != highestIndexExclusive) {
                 value = entities[curIndex++];
                 if (value != null) return true;
-            } while (curIndex < highestIndexInUse);
+            }
 
             return false;
         }
 
         public E next() {
-            return null;
+            return (E) value;
         }
 
         public void remove() {

@@ -15,7 +15,11 @@ public final class ItemMessageDecoders {
         }
 
         public ItemDoorMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionX = buffer.readShort();
+            int actionY = buffer.readShort();
+            int direction = buffer.readByte();
+            int itemId = buffer.readShort();
+            return new ItemDoorMessage(actionX, actionY, direction, itemId);
         }
     }
 
@@ -38,7 +42,10 @@ public final class ItemMessageDecoders {
         }
 
         public ItemGameObjectMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionX = buffer.readShort();
+            int actionY = buffer.readShort();
+            int itemId = buffer.readShort();
+            return new ItemGameObjectMessage(actionX, actionY, itemId);
         }
     }
 
@@ -49,7 +56,11 @@ public final class ItemMessageDecoders {
         }
 
         public ItemGroundItemMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionX = buffer.readShort();
+            int actionY = buffer.readShort();
+            int itemId = buffer.readShort();
+            int inventoryIndex = buffer.readShort();
+            return new ItemGroundItemMessage(actionX, actionY, itemId, inventoryIndex);
         }
     }
 
@@ -60,7 +71,9 @@ public final class ItemMessageDecoders {
         }
 
         public ItemItemMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int itemOneInventoryIndex = buffer.readShort();
+            int itemTwoInventoryIndex = buffer.readShort();
+            return new ItemItemMessage(itemOneInventoryIndex, itemTwoInventoryIndex);
         }
     }
 
@@ -71,7 +84,9 @@ public final class ItemMessageDecoders {
         }
 
         public ItemNpcMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int npcIndex = buffer.readShort();
+            int inventoryIndex = buffer.readShort();
+            return new ItemNpcMessage(npcIndex, inventoryIndex);
         }
     }
 
@@ -85,7 +100,8 @@ public final class ItemMessageDecoders {
             int x = buffer.readShort();
             int y = buffer.readShort();
             int itemId = buffer.readShort();
-            return new ItemPickupMessage(itemId, x, y);
+            int unknown = buffer.readShort();
+            return new ItemPickupMessage(itemId, x, y, unknown);
         }
     }
 
@@ -96,7 +112,9 @@ public final class ItemMessageDecoders {
         }
 
         public ItemPlayerMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int targetPlayerIndex = buffer.readShort();
+            int inventoryIndex = buffer.readShort();
+            return new ItemPlayerMessage(targetPlayerIndex, inventoryIndex);
         }
     }
 

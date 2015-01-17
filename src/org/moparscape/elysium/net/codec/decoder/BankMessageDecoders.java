@@ -17,7 +17,7 @@ public final class BankMessageDecoders {
         }
 
         public BankCloseMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            return new BankCloseMessage();
         }
     }
 
@@ -28,7 +28,9 @@ public final class BankMessageDecoders {
         }
 
         public BankDepositMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int itemId = buffer.readShort();
+            int amount = buffer.readInt();
+            return new BankDepositMessage(itemId, amount);
         }
     }
 
@@ -39,7 +41,9 @@ public final class BankMessageDecoders {
         }
 
         public BankWithdrawMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int itemId = buffer.readShort();
+            int amount = buffer.readInt();
+            return new BankWithdrawMessage(itemId, amount);
         }
     }
 }

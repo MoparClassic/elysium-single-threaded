@@ -15,7 +15,8 @@ public final class CombatMessageDecoders {
         }
 
         public AttackNpcMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException("Not yet implemented");
+            int npcIndex = buffer.readShort();
+            return new AttackNpcMessage(npcIndex);
         }
     }
 
@@ -26,7 +27,8 @@ public final class CombatMessageDecoders {
         }
 
         public AttackPlayerMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException("Not yet implemented");
+            int playerIndex = buffer.readShort();
+            return new AttackPlayerMessage(playerIndex);
         }
     }
 
@@ -37,7 +39,8 @@ public final class CombatMessageDecoders {
         }
 
         public AttackStyleMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int attackStyle = buffer.readByte();
+            return new AttackStyleMessage(attackStyle);
         }
     }
 
@@ -48,7 +51,8 @@ public final class CombatMessageDecoders {
         }
 
         public PrayerActivateMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int prayerIndex = buffer.readByte();
+            return new PrayerActivateMessage(prayerIndex);
         }
     }
 
@@ -59,7 +63,8 @@ public final class CombatMessageDecoders {
         }
 
         public PrayerDeactivateMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int prayerIndex = buffer.readByte();
+            return new PrayerDeactivateMessage(prayerIndex);
         }
     }
 }

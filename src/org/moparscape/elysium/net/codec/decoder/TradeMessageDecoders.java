@@ -3,6 +3,9 @@ package org.moparscape.elysium.net.codec.decoder;
 import io.netty.buffer.ByteBuf;
 import org.moparscape.elysium.net.codec.decoder.message.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by daniel on 14/01/2015.
  */
@@ -15,7 +18,7 @@ public final class TradeMessageDecoders {
         }
 
         public TradeAcceptMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            return new TradeAcceptMessage();
         }
     }
 
@@ -26,7 +29,7 @@ public final class TradeMessageDecoders {
         }
 
         public TradeConfirmAcceptMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            return new TradeConfirmAcceptMessage();
         }
     }
 
@@ -37,7 +40,7 @@ public final class TradeMessageDecoders {
         }
 
         public TradeDeclineMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            return new TradeDeclineMessage();
         }
     }
 
@@ -48,7 +51,18 @@ public final class TradeMessageDecoders {
         }
 
         public TradeInformationMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int itemCount = buffer.readByte();
+
+            List<TradeInformationMessage.TradeItem> items = new ArrayList<>(itemCount);
+            for (int i = 0; i < itemCount; i++) {
+                int itemId = buffer.readShort();
+                int amount = buffer.readInt();
+
+                TradeInformationMessage.TradeItem item = new TradeInformationMessage.TradeItem(itemId, amount);
+                items.add(item);
+            }
+
+            return new TradeInformationMessage(itemCount, items);
         }
     }
 
@@ -59,7 +73,8 @@ public final class TradeMessageDecoders {
         }
 
         public TradeRequestMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int playerIndex = buffer.readShort();
+            return new TradeRequestMessage(playerIndex);
         }
     }
 }

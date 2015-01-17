@@ -4,10 +4,9 @@ import org.moparscape.elysium.entity.ChatMessage;
 import org.moparscape.elysium.entity.Npc;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.component.UpdateProxy;
+import org.moparscape.elysium.util.EntityList;
 import org.moparscape.elysium.world.Region;
 import org.moparscape.elysium.world.World;
-
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,9 +15,9 @@ import java.util.List;
  */
 public final class GameStateUpdater {
 
-    private final List<Npc> npcList = World.getInstance().getNpcs();
+    private final EntityList<Npc> npcList = World.getInstance().getNpcs();
 
-    private final List<Player> playerList = World.getInstance().getPlayers();
+    private final EntityList<Player> playerList = World.getInstance().getPlayers();
 
     public void updateCollections() throws Exception {
         // TODO: Unregister any players that have logged out

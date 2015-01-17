@@ -15,7 +15,8 @@ public final class CommunicationMessageDecoders {
         }
 
         public FriendAddMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            long friendHash = buffer.readLong();
+            return new FriendAddMessage(friendHash);
         }
     }
 
@@ -26,7 +27,9 @@ public final class CommunicationMessageDecoders {
         }
 
         public FriendPmMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            long friendHash = buffer.readLong();
+            byte[] messageBytes = new byte[length - 8];
+            return new FriendPmMessage(friendHash, messageBytes);
         }
     }
 
@@ -37,7 +40,8 @@ public final class CommunicationMessageDecoders {
         }
 
         public FriendRemoveMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            long removedFriendHash = buffer.readLong();
+            return new FriendRemoveMessage(removedFriendHash);
         }
     }
 
@@ -48,7 +52,8 @@ public final class CommunicationMessageDecoders {
         }
 
         public IgnoreAddMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            long ignoreHash = buffer.readLong();
+            return new IgnoreAddMessage(ignoreHash);
         }
     }
 
@@ -59,7 +64,8 @@ public final class CommunicationMessageDecoders {
         }
 
         public IgnoreRemoveMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            long removedIgnoreHash = buffer.readLong();
+            return new IgnoreRemoveMessage(removedIgnoreHash);
         }
     }
 
@@ -70,7 +76,13 @@ public final class CommunicationMessageDecoders {
         }
 
         public PrivacySettingMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException("Not yet implemented");
+            boolean blockChatMessages = buffer.readByte() == 1;
+            boolean blockPrivateMessages = buffer.readByte() == 1;
+            boolean blockTradeRequests = buffer.readByte() == 1;
+            boolean blockDuelRequests = buffer.readByte() == 1;
+
+            return new PrivacySettingMessage(blockChatMessages,
+                    blockPrivateMessages, blockTradeRequests, blockDuelRequests);
         }
     }
 

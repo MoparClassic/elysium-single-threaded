@@ -17,7 +17,9 @@ public final class ShopMessageDecoders {
         }
 
         public ShopBuyMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int itemId = buffer.readShort();
+            int buyPrice = buffer.readInt();
+            return new ShopBuyMessage(itemId, buyPrice);
         }
     }
 
@@ -28,7 +30,7 @@ public final class ShopMessageDecoders {
         }
 
         public ShopCloseMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            return new ShopCloseMessage();
         }
     }
 
@@ -39,7 +41,9 @@ public final class ShopMessageDecoders {
         }
 
         public ShopSellMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int itemId = buffer.readShort();
+            int sellPrice = buffer.readInt();
+            return new ShopSellMessage(itemId, sellPrice);
         }
     }
 }

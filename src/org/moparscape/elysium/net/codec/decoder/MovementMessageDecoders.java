@@ -17,7 +17,8 @@ public final class MovementMessageDecoders {
         }
 
         public FollowRequestMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int targetIndex = buffer.readShort();
+            return new FollowRequestMessage(targetIndex);
         }
     }
 

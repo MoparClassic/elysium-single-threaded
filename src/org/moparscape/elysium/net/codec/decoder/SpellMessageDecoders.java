@@ -15,7 +15,11 @@ public final class SpellMessageDecoders {
         }
 
         public SpellDoorMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionVariable = buffer.readShort();
+            int actionX = buffer.readShort();
+            int actionY = buffer.readShort();
+            int actionType = buffer.readByte();
+            return new SpellDoorMessage(actionVariable, actionX, actionY, actionType);
         }
     }
 
@@ -26,7 +30,10 @@ public final class SpellMessageDecoders {
         }
 
         public SpellGameObjectMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionVariable = buffer.readShort();
+            int actionX = buffer.readShort();
+            int actionY = buffer.readShort();
+            return new SpellGameObjectMessage(actionVariable, actionX, actionY);
         }
     }
 
@@ -37,7 +44,11 @@ public final class SpellMessageDecoders {
         }
 
         public SpellGroundItemMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionVariable = buffer.readShort();
+            int actionX = buffer.readShort();
+            int actionY = buffer.readShort();
+            int actionType = buffer.readShort();
+            return new SpellGroundItemMessage(actionVariable, actionX, actionY, actionType);
         }
     }
 
@@ -48,7 +59,10 @@ public final class SpellMessageDecoders {
         }
 
         public SpellGroundMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionVariable = buffer.readShort();
+            int actionX = buffer.readShort();
+            int actionY = buffer.readShort();
+            return new SpellGroundMessage(actionVariable, actionX, actionY);
         }
     }
 
@@ -59,7 +73,9 @@ public final class SpellMessageDecoders {
         }
 
         public SpellInvItemMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionVariable = buffer.readShort();
+            int actionType = buffer.readShort();
+            return new SpellInvItemMessage(actionVariable, actionType);
         }
     }
 
@@ -70,7 +86,9 @@ public final class SpellMessageDecoders {
         }
 
         public SpellNpcMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionVariable = buffer.readShort();
+            int actionType = buffer.readShort();
+            return new SpellNpcMessage(actionVariable, actionType);
         }
     }
 
@@ -81,7 +99,9 @@ public final class SpellMessageDecoders {
         }
 
         public SpellPlayerMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionVariable = buffer.readShort();
+            int actionType = buffer.readShort();
+            return new SpellPlayerMessage(actionVariable, actionType);
         }
     }
 
@@ -92,7 +112,8 @@ public final class SpellMessageDecoders {
         }
 
         public SpellSelfMessage decode(ByteBuf buffer, int length) {
-            throw new UnsupportedOperationException();
+            int actionType = buffer.readShort();
+            return new SpellSelfMessage(actionType);
         }
     }
 }

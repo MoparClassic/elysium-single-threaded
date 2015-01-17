@@ -11,12 +11,13 @@ import org.moparscape.elysium.world.Point;
 public final class ItemPickupMessage extends AbstractMessage {
 
     private final int itemId;
-
     private final Point location;
+    private final int unknown;
 
-    public ItemPickupMessage(int itemId, int x, int y) {
+    public ItemPickupMessage(int itemId, int x, int y, int unknown) {
         this.itemId = itemId;
         this.location = new Point(x, y);
+        this.unknown = unknown;
     }
 
     public int getItemId() {
@@ -25,6 +26,10 @@ public final class ItemPickupMessage extends AbstractMessage {
 
     public Point getLocation() {
         return location;
+    }
+
+    public int getUnknown() {
+        return unknown;
     }
 
     @Override
