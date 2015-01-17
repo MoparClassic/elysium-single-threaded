@@ -7,6 +7,7 @@ import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.component.Combat;
 import org.moparscape.elysium.entity.component.Communication;
 import org.moparscape.elysium.entity.component.Skills;
+import org.moparscape.elysium.net.experimental.RawPacketBuilder;
 import org.moparscape.elysium.util.Formulae;
 import org.moparscape.elysium.world.Point;
 
@@ -163,7 +164,9 @@ public final class Packets {
 
     public static ChannelFuture sendLoginResponse(Player player, LoginResponse response) {
         ByteBuf buffer = Unpooled.buffer(1);
-        buffer.writeByte(response.getResponseCode());
+//        buffer.writeByte(response.getResponseCode());
+        RawPacketBuilder rpb = new RawPacketBuilder(buffer);
+        rpb.writeByte(response.getResponseCode());
         return player.getSession().write(buffer);
     }
 
