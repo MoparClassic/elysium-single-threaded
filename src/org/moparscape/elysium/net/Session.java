@@ -1,5 +1,6 @@
 package org.moparscape.elysium.net;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import org.moparscape.elysium.entity.Player;
@@ -19,6 +20,7 @@ public final class Session {
 
     private final Channel channel;
     private boolean allowedToDisconnect = true;
+    private ByteBuf currentBuffer;
     private List<Message> messages = new ArrayList<>();
     private Player player;
     private boolean removing = false;
@@ -27,8 +29,19 @@ public final class Session {
         this.channel = channel;
     }
 
+    private void acquirePooledByteBuf() {
+        currentBuffer = channel.alloc().buffer(16384);
+    }
+
     public ChannelFuture close() {
         return channel.close();
+    }
+
+    public ByteBuf getByteBuf() {
+        if (currentBuffer == null) {
+            acquirePooledByteBuf();
+        }
+        return currentBuffer;
     }
 
     public Player getPlayer() {
@@ -109,5 +122,12 @@ public final class Session {
 
     public ChannelFuture write(Object o) {
         return channel.writeAndFlush(o);
+    }
+
+    public void writeAndFlush() {
+        ByteBuf temp = currentBuffer;
+        acquirePooledByteBuf();
+
+        channel.writeAndFlush(currentBuffer);
     }
 }
