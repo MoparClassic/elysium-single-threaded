@@ -62,9 +62,8 @@ public final class IssueUpdatePacketsTask implements Runnable {
             Collection<GameObject> newObjects = objects.getNewEntities();
             Collection<GameObject> knownObjects = objects.getKnownEntities();
             Point loc = p.getLocation();
-            PacketBuilder pb = new PacketBuilder();
 
-            pb.setId(27);
+            PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 27);
             for (GameObject o : knownObjects) {
                 if (o.getType() != 0) {
                     continue;
@@ -90,7 +89,7 @@ public final class IssueUpdatePacketsTask implements Runnable {
                 pb.writeByte(o.getDirection());
             }
 
-            s.write(pb.toPacket());
+            pb.finalisePacket();
         }
     }
 
@@ -101,9 +100,8 @@ public final class IssueUpdatePacketsTask implements Runnable {
             Collection<Item> newItems = items.getNewEntities();
             Collection<Item> knownItems = items.getKnownEntities();
             Point loc = p.getLocation();
-            PacketBuilder pb = new PacketBuilder();
 
-            pb.setId(109);
+            PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 109);
             for (Item i : knownItems) {
                 if (items.isRemoving(i)) {
                     byte[] offsets = DataConversions.getObjectPositionOffsets(i.getLocation(), loc);
@@ -119,7 +117,7 @@ public final class IssueUpdatePacketsTask implements Runnable {
                 pb.writeByte(offsets[1]);
             }
 
-            s.write(pb.toPacket());
+            pb.finalisePacket();
         }
     }
 
@@ -132,8 +130,7 @@ public final class IssueUpdatePacketsTask implements Runnable {
         int updateSize = messageCount + hitUpdateCount;
 
         if (updateSize > 0) {
-            PacketBuilder pb = new PacketBuilder();
-            pb.setId(190);
+            PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 190);
             pb.writeShort(updateSize);
             for (ChatMessage cm : messages) {
                 pb.writeShort(cm.getSender().getIndex());
@@ -150,7 +147,7 @@ public final class IssueUpdatePacketsTask implements Runnable {
                 pb.writeByte(n.getMaxHits());
             }
 
-            s.write(pb.toPacket());
+            pb.finalisePacket();
         }
     }
 
@@ -159,9 +156,8 @@ public final class IssueUpdatePacketsTask implements Runnable {
         Collection<Npc> newNpcs = npcs.getNewEntities();
         Collection<Npc> knownNpcs = npcs.getKnownEntities();
         Point loc = p.getLocation();
-        Bitpacker pb = new Bitpacker();
 
-        pb.setId(77);
+        Bitpacker pb = new Bitpacker(s.getByteBuf(), 77);
         pb.addBits(knownNpcs.size(), 8);
         for (Npc n : knownNpcs) {
             pb.addBits(n.getIndex(), 16);
@@ -191,7 +187,7 @@ public final class IssueUpdatePacketsTask implements Runnable {
             pb.addBits(n.getId(), 10);
         }
 
-        s.write(pb.toPacket());
+        pb.finalisePacket();
     }
 
     private void updatePlayerAppearances(Session s, Player player, UpdateProxy proxy) {
@@ -202,13 +198,11 @@ public final class IssueUpdatePacketsTask implements Runnable {
         List<Projectile> projectiles = proxy.getProjectilesNeedingDisplayed();
         List<Player> playerAppearanceUpdates = proxy.getPlayerAppearanceUpdates();
 
-
         int updateSize = bubbles.size() + chatMessages.size() + playerHitUpdates.size() +
                 projectiles.size() + playerAppearanceUpdates.size();
 
         if (updateSize > 0) {
-            PacketBuilder pb = new PacketBuilder();
-            pb.setId(53);
+            PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 53);
             pb.writeShort(updateSize);
 
             for (Bubble b : bubbles) {
@@ -248,8 +242,8 @@ public final class IssueUpdatePacketsTask implements Runnable {
                 pb.writeShort(targetProxy.getAppearanceId());
                 pb.writeLong(targetProxy.getUsernameHash());
 
-                System.out.println("Sending appearance update to " + player.getCredentials().getUsername() +
-                        " for player " + targetProxy.getUsername() + " (Target AID: " + targetProxy.getAppearanceId() + ")");
+//                System.out.println("Sending appearance update to " + player.getCredentials().getUsername() +
+//                        " for player " + targetProxy.getUsername() + " (Target AID: " + targetProxy.getAppearanceId() + ")");
 
                 int[] wornItems = targetProxy.getWornItems();
                 pb.writeByte(wornItems.length);
@@ -267,7 +261,7 @@ public final class IssueUpdatePacketsTask implements Runnable {
                 pb.writeByte(0); // 3: Admin 2: Mod 1; Pmod 0: None
             }
 
-            s.write(pb.toPacket());
+            pb.finalisePacket();
         }
     }
 
@@ -276,10 +270,8 @@ public final class IssueUpdatePacketsTask implements Runnable {
         Collection<Player> newPlayers = players.getNewEntities();
         Collection<Player> knownPlayers = players.getKnownEntities();
         Point loc = player.getLocation();
-        Bitpacker pb = new Bitpacker();
 
-        // Set packet id to 145
-        pb.setId(145);
+        Bitpacker pb = new Bitpacker(s.getByteBuf(), 145);
         pb.addBits(loc.getX(), 11);
         pb.addBits(loc.getY(), 13);
         pb.addBits(proxy.getSprite(), 4);
@@ -288,17 +280,17 @@ public final class IssueUpdatePacketsTask implements Runnable {
             UpdateProxy targetProxy = p.getUpdateProxy();
             pb.addBits(p.getIndex(), 16);
             if (players.isRemoving(p)) {
-                System.out.println("Removing: " + targetProxy.getUsername() + " removed from view of " + proxy.getUsername());
+                //System.out.println("Removing: " + targetProxy.getUsername() + " removed from view of " + proxy.getUsername());
                 pb.addBits(1, 1);
                 pb.addBits(1, 1);
                 pb.addBits(12, 4);
             } else if (targetProxy.hasMoved()) {
-                System.out.println("Moving: " + targetProxy.getUsername() + " has moved for " + proxy.getUsername());
+                //System.out.println("Moving: " + targetProxy.getUsername() + " has moved for " + proxy.getUsername());
                 pb.addBits(1, 1);
                 pb.addBits(0, 1);
                 pb.addBits(targetProxy.getSprite(), 3);
             } else if (targetProxy.spriteChanged()) {
-                System.out.println("Sprite changed: " + targetProxy.getUsername() + " sprite changed in view of " + proxy.getUsername());
+                //System.out.println("Sprite changed: " + targetProxy.getUsername() + " sprite changed in view of " + proxy.getUsername());
                 pb.addBits(1, 1);
                 pb.addBits(1, 1);
                 pb.addBits(targetProxy.getSprite(), 4);
@@ -308,7 +300,7 @@ public final class IssueUpdatePacketsTask implements Runnable {
         }
         for (Player p : newPlayers) {
             UpdateProxy targetProxy = p.getUpdateProxy();
-            System.out.println("New player: " + targetProxy.getUsername() + " added to world view of " + proxy.getUsername());
+            //System.out.println("New player: " + targetProxy.getUsername() + " added to world view of " + proxy.getUsername());
             byte[] offsets = DataConversions.getMobPositionOffsets(p.getLocation(), loc);
             pb.addBits(p.getIndex(), 16);
             pb.addBits(offsets[0], 5);
@@ -317,7 +309,7 @@ public final class IssueUpdatePacketsTask implements Runnable {
             pb.addBits(0, 1);
         }
 
-        s.write(pb.toPacket());
+        pb.finalisePacket();
     }
 
     private void updateTimeouts(Session s, Player p, UpdateProxy proxy) {
@@ -331,9 +323,8 @@ public final class IssueUpdatePacketsTask implements Runnable {
             Collection<GameObject> newObjects = objects.getNewEntities();
             Collection<GameObject> knownObjects = objects.getKnownEntities();
             Point loc = p.getLocation();
-            PacketBuilder pb = new PacketBuilder();
 
-            pb.setId(95);
+            PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 95);
             for (GameObject o : knownObjects) {
                 if (o.getType() != 1) {
                     continue;
@@ -359,7 +350,7 @@ public final class IssueUpdatePacketsTask implements Runnable {
                 pb.writeByte(o.getDirection());
             }
 
-            s.write(pb.toPacket());
+            pb.finalisePacket();
         }
     }
 }

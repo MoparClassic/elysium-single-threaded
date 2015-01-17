@@ -1,11 +1,8 @@
 package org.moparscape.elysium.net.handler;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.net.codec.decoder.message.SessionRequestMessage;
-import org.moparscape.elysium.net.experimental.RawPacketBuilder;
 import org.moparscape.elysium.util.Formulae;
 
 /**
@@ -19,11 +16,7 @@ public final class SessionRequestMessageHandler extends MessageHandler<SessionRe
         System.out.printf("SessionRequest: %s %d\n", message.getClassName(), message.getUserByte());
 
         long serverKey = Formulae.generateSessionKey(message.getUserByte());
-        ByteBuf buffer = Unpooled.buffer(8);
-//        buffer.writeLong(serverKey);
-        RawPacketBuilder rpb = new RawPacketBuilder(buffer);
-        rpb.writeLong(serverKey);
-        session.write(buffer);
+        session.getByteBuf().writeLong(serverKey);
 
         return true;
     }

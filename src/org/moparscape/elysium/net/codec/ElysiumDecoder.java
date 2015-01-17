@@ -59,7 +59,7 @@ public final class ElysiumDecoder extends ByteToMessageDecoder {
             payload = Unpooled.wrappedBuffer(data);
         }
 
-        System.out.println("OPCODE: " + opcode);
+        //System.out.println("OPCODE: " + opcode);
         MessageDecoder<?> decoder = CodecLookupService.getDecoder(opcode);
         if (decoder == null) {
             System.out.println("No decoder for " + opcode);

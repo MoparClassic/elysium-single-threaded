@@ -108,6 +108,11 @@ public class Server {
                     processTasks(); // This function blocks until all events have been processed
                     updater.updateState(); // This function blocks until all updating has finished
                     issueUpdatePackets(); // This function blocks until all packets have been sent
+
+                    for (Session s : sessions) {
+                        s.writeAndFlush();
+                    }
+
                     updater.updateCollections(); // This function blocks until everything is finished
 
                     // Update the time that the last pulse took place before finishing

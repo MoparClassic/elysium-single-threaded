@@ -1,12 +1,12 @@
 package org.moparscape.elysium.entity.component;
 
-import io.netty.channel.ChannelFuture;
 import org.moparscape.elysium.entity.Entity;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Item;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.net.PacketBuilder;
 import org.moparscape.elysium.net.Packets;
+import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.util.ItemByValueComparator;
 import org.moparscape.elysium.world.Point;
 import org.moparscape.elysium.world.Region;
@@ -235,14 +235,14 @@ public class Inventory extends AbstractComponent {
         return removed;
     }
 
-    public final ChannelFuture sendInventory() {
+    public final void sendInventory() {
         Player p = owner;
+        Session s = owner.getSession();
 
         int size = items.size();
         int packetSize = (size * 6) + 1;
 
-        PacketBuilder pb = new PacketBuilder(packetSize);
-        pb.setId(114);
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 114);
         pb.writeByte(size);
         for (InvItem item : items) {
             pb.writeShort(item.getItemId());
@@ -250,18 +250,16 @@ public class Inventory extends AbstractComponent {
                 pb.writeInt(item.getAmount());
             }
         }
-
-        return p.getSession().write(pb.toPacket());
+        pb.finalisePacket();
     }
 
-    public final ChannelFuture sendRemoveItem(int slot) {
+    public final void sendRemoveItem(int slot) {
         Player p = owner;
+        Session s = owner.getSession();
 
-        PacketBuilder pb = new PacketBuilder(1);
-        pb.setId(191);
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 191);
         pb.writeByte(slot);
-
-        return p.getSession().write(pb.toPacket());
+        pb.finalisePacket();
     }
 
     public final int size() {
@@ -281,17 +279,17 @@ public class Inventory extends AbstractComponent {
         return sb.toString();
     }
 
-    public final ChannelFuture updateInventoryItem(int slot, InvItem item) {
+    public final void updateInventoryItem(int slot, InvItem item) {
         Player p = owner;
+        Session s = owner.getSession();
 
-        PacketBuilder pb = new PacketBuilder(7);
-        pb.setId(228);
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 228);
         pb.writeByte(slot);
         pb.writeShort(item.getItemId() + (item.isWielded() ? 32768 : 0));
         if (item.getDef().isStackable()) {
             pb.writeInt(item.getAmount());
         }
 
-        return p.getSession().write(pb.toPacket());
+        pb.finalisePacket();
     }
 }

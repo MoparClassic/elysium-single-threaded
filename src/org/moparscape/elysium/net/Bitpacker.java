@@ -1,7 +1,6 @@
 package org.moparscape.elysium.net;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 /**
  * Created by IntelliJ IDEA.
@@ -9,8 +8,6 @@ import io.netty.buffer.Unpooled;
  * @author lothy
  */
 public final class Bitpacker {
-
-    private static final int DEFAULT_CAPACITY = 64;
 
     /**
      * Bitmasks for <code>addBits()</code>
@@ -26,76 +23,95 @@ public final class Bitpacker {
             0xfffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff,
             -1
     };
-
+    private final int bodyWriterIndex;
+    private final ByteBuf buffer;
+    private final int headerPlaceholderIndex;
+    private final int id;
     private int bitPosition = 0;
-    private int id = -1;
-    private byte[] payload;
+    private boolean finalised = false;
 
-    public Bitpacker() {
-        this(DEFAULT_CAPACITY);
-    }
+    public Bitpacker(ByteBuf buf, int id) {
+        this.buffer = buf;
+        this.id = id;
+        this.headerPlaceholderIndex = buf.writerIndex();
 
-    public Bitpacker(int initialCapacity) {
-        this.payload = new byte[initialCapacity];
+        // Skip 3 bytes - packet header placeholder
+        this.buffer.writerIndex(this.headerPlaceholderIndex + 3);
+        this.bodyWriterIndex = buf.writerIndex();
     }
 
     public Bitpacker addBits(int value, int numBits) {
-        int bytePos = bitPosition >> 3;
+        checkFinalised();
+
+        int bytePos = bodyWriterIndex + (bitPosition >> 3);
         int bitOffset = 8 - (bitPosition & 7);
         bitPosition += numBits;
-        int curLength = (bitPosition + 7) / 8;
-        ensureCapacity(curLength);
+
         for (; numBits > bitOffset; bitOffset = 8) {
-            payload[bytePos] &= ~bitmasks[bitOffset];     // mask out the desired area
-            payload[bytePos++] |= (value >> (numBits - bitOffset)) & bitmasks[bitOffset];
+            byte curByte = buffer.getByte(bytePos);
+            curByte &= ~bitmasks[bitOffset];
+            curByte |= (value >> (numBits - bitOffset)) & bitmasks[bitOffset];
+
+            buffer.setByte(bytePos++, curByte);
 
             numBits -= bitOffset;
         }
         if (numBits == bitOffset) {
-            payload[bytePos] &= ~bitmasks[bitOffset];
-            payload[bytePos] |= value & bitmasks[bitOffset];
+            byte curByte = buffer.getByte(bytePos);
+            curByte &= ~bitmasks[bitOffset];
+            curByte |= value & bitmasks[bitOffset];
+
+            buffer.setByte(bytePos, curByte);
         } else {
-            payload[bytePos] &= ~(bitmasks[numBits] << (bitOffset - numBits));
-            payload[bytePos] |= (value & bitmasks[numBits]) << (bitOffset - numBits);
+            byte curByte = buffer.getByte(bytePos);
+            curByte &= ~(bitmasks[numBits] << (bitOffset - numBits));
+            curByte |= (value & bitmasks[numBits]) << (bitOffset - numBits);
+
+            buffer.setByte(bytePos, curByte);
         }
+
         return this;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity >= payload.length) {
-            int newCapacity = (payload.length + 1) * 2;
-            byte[] newPayload = new byte[newCapacity];
-            System.arraycopy(payload, 0, newPayload, 0, payload.length);
-
-            payload = newPayload;
-        }
+    private void checkFinalised() {
+        if (finalised) throw new IllegalStateException("Bitpacker already finalised");
     }
 
-    public Bitpacker setId(int id) {
-        this.id = id;
-        return this;
-    }
+    public void finalisePacket() {
+        checkFinalised();
 
-    public ByteBuf toPacket() {
-        int dataLen = (bitPosition + 7) / 8;
-        int packetLen = dataLen + 1;
+        final int dataLen = (bitPosition + 7) / 8;
+        final int packetLen = dataLen + 1;
+        final int currentWriteIndex = bodyWriterIndex + dataLen; //buffer.writerIndex();
+        final int lastByteIndex = currentWriteIndex - 1;
 
-        ByteBuf header = Unpooled.buffer(3);
         if (dataLen >= 160) {
-            header.writeByte(160 + (packetLen / 256));
-            header.writeByte(packetLen & 0xff);
-            header.writeByte(id);
-            return Unpooled.wrappedBuffer(header, Unpooled.wrappedBuffer(payload, 0, dataLen));
+            buffer.writerIndex(headerPlaceholderIndex);
+            buffer.writeByte(160 + (packetLen / 256));
+            buffer.writeByte(packetLen & 0xff);
+            buffer.writeByte(id);
+            buffer.writerIndex(currentWriteIndex);
         } else {
-            header.writeByte(packetLen);            // Length byte
             if (dataLen > 0) {
-                header.writeByte(payload[dataLen - 1]); // Last byte of payload
-                header.writeByte(id);
-                return Unpooled.wrappedBuffer(header, Unpooled.wrappedBuffer(payload, 0, dataLen - 1));
+                byte lastByte = buffer.getByte(lastByteIndex);
+
+                buffer.writerIndex(headerPlaceholderIndex);
+                buffer.writeByte(packetLen);
+                buffer.writeByte(lastByte);
+                buffer.writeByte(id);
+
+                // Move the writer index back to the index of the
+                // last byte, which we've now got at the start
+                // of the packet.
+                buffer.writerIndex(lastByteIndex);
             } else {
-                header.writeByte(id);                   // Opcode
-                return header;
+                buffer.writerIndex(headerPlaceholderIndex);
+                buffer.writeByte(packetLen);
+                buffer.writeByte(id);
+                // Don't reset writerIndex to currentWriteIndex.
             }
         }
+
+        finalised = true;
     }
 }

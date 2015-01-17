@@ -1,7 +1,6 @@
 package org.moparscape.elysium.net;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,82 +10,101 @@ import io.netty.buffer.Unpooled;
 public final class PacketBuilder {
 
     private final ByteBuf buffer;
+    private final int headerPlaceholderIndex;
+    private final int id;
+    private int bytesWritten = 0;
+    private boolean finalised = false;
 
-    private int id;
-
-    /**
-     * Allocates a dynamic buffer with an initial capacity of 256.
-     */
-    public PacketBuilder() {
-        this.buffer = Unpooled.buffer();
-    }
-
-    /**
-     * Allocates a dynamic buffer with the specified initial capacity.
-     *
-     * @param initialCapacity The initial capacity
-     */
-    public PacketBuilder(int initialCapacity) {
-        this.buffer = Unpooled.buffer(initialCapacity);
-    }
-
-    public PacketBuilder setId(int id) {
+    public PacketBuilder(ByteBuf buf, int id) {
+        this.buffer = buf;
         this.id = id;
-        return this;
+        this.headerPlaceholderIndex = buf.writerIndex();
+
+        // Skip 3 bytes - packet header placeholder
+        this.buffer.writerIndex(this.headerPlaceholderIndex + 3);
     }
 
-    public ByteBuf toPacket() {
-        int dataLen = buffer.readableBytes(); // Length of payload
+    private void checkFinalised() {
+        if (finalised) throw new IllegalStateException("PacketBuilder already finalised");
+    }
+
+    public PacketBuilder finalisePacket() {
+        checkFinalised();
+        int dataLen = bytesWritten; // Length of payload
         int packetLen = dataLen + 1;          // Length of opcode followed by payload
+        int currentWriteIndex = buffer.writerIndex();
+        int lastByteIndex = currentWriteIndex - 1;
 
-        //System.out.printf("dataLen=%d; packetLen=%d;\n", dataLen, packetLen);
-
-        ByteBuf header = Unpooled.buffer(3);
         if (dataLen >= 160) {
-            header.writeByte(160 + (packetLen / 256));
-            header.writeByte(packetLen & 0xff);
-            header.writeByte(id);
-            return Unpooled.wrappedBuffer(header, buffer);
+            buffer.writerIndex(headerPlaceholderIndex);
+            buffer.writeByte(160 + (packetLen / 256));
+            buffer.writeByte(packetLen & 0xff);
+            buffer.writeByte(id);
+            buffer.writerIndex(currentWriteIndex);
         } else {
-            header.writeByte(packetLen);                   // Length byte
             if (dataLen > 0) {
-                header.writeByte(buffer.getByte(dataLen - 1)); // Last byte of payload
-                header.writeByte(id);
-                return Unpooled.wrappedBuffer(header, buffer.slice(0, dataLen - 1));
+                byte lastByte = buffer.getByte(lastByteIndex);
+
+                buffer.writerIndex(headerPlaceholderIndex);
+                buffer.writeByte(packetLen);
+                buffer.writeByte(lastByte);
+                buffer.writeByte(id);
+
+                // Move the writer index back to the index of the
+                // last byte, which we've now got at the start
+                // of the packet.
+                buffer.writerIndex(lastByteIndex);
             } else {
-                header.writeByte(id);                          // Opcode
-                return header;
+                buffer.writerIndex(headerPlaceholderIndex);
+                buffer.writeByte(packetLen);
+                buffer.writeByte(id);
+                // Don't reset writerIndex to currentWriteIndex.
             }
         }
+
+        finalised = true;
+        return this;
     }
 
     public PacketBuilder writeByte(int value) {
+        checkFinalised();
         buffer.writeByte(value);
-        return this;
-    }
-
-    public PacketBuilder writeBytes(byte[] src, int startIndex, int length) {
-        buffer.writeBytes(src, startIndex, length);
+        bytesWritten++;
         return this;
     }
 
     public PacketBuilder writeBytes(byte[] src) {
+        checkFinalised();
         buffer.writeBytes(src);
+        bytesWritten += src.length;
+        return this;
+    }
+
+    public PacketBuilder writeBytes(byte[] src, int startIndex, int length) {
+        checkFinalised();
+        buffer.writeBytes(src, startIndex, length);
+        bytesWritten += length;
         return this;
     }
 
     public PacketBuilder writeInt(int value) {
+        checkFinalised();
         buffer.writeInt(value);
+        bytesWritten += 4;
         return this;
     }
 
     public PacketBuilder writeLong(long value) {
+        checkFinalised();
         buffer.writeLong(value);
+        bytesWritten += 8;
         return this;
     }
 
     public PacketBuilder writeShort(int value) {
+        checkFinalised();
         buffer.writeShort(value);
+        bytesWritten += 2;
         return this;
     }
 }

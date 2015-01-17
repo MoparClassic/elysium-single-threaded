@@ -1,6 +1,8 @@
 package org.moparscape.elysium.net;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import org.moparscape.elysium.entity.Player;
@@ -18,6 +20,8 @@ import java.util.List;
  */
 public final class Session {
 
+    private static final ByteBufAllocator ALLOCATOR = new PooledByteBufAllocator();
+
     private final Channel channel;
     private boolean allowedToDisconnect = true;
     private ByteBuf currentBuffer;
@@ -27,6 +31,8 @@ public final class Session {
 
     public Session(Channel channel) {
         this.channel = channel;
+        this.channel.config().setAllocator(ALLOCATOR);
+        acquirePooledByteBuf();
     }
 
     private void acquirePooledByteBuf() {
@@ -38,9 +44,6 @@ public final class Session {
     }
 
     public ByteBuf getByteBuf() {
-        if (currentBuffer == null) {
-            acquirePooledByteBuf();
-        }
         return currentBuffer;
     }
 
@@ -79,7 +82,7 @@ public final class Session {
     }
 
     public <T extends Message> void messageReceived(T message) {
-        System.out.printf("Message = %s\n", message);
+        //System.out.printf("Message = %s\n", message);
         synchronized (messages) {
             messages.add(message);
         }
@@ -120,14 +123,10 @@ public final class Session {
         return true;
     }
 
-    public ChannelFuture write(Object o) {
-        return channel.writeAndFlush(o);
-    }
-
     public void writeAndFlush() {
         ByteBuf temp = currentBuffer;
         acquirePooledByteBuf();
 
-        channel.writeAndFlush(currentBuffer);
+        channel.writeAndFlush(temp);
     }
 }
