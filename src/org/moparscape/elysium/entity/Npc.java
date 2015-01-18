@@ -2,31 +2,34 @@ package org.moparscape.elysium.entity;
 
 import org.moparscape.elysium.Server;
 import org.moparscape.elysium.def.NpcDef;
+import org.moparscape.elysium.entity.component.MobileSprite;
 import org.moparscape.elysium.entity.component.Movement;
 import org.moparscape.elysium.world.Point;
+import org.moparscape.elysium.world.Region;
 
 /**
  * Created by IntelliJ IDEA.
  *
  * @author lothy
  */
-public final class Npc implements Indexable, Locatable {
+public final class Npc extends MobileEntity {
 
     private static final Server server = Server.getInstance();
     private int appearanceId = 0;
     private boolean appearanceUpdateRequired = false;
     private int combatLevel = 0;
     private NpcDef def;
-    private boolean hasMoved = false;
     private int hitpoints;
     private int id;
     private int index;
     private int lastDamage = 0;
     private long lastMoved = 0L;
-    private Point location;
-    private Movement movement;
-    private int sprite = 1;
-    private boolean spriteChanged = false;
+    private MobileSprite mobSprite = new MobileSprite(this);
+    private Movement movement = new Movement(this, mobSprite);
+
+    public Npc(int id) {
+        this.id = id;
+    }
 
     public int getAttack() {
         return def.getAtt();
@@ -60,16 +63,39 @@ public final class Npc implements Indexable, Locatable {
         this.index = index;
     }
 
+    @Override
+    public String toString() {
+        return "";
+    }
+
     public int getLastDamage() {
         return lastDamage;
     }
 
+    @Override
     public Point getLocation() {
-        return location;
+        return movement.getLocation();
     }
 
+    @Override
     public void setLocation(Point location) {
-        this.location = location;
+        movement.setLocation(location);
+    }
+
+    @Override
+    public void setLocation(Point location, boolean teleported) {
+        movement.setLocation(location, teleported);
+    }
+
+    @Override
+    public void updateRegion(Region oldRegion, Region newRegion) {
+        if (oldRegion != newRegion) {
+            if (oldRegion != null) {
+                oldRegion.removeNpc(this);
+            }
+
+            newRegion.addNpc(this);
+        }
     }
 
     public int getMaxHits() {
@@ -77,7 +103,7 @@ public final class Npc implements Indexable, Locatable {
     }
 
     public int getSprite() {
-        return sprite;
+        return mobSprite.getSprite();
     }
 
     public int getStrength() {
@@ -85,7 +111,7 @@ public final class Npc implements Indexable, Locatable {
     }
 
     public boolean hasMoved() {
-        return hasMoved;
+        return movement.hasMoved();
     }
 
     @Override
@@ -98,11 +124,6 @@ public final class Npc implements Indexable, Locatable {
         return false;
     }
 
-    @Override
-    public String toString() {
-        return "";
-    }
-
     public boolean isAttackable() {
         return def.isAttackable();
     }
@@ -112,11 +133,15 @@ public final class Npc implements Indexable, Locatable {
     }
 
     public void resetMoved() {
-        this.hasMoved = false;
+        movement.resetMoved();
+    }
+
+    public void resetSpriteChanged() {
+        mobSprite.resetSpriteChanged();
     }
 
     public boolean spriteChanged() {
-        return spriteChanged;
+        return mobSprite.spriteChanged();
     }
 
     public void updatePosition() {

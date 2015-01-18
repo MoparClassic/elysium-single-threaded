@@ -10,7 +10,7 @@ import org.moparscape.elysium.world.Region;
  *
  * @author lothy
  */
-public final class Player extends Entity {
+public final class Player extends MobileEntity implements Moveable {
 
     private final Bank bank = new Bank(this);
     private final Combat combat = new Combat();
@@ -20,7 +20,7 @@ public final class Player extends Entity {
     private final Session session;
     private final Settings settings = new Settings();
     private final Skills skills = new Skills();
-    private final Sprite sprite = new Sprite(this);
+    private final PlayerSprite sprite = new PlayerSprite(this);
     private final Movement movement = new Movement(this, sprite);
     private final Observer observer = new Observer(this, sprite);
     private final UpdateProxy updateProxy = new UpdateProxy(communication, credentials, movement, observer, skills, sprite);
@@ -57,6 +57,31 @@ public final class Player extends Entity {
         return inventory;
     }
 
+    public Point getLocation() {
+        return movement.getLocation();
+    }
+
+    @Override
+    public void setLocation(Point location) {
+        movement.setLocation(location);
+    }
+
+    @Override
+    public void setLocation(Point location, boolean teleported) {
+        movement.setLocation(location, teleported);
+    }
+
+    @Override
+    public void updateRegion(Region oldRegion, Region newRegion) {
+        if (oldRegion != newRegion) {
+            if (oldRegion != null) {
+                oldRegion.removePlayer(this);
+            }
+
+            newRegion.addPlayer(this);
+        }
+    }
+
     public Movement getMovement() {
         return movement;
     }
@@ -77,7 +102,7 @@ public final class Player extends Entity {
         return skills;
     }
 
-    public Sprite getSprite() {
+    public PlayerSprite getSprite() {
         return sprite;
     }
 
@@ -105,23 +130,6 @@ public final class Player extends Entity {
 
     public void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
-    }
-
-    @Override
-    public void setLocation(Point location) {
-        Region r = Region.getRegion(location);
-        Region cur = region;
-
-        if (cur != r) {
-            if (cur != null) {
-                cur.removePlayer(this);
-            }
-
-            r.addPlayer(this);
-            region = r;
-        }
-
-        super.setLocation(location);
     }
 
     @Override

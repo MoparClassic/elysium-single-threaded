@@ -30,7 +30,7 @@ public class ItemWieldableDef {
      */
     public HashMap<Integer, Integer> requiredStats;
     /**
-     * Sprite Id of the item
+     * PlayerSprite Id of the item
      */
     public int sprite;
     /**

@@ -7,7 +7,6 @@ import org.moparscape.elysium.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -50,9 +49,12 @@ public final class Region {
         return regions[regionX][regionY];
     }
 
-    public static Iterable<Item> getViewableItems(Point p, int radius) {
-        Region[] regions = getViewableRegions(p);
-        List<Item> items = new LinkedList<Item>();
+    public static List<Item> getViewableItems(Point p, int radius) {
+        List<Region> regions = getViewableRegions(p);
+
+        int itemCount = 0;
+        for (Region r : regions) itemCount += r.getItemCount();
+        List<Item> items = new ArrayList<>(itemCount);
 
         for (Region r : regions) {
             for (Item i : r.getItems()) {
@@ -65,9 +67,12 @@ public final class Region {
         return items;
     }
 
-    public static Iterable<Npc> getViewableNpcs(Point p, int radius) {
-        Region[] regions = getViewableRegions(p);
-        List<Npc> npcs = new LinkedList<Npc>();
+    public static List<Npc> getViewableNpcs(Point p, int radius) {
+        List<Region> regions = getViewableRegions(p);
+
+        int npcCount = 0;
+        for (Region r : regions) npcCount += r.getNpcCount();
+        List<Npc> npcs = new ArrayList<>(npcCount);
 
         for (Region r : regions) {
             for (Npc n : r.getNpcs()) {
@@ -80,9 +85,12 @@ public final class Region {
         return npcs;
     }
 
-    public static Iterable<GameObject> getViewableObjects(Point p, int radius) {
-        Region[] regions = getViewableRegions(p);
-        List<GameObject> objects = new LinkedList<GameObject>();
+    public static List<GameObject> getViewableObjects(Point p, int radius) {
+        List<Region> regions = getViewableRegions(p);
+
+        int objectCount = 0;
+        for (Region r : regions) objectCount += r.getObjectCount();
+        List<GameObject> objects = new ArrayList<>(objectCount);
 
         for (Region r : regions) {
             for (GameObject go : r.getObjects()) {
@@ -95,25 +103,13 @@ public final class Region {
         return objects;
     }
 
-    public static Iterable<Player> getViewablePlayers(Point p, int radius) {
-        Region[] regions = getViewableRegions(p);
-        List<Player> players = new LinkedList<Player>();
-
-        for (Region r : regions) {
-            for (Player player : r.getPlayers()) {
-                if (player.isLoggedIn() && p.withinRange(player.getLocation(), radius)) {
-                    players.add(player);
-                }
-            }
-        }
-
-        return players;
-    }
-
-    public static Iterable<Player> getViewablePlayers(Player player, int radius) {
+    public static List<Player> getViewablePlayers(Player player, int radius) {
         Point loc = player.getLocation();
-        Region[] regions = getViewableRegions(loc);
-        List<Player> players = new LinkedList<Player>();
+        List<Region> regions = getViewableRegions(loc);
+
+        int playerCount = 0;
+        for (Region r : regions) playerCount += r.getPlayerCount();
+        List<Player> players = new ArrayList<>(playerCount);
 
         for (Region r : regions) {
             for (Player p : r.getPlayers()) {
@@ -126,41 +122,41 @@ public final class Region {
         return players;
     }
 
-    private static Region[] getViewableRegions(int x, int y) {
-        Region[] neighbours = new Region[4];
+    private static List<Region> getViewableRegions(int x, int y) {
+        List<Region> result = new ArrayList<>(4);
         int regionX = x / REGION_SIZE;
         int regionY = y / REGION_SIZE;
-        neighbours[0] = regions[regionX][regionY];
+        result.add(regions[regionX][regionY]);
 
         int relX = x % REGION_SIZE;
         int relY = y % REGION_SIZE;
 
         if (relX <= LOWER_BOUND) {
             if (relY <= LOWER_BOUND) {
-                neighbours[1] = regions[regionX - 1][regionY];
-                neighbours[2] = regions[regionX - 1][regionY - 1];
-                neighbours[3] = regions[regionX][regionY - 1];
+                result.add(regions[regionX - 1][regionY]);
+                result.add(regions[regionX - 1][regionY - 1]);
+                result.add(regions[regionX][regionY - 1]);
             } else {
-                neighbours[1] = regions[regionX - 1][regionY];
-                neighbours[2] = regions[regionX - 1][regionY + 1];
-                neighbours[3] = regions[regionX][regionY + 1];
+                result.add(regions[regionX - 1][regionY]);
+                result.add(regions[regionX - 1][regionY + 1]);
+                result.add(regions[regionX][regionY + 1]);
             }
         } else {
             if (relY <= LOWER_BOUND) {
-                neighbours[1] = regions[regionX + 1][regionY];
-                neighbours[2] = regions[regionX + 1][regionY - 1];
-                neighbours[3] = regions[regionX][regionY - 1];
+                result.add(regions[regionX + 1][regionY]);
+                result.add(regions[regionX + 1][regionY - 1]);
+                result.add(regions[regionX][regionY - 1]);
             } else {
-                neighbours[1] = regions[regionX + 1][regionY];
-                neighbours[2] = regions[regionX + 1][regionY + 1];
-                neighbours[3] = regions[regionX][regionY + 1];
+                result.add(regions[regionX + 1][regionY]);
+                result.add(regions[regionX + 1][regionY + 1]);
+                result.add(regions[regionX][regionY + 1]);
             }
         }
 
-        return neighbours;
+        return result;
     }
 
-    public static Region[] getViewableRegions(Point p) {
+    public static List<Region> getViewableRegions(Point p) {
         return getViewableRegions(p.getX(), p.getY());
     }
 
@@ -190,12 +186,20 @@ public final class Region {
         return null;
     }
 
+    public int getItemCount() {
+        return items.size();
+    }
+
     public Iterable<Item> getItems() {
         return Collections.unmodifiableCollection(items);
     }
 
     public Npc getNpc() {
         throw new UnsupportedOperationException();
+    }
+
+    public int getNpcCount() {
+        return npcs.size();
     }
 
     public Iterable<Npc> getNpcs() {
@@ -206,12 +210,20 @@ public final class Region {
         throw new UnsupportedOperationException();
     }
 
+    public int getObjectCount() {
+        return objects.size();
+    }
+
     public Iterable<GameObject> getObjects() {
         return Collections.unmodifiableCollection(objects);
     }
 
     public Player getPlayer() {
         throw new UnsupportedOperationException();
+    }
+
+    public int getPlayerCount() {
+        return players.size();
     }
 
     public Iterable<Player> getPlayers() {

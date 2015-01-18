@@ -28,7 +28,7 @@ public final class DefaultEntityFactory implements EntityFactory {
 //            c.resolveDependencies(components);
 //        }
 
-        return new Npc();
+        return new Npc(1);
     }
 
     public Player newPlayer(Session session) {

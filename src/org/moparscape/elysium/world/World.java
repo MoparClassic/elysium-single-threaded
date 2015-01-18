@@ -1,10 +1,10 @@
 package org.moparscape.elysium.world;
 
-import org.moparscape.elysium.entity.DefaultEntityFactory;
-import org.moparscape.elysium.entity.EntityFactory;
-import org.moparscape.elysium.entity.Npc;
-import org.moparscape.elysium.entity.Player;
+import org.moparscape.elysium.entity.*;
 import org.moparscape.elysium.util.EntityList;
+
+import java.security.SecureRandom;
+import java.util.Random;
 
 /**
  * Created by IntelliJ IDEA.
@@ -55,6 +55,15 @@ public final class World {
         return playerList;
     }
 
+    private int getRandomOrdinate(Random r, int basePoint, int maxDistance) {
+        boolean negative = r.nextBoolean();
+        int offset = r.nextInt() % maxDistance;
+
+        if (negative) offset *= -1;
+
+        return basePoint + offset;
+    }
+
     /**
      * Gets the tile value as point x, y
      */
@@ -76,6 +85,31 @@ public final class World {
 
     public boolean registerPlayer(Player p) {
         return playerList.add(p);
+    }
+
+    public void seedWithEntities() {
+        Point workingLocation = new Point(329, 552);
+        SecureRandom random = new SecureRandom();
+        random.setSeed(13333333333337L);
+
+        for (int i = 0; i < 50; i++) {
+            int x = getRandomOrdinate(random, workingLocation.getX(), 10);
+            int y = getRandomOrdinate(random, workingLocation.getY(), 10);
+
+            Point loc = new Point(x, y);
+            Item item = new Item(i, 1, loc, null);
+            Region.getRegion(loc).addItem(item);
+        }
+
+        for (int i = 1; i < 20; i++) {
+            int x = getRandomOrdinate(random, workingLocation.getX(), 10);
+            int y = getRandomOrdinate(random, workingLocation.getY(), 10);
+
+            Point loc = new Point(x, y);
+            Npc npc = new Npc(95);
+            npc.setIndex(i);
+            npc.setLocation(loc, true);
+        }
     }
 
     public boolean unregisterPlayer(Player p) {

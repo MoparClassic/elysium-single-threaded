@@ -11,5 +11,4 @@ public interface Locatable {
 
     Point getLocation();
 
-    void setLocation(Point location);
 }

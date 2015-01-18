@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author lothy
  */
-public final class IssueUpdatePacketsTask implements Runnable {
+public final class IssueUpdatePacketsTask {
 
     private final Iterable<Session> sessions;
 
@@ -25,7 +25,7 @@ public final class IssueUpdatePacketsTask implements Runnable {
         this.sessions = sessions;
     }
 
-    public void run() {
+    public void prepareUpdatePackets() {
         try {
             for (Session s : sessions) {
                 Player p = s.getPlayer();
@@ -290,7 +290,7 @@ public final class IssueUpdatePacketsTask implements Runnable {
                 pb.addBits(0, 1);
                 pb.addBits(targetProxy.getSprite(), 3);
             } else if (targetProxy.spriteChanged()) {
-                //System.out.println("Sprite changed: " + targetProxy.getUsername() + " sprite changed in view of " + proxy.getUsername());
+                //System.out.println("PlayerSprite changed: " + targetProxy.getUsername() + " sprite changed in view of " + proxy.getUsername());
                 pb.addBits(1, 1);
                 pb.addBits(1, 1);
                 pb.addBits(targetProxy.getSprite(), 4);

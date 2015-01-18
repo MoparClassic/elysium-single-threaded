@@ -2,9 +2,7 @@ package org.moparscape.elysium;
 
 import org.moparscape.elysium.entity.Heartbeat;
 import org.moparscape.elysium.entity.Indexable;
-import org.moparscape.elysium.util.EntityList;
-
-import java.util.ArrayList;
+import org.moparscape.elysium.world.Point;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,44 +12,50 @@ import java.util.ArrayList;
 public class Derp {
 
     public static void main(String[] args) throws Exception {
-        final int TEST_ITERATIONS = 20;
-        ArrayList<Long> timeTaken = new ArrayList<>(TEST_ITERATIONS);
+        Point p1 = new Point(10, 10);
+        Point p2 = new Point(14, 6);
 
-        for (int j = 0; j < 50; j++) {
-            long start = time();
-            EntityList<TestIndexable> elist = new EntityList<>(5000000);
+        System.out.println(Math.sqrt(Math.pow((p2.getX() - p1.getX()), 2) + Math.pow((p2.getY() - p1.getY()), 2)));
+        System.out.println(Math.pow((p2.getX() - p1.getX()), 2) + Math.pow((p2.getY() - p1.getY()), 2));
 
-            for (int i = 0; i < 5000000; i++) {
-                elist.add(new TestIndexable());
-            }
-
-            Object cur = null;
-            for (int i = 400000; i < 500000; i++) {
-                elist.remove(i);
-            }
-
-            for (int i = 0; i < 75000; i++) {
-                elist.add(new TestIndexable());
-            }
-
-            //for (int i = 0; i < 10; i++) elist.add(new TestIndexable());
-
-            for (TestIndexable ti : elist) {
-                cur = ti; //System.out.println(ti);
-            }
-            System.out.println(cur);
-            long end = time();
-            long elapsed = end - start;
-            timeTaken.add(elapsed);
-        }
-
-        System.out.println();
-        long average = 0;
-        for (Long l : timeTaken) {
-            average += l;
-        }
-        average /= TEST_ITERATIONS;
-        System.out.printf("Average = %d\n", average);
+//        final int TEST_ITERATIONS = 20;
+//        ArrayList<Long> timeTaken = new ArrayList<>(TEST_ITERATIONS);
+//
+//        for (int j = 0; j < 50; j++) {
+//            long start = time();
+//            EntityList<TestIndexable> elist = new EntityList<>(5000000);
+//
+//            for (int i = 0; i < 5000000; i++) {
+//                elist.add(new TestIndexable());
+//            }
+//
+//            Object cur = null;
+//            for (int i = 400000; i < 500000; i++) {
+//                elist.remove(i);
+//            }
+//
+//            for (int i = 0; i < 75000; i++) {
+//                elist.add(new TestIndexable());
+//            }
+//
+//            //for (int i = 0; i < 10; i++) elist.add(new TestIndexable());
+//
+//            for (TestIndexable ti : elist) {
+//                cur = ti; //System.out.println(ti);
+//            }
+//            System.out.println(cur);
+//            long end = time();
+//            long elapsed = end - start;
+//            timeTaken.add(elapsed);
+//        }
+//
+//        System.out.println();
+//        long average = 0;
+//        for (Long l : timeTaken) {
+//            average += l;
+//        }
+//        average /= TEST_ITERATIONS;
+//        System.out.printf("Average = %d\n", average);
 
 //        long start = time();
 //        String s = null;

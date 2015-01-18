@@ -6,6 +6,7 @@ import org.moparscape.elysium.task.timed.RespawnItemTask;
 import org.moparscape.elysium.world.Point;
 import org.moparscape.elysium.world.Region;
 
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -22,6 +23,7 @@ public final class Item implements Locatable, Heartbeat {
     private final AtomicBoolean removed = new AtomicBoolean(false);
     private final int secondsUntilRespawn;
     private final long spawned;
+    private final UUID uuid;
     private boolean heartbeatCancelled = false;
     private long pulseTime = 0;
 
@@ -34,6 +36,7 @@ public final class Item implements Locatable, Heartbeat {
         this.amount = amount;
         this.location = loc;
         this.owner = owner;
+        this.uuid = UUID.randomUUID();
 
         this.spawned = Server.getInstance().getHighResolutionTimestamp();
         this.secondsUntilRespawn = secondsUntilRespawn;
@@ -53,10 +56,6 @@ public final class Item implements Locatable, Heartbeat {
 
     public Point getLocation() {
         return location;
-    }
-
-    public void setLocation(Point location) {
-        throw new UnsupportedOperationException("Item is immutable");
     }
 
     @Override
@@ -81,8 +80,7 @@ public final class Item implements Locatable, Heartbeat {
 
     @Override
     public int hashCode() {
-        int ownerHash = owner != null ? owner.hashCode() : 0;
-        return itemId | amount | location.hashCode() | ownerHash;
+        return uuid.hashCode();
     }
 
     @Override
@@ -91,8 +89,7 @@ public final class Item implements Locatable, Heartbeat {
         if (o == null || !(o instanceof Item)) return false;
 
         Item i = (Item) o;
-        return this.itemId == i.itemId && this.amount == i.amount &&
-                this.owner == i.owner && this.location.equals(i.location);
+        return this.uuid.equals(i.uuid);
     }
 
     @Override

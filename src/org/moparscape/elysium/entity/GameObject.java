@@ -43,4 +43,8 @@ public final class GameObject implements Locatable {
     public boolean isRemoved() {
         return false;
     }
+
+    public void setLocation(Point location, boolean teleported) {
+        this.location = location;
+    }
 }

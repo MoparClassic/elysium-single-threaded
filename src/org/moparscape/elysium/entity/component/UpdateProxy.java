@@ -17,17 +17,21 @@ public final class UpdateProxy extends AbstractComponent {
     private Movement movement;
     private Observer observer;
     private Skills skills;
-    private Sprite sprite;
+    private PlayerSprite sprite;
 
     public UpdateProxy(Communication communication, Credentials credentials,
                        Movement movement, Observer observer, Skills skills,
-                       Sprite sprite) {
+                       PlayerSprite sprite) {
         this.communication = communication;
         this.credentials = credentials;
         this.movement = movement;
         this.observer = observer;
         this.skills = skills;
         this.sprite = sprite;
+    }
+
+    public void cleanupViewableEntities() {
+        observer.cleanupViewableEntities();
     }
 
     public void clearChatLists() {
@@ -177,6 +181,10 @@ public final class UpdateProxy extends AbstractComponent {
 
     public void updatePosition() {
         movement.updatePosition();
+    }
+
+    public void updateViewableEntities() {
+        observer.updateViewableEntities();
     }
 
     public void updateWatchedEntities() {

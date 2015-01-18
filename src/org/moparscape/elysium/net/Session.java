@@ -124,9 +124,7 @@ public final class Session {
     }
 
     public void writeAndFlush() {
-        ByteBuf temp = currentBuffer;
+        channel.writeAndFlush(currentBuffer);
         acquirePooledByteBuf();
-
-        channel.writeAndFlush(temp);
     }
 }

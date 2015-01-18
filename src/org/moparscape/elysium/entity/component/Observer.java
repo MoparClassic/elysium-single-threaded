@@ -14,8 +14,16 @@ import java.util.*;
  */
 public final class Observer extends AbstractComponent {
 
+    private static final int MAX_VISIBLE_ITEMS = 254;
+    private static final int MAX_VISIBLE_NPCS = 100;
+    private static final int MAX_VISIBLE_OBJECTS = 100;
+    private static final int MAX_VISIBLE_PLAYERS = 100;
     private final List<Bubble> bubbles = new ArrayList<>();
     private final Map<Integer, Integer> knownPlayerAppearanceIds = new HashMap<>();
+    private final Set<Item> nearestViewableItems = new HashSet<>(MAX_VISIBLE_ITEMS);
+    private final Set<Npc> nearestViewableNpcs = new HashSet<>(MAX_VISIBLE_NPCS);
+    private final Set<GameObject> nearestViewableObjects = new HashSet<>(MAX_VISIBLE_OBJECTS);
+    private final Set<Player> nearestViewablePlayers = new HashSet<>(MAX_VISIBLE_PLAYERS);
     private final List<Npc> npcHitUpdates = new ArrayList<>();
     private final List<Player> playerHitUpdates = new ArrayList<>();
     private final List<Projectile> projectiles = new ArrayList<>();
@@ -23,11 +31,18 @@ public final class Observer extends AbstractComponent {
     private final StatefulEntityCollection<Npc> watchedNpcs = new StatefulEntityCollection<>();
     private final StatefulEntityCollection<GameObject> watchedObjects = new StatefulEntityCollection<>();
     private final StatefulEntityCollection<Player> watchedPlayers = new StatefulEntityCollection<>();
+    private List<Item> allViewableItems;
+    private List<Npc> allViewableNpcs;
+    private List<GameObject> allViewableObjects;
+    private List<Player> allViewablePlayers;
     private Player owner;
+    private PlayerSprite sprite;
+    private boolean visibleItemLimitBreached = false;
+    private boolean visibleNpcLimitBreached = false;
+    private boolean visibleObjectLimitBreached = false;
+    private boolean visiblePlayerLimitBreached = false;
 
-    private Sprite sprite;
-
-    public Observer(Player owner, Sprite sprite) {
+    public Observer(Player owner, PlayerSprite sprite) {
         this.owner = owner;
         this.sprite = sprite;
     }
@@ -36,6 +51,23 @@ public final class Observer extends AbstractComponent {
         for (int i = 0; i < indices.length; i++) {
             knownPlayerAppearanceIds.put(indices[i], appearanceIds[i]);
         }
+    }
+
+    public void cleanupViewableEntities() {
+        allViewableItems.clear();
+        allViewableNpcs.clear();
+        allViewableObjects.clear();
+        allViewablePlayers.clear();
+
+        nearestViewableItems.clear();
+        nearestViewableNpcs.clear();
+        nearestViewableObjects.clear();
+        nearestViewablePlayers.clear();
+
+        visibleItemLimitBreached = false;
+        visibleNpcLimitBreached = false;
+        visibleObjectLimitBreached = false;
+        visiblePlayerLimitBreached = false;
     }
 
     public void clearDisplayLists() {
@@ -47,6 +79,30 @@ public final class Observer extends AbstractComponent {
 
     public List<Bubble> getBubblesNeedingDisplayed() {
         return bubbles;
+    }
+
+    public Collection<Item> getCachedViewableItems() {
+        return visibleItemLimitBreached ?
+                Collections.unmodifiableCollection(nearestViewableItems) :
+                Collections.unmodifiableCollection(allViewableItems);
+    }
+
+    public Collection<Npc> getCachedViewableNpcs() {
+        return visibleNpcLimitBreached ?
+                Collections.unmodifiableCollection(nearestViewableNpcs) :
+                Collections.unmodifiableCollection(allViewableNpcs);
+    }
+
+    public Collection<GameObject> getCachedViewableObjects() {
+        return visibleObjectLimitBreached ?
+                Collections.unmodifiableCollection(nearestViewableObjects) :
+                Collections.unmodifiableCollection(allViewableObjects);
+    }
+
+    public Collection<Player> getCachedViewablePlayers() {
+        return visiblePlayerLimitBreached ?
+                Collections.unmodifiableCollection(nearestViewablePlayers) :
+                Collections.unmodifiableCollection(allViewablePlayers);
     }
 
     public List<Npc> getNpcHitUpdates() {
@@ -98,7 +154,7 @@ public final class Observer extends AbstractComponent {
 
     private boolean needsAppearanceUpdateFor(Player target) {
         int targetIndex = target.getIndex();
-        Sprite targetSprite = target.getSprite();
+        PlayerSprite targetSprite = target.getSprite();
         if (knownPlayerAppearanceIds.containsKey(targetIndex)) {
             int knownAppearanceId = knownPlayerAppearanceIds.get(targetIndex);
             if (knownAppearanceId != targetSprite.getAppearanceId()) {
@@ -115,7 +171,7 @@ public final class Observer extends AbstractComponent {
 
     @Override
     public void resolveDependencies(Map<Class<? extends Component>, Component> components) {
-        this.sprite = Sprite.class.cast(components.get(Sprite.class));
+        this.sprite = PlayerSprite.class.cast(components.get(PlayerSprite.class));
     }
 
     public void revalidateWatchedEntities() {
@@ -127,9 +183,22 @@ public final class Observer extends AbstractComponent {
 
     private void revalidateWatchedItems() {
         Point loc = owner.getLocation();
-        for (Item i : watchedItems.getKnownEntities()) {
-            if (!loc.withinRange(i.getLocation(), 16) || i.isRemoved() || !i.isVisibleTo(owner)) {
-                watchedItems.remove(i);
+
+        if (!visibleItemLimitBreached) {
+            for (Item i : watchedItems.getKnownEntities()) {
+                if (!loc.withinRange(i.getLocation(), 16) || i.isRemoved() || !i.isVisibleTo(owner)) {
+                    watchedItems.remove(i);
+                }
+            }
+        } else {
+            for (Item i : watchedItems.getKnownEntities()) {
+                if (!nearestViewableItems.contains(i)) {
+                    watchedItems.remove(i);
+                }
+
+                if (!loc.withinRange(i.getLocation(), 16) || i.isRemoved() || !i.isVisibleTo(owner)) {
+                    watchedItems.remove(i);
+                }
             }
         }
     }
@@ -176,6 +245,51 @@ public final class Observer extends AbstractComponent {
         watchedNpcs.update();
     }
 
+    public void updateViewableEntities() {
+        Point loc = owner.getLocation();
+        allViewableItems = Region.getViewableItems(loc, 16);
+        allViewableNpcs = Region.getViewableNpcs(loc, 16);
+        allViewableObjects = Region.getViewableObjects(loc, 21);
+        allViewablePlayers = Region.getViewablePlayers(owner, 16);
+
+        EntityComparators.DistanceComparator distCompare = null;
+        if (allViewableItems.size() > MAX_VISIBLE_ITEMS) {
+            if (distCompare == null) distCompare = new EntityComparators.DistanceComparator(loc);
+
+            allViewableItems.sort(distCompare);
+            visibleItemLimitBreached = true;
+
+            int count = 0;
+            for (Item i : allViewableItems) {
+                if (count == MAX_VISIBLE_ITEMS) break;
+
+                nearestViewableItems.add(i);
+                count++;
+            }
+        }
+
+        if (allViewableNpcs.size() > MAX_VISIBLE_NPCS) {
+            if (distCompare == null) distCompare = new EntityComparators.DistanceComparator(loc);
+
+            allViewableNpcs.sort(distCompare);
+            visibleNpcLimitBreached = true;
+        }
+
+        if (allViewableObjects.size() > MAX_VISIBLE_OBJECTS) {
+            if (distCompare == null) distCompare = new EntityComparators.DistanceComparator(loc);
+
+            allViewableObjects.sort(distCompare);
+            visibleObjectLimitBreached = true;
+        }
+
+        if (allViewablePlayers.size() > MAX_VISIBLE_PLAYERS) {
+            if (distCompare == null) distCompare = new EntityComparators.DistanceComparator(loc);
+
+            allViewablePlayers.sort(distCompare);
+            visiblePlayerLimitBreached = true;
+        }
+    }
+
     public void updateWatchedEntities() {
         updateWatchedPlayers();
         updateWatchedObjects();
@@ -184,11 +298,17 @@ public final class Observer extends AbstractComponent {
     }
 
     private void updateWatchedItems() {
-        Iterable<Item> items = Region.getViewableItems(owner.getLocation(), 16);
-
-        for (Item item : items) {
-            if (!watchedItems.contains(item) && item.isVisibleTo(owner)) {
-                watchedItems.add(item);
+        if (!visibleItemLimitBreached) {
+            for (Item item : allViewableItems) {
+                if (!watchedItems.contains(item) && item.isVisibleTo(owner)) {
+                    watchedItems.add(item);
+                }
+            }
+        } else {
+            for (Item item : nearestViewableItems) {
+                if (!watchedItems.contains(item) && item.isVisibleTo(owner)) {
+                    watchedItems.add(item);
+                }
             }
         }
     }

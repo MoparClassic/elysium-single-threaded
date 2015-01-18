@@ -1,8 +1,9 @@
 package org.moparscape.elysium.entity.component;
 
-import org.moparscape.elysium.entity.Locatable;
+import org.moparscape.elysium.entity.Moveable;
 import org.moparscape.elysium.entity.Path;
 import org.moparscape.elysium.world.Point;
+import org.moparscape.elysium.world.Region;
 import org.moparscape.elysium.world.TileValue;
 import org.moparscape.elysium.world.World;
 
@@ -16,13 +17,13 @@ public final class Movement extends AbstractComponent {
     private static final World world = World.getInstance();
     private int curWaypoint;
     private boolean hasMoved = false;
-
-    private Locatable owner;
-
+    private Point location;
+    private Moveable owner;
     private Path path;
-    private Sprite sprite;
+    private Region region;
+    private MobileSprite sprite;
 
-    public Movement(Locatable owner, Sprite sprite) {
+    public Movement(Moveable owner, MobileSprite sprite) {
         this.owner = owner;
         this.sprite = sprite;
     }
@@ -60,7 +61,7 @@ public final class Movement extends AbstractComponent {
     }
 
     public Point getLocation() {
-        return owner.getLocation();
+        return location;
     }
 
     public void setLocation(Point location) {
@@ -151,7 +152,13 @@ public final class Movement extends AbstractComponent {
             hasMoved = true;
             sprite.updateSprite(location);
         }
-        owner.setLocation(location);
+
+        Region newRegion = Region.getRegion(location);
+        Region oldRegion = region;
+        owner.updateRegion(oldRegion, newRegion);
+
+        this.location = location;
+        this.region = newRegion;
     }
 
     /**

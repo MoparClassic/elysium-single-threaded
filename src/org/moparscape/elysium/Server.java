@@ -29,6 +29,7 @@ import java.util.concurrent.Executors;
 public class Server {
 
     private static final Server INSTANCE = new Server();
+    private static final int PULSE_RUN_TIME_MILLISECONDS = 600;
 
     private final EventLoopGroup bossGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
     private final ExecutorService dataExecutorService = Executors.newSingleThreadExecutor();
@@ -41,6 +42,7 @@ public class Server {
      * We're better off just synchronizing externally which is what's done now.
      */
     private final PriorityQueue<TimedTask> taskQueue = new PriorityQueue<>();
+    private final IssueUpdatePacketsTask updatePacketBuilder = new IssueUpdatePacketsTask(sessions);
     private final GameStateUpdater updater = new GameStateUpdater();
     private final EventLoopGroup workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
     /**
@@ -53,6 +55,7 @@ public class Server {
      * when an update should be performed.
      */
     private long highResolutionTimestamp = System.nanoTime() / 1000000;
+    private long lastPositionUpdate = 0L;
     private long lastPulse = 0L;
     private boolean running = true;
     private Set<Session> sessionsToRegister = new HashSet<>(10);
@@ -68,6 +71,7 @@ public class Server {
 
     public static void main(String[] args) {
         Server server = Server.getInstance();
+        World.getInstance().seedWithEntities();
         ChannelFuture cf = server.listen();
 
         System.out.println("Server has started. :)");
@@ -78,10 +82,15 @@ public class Server {
         System.out.println("Shutdown complete.");
     }
 
+    private void flushSessions() {
+        for (Session s : sessions) {
+            s.writeAndFlush();
+        }
+    }
+
     private void gameLoop() {
         System.out.println("Game loop started");
-
-        World world = World.getInstance();
+        long tickCount = 0;
 
         ParentLoop:
         while (true) {
@@ -91,7 +100,7 @@ public class Server {
                     // If 600ms have passed then do another update; otherwise, sleep and try again
                     updateTimestamps();
                     long stampDiff = highResolutionTimestamp - lastPulse;
-                    if (stampDiff < 600) {
+                    if (stampDiff < PULSE_RUN_TIME_MILLISECONDS) {
                         try {
                             Thread.sleep(1); // Surrender this time slice
                         } catch (InterruptedException e) {
@@ -102,21 +111,32 @@ public class Server {
                     }
 
                     registerNewSessions();
-                    pulseSessions(); // This function blocks until all sessions have finished
+                    pulseSessions();
                     unregisterOldSessions();
 
-                    processTasks(); // This function blocks until all events have been processed
-                    updater.updateState(); // This function blocks until all updating has finished
-                    issueUpdatePackets(); // This function blocks until all packets have been sent
+                    processTasks(getRemainingPulseTime() / 2);
 
-                    for (Session s : sessions) {
-                        s.writeAndFlush();
+                    // NOTE: This would need more work if we were to make the game pulse
+                    // more frequent. Maybe I'll do it in the future.
+                    long positionUpdateDiff = highResolutionTimestamp - lastPositionUpdate;
+                    boolean positionUpdateRequired = positionUpdateDiff >= 600;
+                    if (positionUpdateRequired) {
+                        lastPositionUpdate = highResolutionTimestamp;
+                    } else {
+
                     }
 
-                    updater.updateCollections(); // This function blocks until everything is finished
+                    updater.updateState();
+                    updatePacketBuilder.prepareUpdatePackets();
+                    flushSessions();
+                    updater.updateCollections();
 
                     // Update the time that the last pulse took place before finishing
                     lastPulse = highResolutionTimestamp;
+                    tickCount++;
+
+//                    long elapsed = getNanoTimeAsMilliseconds() - highResolutionTimestamp;
+//                    System.out.printf("Tick = %d, Pulse time = %dms\n", tickCount, elapsed);
                 }
 
                 // If we reach this point then shutdown has been triggered.
@@ -148,9 +168,13 @@ public class Server {
         return highResolutionTimestamp;
     }
 
-    private void issueUpdatePackets() throws Exception {
-        IssueUpdatePacketsTask task = new IssueUpdatePacketsTask(sessions);
-        task.run();
+    private long getNanoTimeAsMilliseconds() {
+        return System.nanoTime() / 1000000;
+    }
+
+    private int getRemainingPulseTime() {
+        int elapsed = (int) (getNanoTimeAsMilliseconds() - highResolutionTimestamp);
+        return PULSE_RUN_TIME_MILLISECONDS - elapsed;
     }
 
     private ChannelFuture listen() {
@@ -171,12 +195,33 @@ public class Server {
         }
     }
 
-    private void processTasks() throws Exception {
+    private void prepareUpdatePackets() throws Exception {
+        IssueUpdatePacketsTask task = new IssueUpdatePacketsTask(sessions);
+        task.prepareUpdatePackets();
+    }
+
+    private void processTasks(int timeout) throws Exception {
         long time = getHighResolutionTimestamp();
         TimedTask task = null;
 
+        // We use a separate requeue list to ensure that each task
+        // only runs once per pulse. This protects against any
+        // timed tasks that forget to update the next execution time.
+        List<TimedTask> requeueList = new ArrayList<>(taskQueue.size());
+
+        int processedCount = 0;
         while ((task = taskQueue.peek()) != null && task.getExecutionTime() <= time) {
-            // This task is due to run -- remove from the priority queue
+            // If we've processed a batch of 100 tasks then it's time to make sure
+            // we haven't breached the provided timeout.
+            // If the difference between the current time and the pulse start time
+            // is greater than the specified timeout then we have breached, which
+            // means it's time to finish processing tasks.
+            if (processedCount % 100 == 0) {
+                long currentTime = getNanoTimeAsMilliseconds();
+                if (currentTime - highResolutionTimestamp >= timeout) break;
+            }
+
+            // This task is due to prepareUpdatePackets -- remove from the priority queue
             // and add it to the list of tasks to execute
             task = taskQueue.poll();
             try {
@@ -186,8 +231,12 @@ public class Server {
             }
 
             if (task.shouldRepeat()) {
-                taskQueue.offer(task);
+                requeueList.add(task);
             }
+        }
+
+        for (TimedTask t : requeueList) {
+            taskQueue.offer(t);
         }
     }
 
@@ -301,7 +350,7 @@ public class Server {
     }
 
     private void updateTimestamps() {
-        highResolutionTimestamp = System.nanoTime() / 1000000;
+        highResolutionTimestamp = getNanoTimeAsMilliseconds();
         epochTimestamp = System.currentTimeMillis();
     }
 }

@@ -1,10 +1,6 @@
 package org.moparscape.elysium.entity;
 
-import org.moparscape.elysium.data.DataLayer;
-import org.moparscape.elysium.data.mysql.MysqlDataLayer;
 import org.moparscape.elysium.def.ItemDef;
-
-import java.sql.SQLException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,10 +17,13 @@ public final class DefinitionHandler {
 
     static {
         try {
-            DataLayer data = new MysqlDataLayer();
-
-            items = data.loadItemDefinitions();
-        } catch (SQLException e) {
+//            DataLayer data = new MysqlDataLayer();
+//
+//            items = data.loadItemDefinitions();
+            items = new ItemDef[2000];
+            for (int i = 0; i < items.length; i++)
+                items[i] = new ItemDef("fake", "fake", "fake", 100, 995, false, false, 1, false, false);
+        } catch (Exception e) {
             e.printStackTrace();
             throw new Error(e);
         }

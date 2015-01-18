@@ -28,6 +28,8 @@ public final class ItemPickupTask extends AbstractTimedTask {
     }
 
     public void run() {
+//        setNextRunningTime(Server.getInstance().getHighResolutionTimestamp() + 200);
+
         // If somebody has beaten this player to the item
         // (or the item has been removed for another reason)
         // then it's time to finish
