@@ -1,6 +1,6 @@
 package org.moparscape.elysium.entity;
 
-import org.moparscape.elysium.entity.component.NpcLoc;
+import org.moparscape.elysium.def.NPCLoc;
 import org.moparscape.elysium.net.Session;
 
 /**
@@ -10,7 +10,7 @@ import org.moparscape.elysium.net.Session;
  */
 public interface EntityFactory {
 
-    Npc newNpc(NpcLoc loc);
+    Npc newNpc(NPCLoc loc);
 
     Player newPlayer(Session session);
 }

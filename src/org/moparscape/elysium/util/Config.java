@@ -13,13 +13,21 @@ import java.util.Properties;
 public final class Config {
 
     static {
-        loadEnv();
+        try {
+            loadProperties();
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to load Config.");
+        }
     }
 
     public static String CONF_DIR, RSCD_HOME;
     public static int SERVER_NUM = 72;
     //public static int SERVER_PORT, SERVER_VERSION, MAX_PLAYERS, LS_PORT, SERVER_NUM;
     public static long START_TIME;
+
+    public static void init() {
+        // Nothing here.
+    }
 
     /**
      * Called to load config settings from the given file
@@ -72,5 +80,19 @@ public final class Config {
         CONF_DIR = "conf" + File.separator + "server";
 
         RSCD_HOME = home;
+    }
+
+    private static void loadProperties() throws IOException {
+        Properties p = new Properties();
+        p.loadFromXML(new FileInputStream("ElysiumProperties.xml"));
+        for (Object o : p.keySet()) {
+            if (!(o instanceof String)) {
+                throw new IllegalStateException(
+                        "Invalid properties file content. All values must be strings.");
+            }
+
+            String key = (String) o;
+            System.setProperty(key, p.getProperty(key));
+        }
     }
 }

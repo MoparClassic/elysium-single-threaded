@@ -1,7 +1,7 @@
-package org.moparscape.elysium.io;
+package org.moparscape.elysium.util;
 
 import com.thoughtworks.xstream.XStream;
-import org.moparscape.elysium.util.Config;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -10,13 +10,11 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * Created by IntelliJ IDEA.
- *
- * @author lothy
+ * Created by daniel on 19/01/2015.
  */
-public final class PersistenceManager {
+public class PersistenceManager {
 
-    private static final XStream xstream = new XStream();
+    private static final XStream xstream = new XStream(new StaxDriver());
 
     static {
         setupAliases();
@@ -24,14 +22,14 @@ public final class PersistenceManager {
 
     public static Object load(String filename) {
         try {
-            InputStream is = new FileInputStream(new File(Config.CONF_DIR, filename));
+            InputStream is = new FileInputStream(new File(System.getProperty("elysium.conf.directory"), filename));
             if (filename.endsWith(".gz")) {
                 is = new GZIPInputStream(is);
             }
             Object rv = xstream.fromXML(is);
             return rv;
         } catch (IOException ioe) {
-            System.out.println(ioe);
+            ioe.printStackTrace();
         }
         return null;
     }
@@ -39,27 +37,27 @@ public final class PersistenceManager {
     public static void setupAliases() {
         try {
             Properties aliases = new Properties();
-            FileInputStream fis = new FileInputStream(new File(Config.CONF_DIR, "aliases.xml"));
+            FileInputStream fis = new FileInputStream(new File(System.getProperty("elysium.conf.directory"), "aliases.xml"));
             aliases.loadFromXML(fis);
-            for (Enumeration<?> e = aliases.propertyNames(); e.hasMoreElements(); ) {
+            for (Enumeration e = aliases.propertyNames(); e.hasMoreElements(); ) {
                 String alias = (String) e.nextElement();
-                Class<?> c = Class.forName((String) aliases.get(alias));
+                Class c = Class.forName((String) aliases.get(alias));
                 xstream.alias(alias, c);
             }
         } catch (Exception ioe) {
-            System.out.println(ioe);
+            ioe.printStackTrace();
         }
     }
 
     public static void write(String filename, Object o) {
         try {
-            OutputStream os = new FileOutputStream(new File(Config.CONF_DIR, filename));
+            OutputStream os = new FileOutputStream(new File(System.getProperty("elysium.conf.directory"), filename));
             if (filename.endsWith(".gz")) {
                 os = new GZIPOutputStream(os);
             }
             xstream.toXML(o, os);
         } catch (IOException ioe) {
-            System.out.println(ioe);
+            ioe.printStackTrace();
         }
     }
 }

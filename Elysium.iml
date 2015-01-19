@@ -8,11 +8,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="hex-string" level="project" />
-    <orderEntry type="library" name="xpp3" level="project" />
-    <orderEntry type="library" name="xstream" level="project" />
     <orderEntry type="library" name="netty-all-4.0.25.Final" level="project" />
-    <orderEntry type="library" name="org.hibernate:hibernate-core:4.3.8.Final" level="project" />
     <orderEntry type="library" name="sqljdbc41" level="project" />
     <orderEntry type="library" name="org.hibernate:hibernate-c3p0:4.3.8.Final" level="project" />
+    <orderEntry type="library" name="xstream-1.4.7" level="project" />
   </component>
 </module>

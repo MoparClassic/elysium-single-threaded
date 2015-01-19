@@ -1,9 +1,11 @@
 package org.moparscape.elysium.entity;
 
 import org.moparscape.elysium.Server;
-import org.moparscape.elysium.def.NpcDef;
+import org.moparscape.elysium.def.NPCDef;
+import org.moparscape.elysium.def.NPCLoc;
 import org.moparscape.elysium.entity.component.MobileSprite;
 import org.moparscape.elysium.entity.component.Movement;
+import org.moparscape.elysium.util.Formulae;
 import org.moparscape.elysium.world.Point;
 import org.moparscape.elysium.world.Region;
 
@@ -18,12 +20,13 @@ public final class Npc extends MobileEntity {
     private int appearanceId = 0;
     private boolean appearanceUpdateRequired = false;
     private int combatLevel = 0;
-    private NpcDef def;
+    private NPCDef def;
     private int hitpoints;
     private int id;
     private int index;
     private int lastDamage = 0;
     private long lastMoved = 0L;
+    private NPCLoc loc;
     private MobileSprite mobSprite = new MobileSprite(this);
     private Movement movement = new Movement(this, mobSprite);
 
@@ -31,8 +34,25 @@ public final class Npc extends MobileEntity {
         this.id = id;
     }
 
+    public Npc(NPCLoc loc) {
+        def = DefinitionHandler.getNpcDef(loc.getId());
+        hitpoints = def.getHits();
+        this.loc = loc;
+        this.id = loc.getId();
+        this.setLocation(new Point(loc.startX(), loc.startY()), true);
+        this.setCombatLevel(Formulae.getCombatLevel(def.getAtt(), def.getDef(), def.getStr(), def.getHits(), 0, 0, 0));
+    }
+
     public int getAttack() {
         return def.getAtt();
+    }
+
+    public int getCombatLevel() {
+        return combatLevel;
+    }
+
+    public void setCombatLevel(int combatLevel) {
+        this.combatLevel = combatLevel;
     }
 
     public int getDefense() {
@@ -70,6 +90,10 @@ public final class Npc extends MobileEntity {
 
     public int getLastDamage() {
         return lastDamage;
+    }
+
+    public NPCLoc getLoc() {
+        return loc;
     }
 
     @Override

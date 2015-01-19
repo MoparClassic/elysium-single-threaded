@@ -2,6 +2,7 @@ package org.moparscape.elysium.entity;
 
 import org.moparscape.elysium.Server;
 import org.moparscape.elysium.def.ItemDef;
+import org.moparscape.elysium.def.ItemLoc;
 import org.moparscape.elysium.task.timed.RespawnItemTask;
 import org.moparscape.elysium.world.Point;
 import org.moparscape.elysium.world.Region;
@@ -25,7 +26,12 @@ public final class Item implements Locatable, Heartbeat {
     private final long spawned;
     private final UUID uuid;
     private boolean heartbeatCancelled = false;
+    private ItemLoc loc; // Note: Should not need to keep a reference to this.
     private long pulseTime = 0;
+
+    public Item(ItemLoc loc) {
+        this(loc.getId(), loc.getAmount(), new Point(loc.getX(), loc.getY()), null, loc.getRespawnTime());
+    }
 
     public Item(int itemId, int amount, Point loc, Player owner) {
         this(itemId, amount, loc, owner, -1);

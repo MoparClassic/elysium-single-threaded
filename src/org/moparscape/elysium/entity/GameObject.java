@@ -1,5 +1,7 @@
 package org.moparscape.elysium.entity;
 
+import org.moparscape.elysium.def.DoorDef;
+import org.moparscape.elysium.def.GameObjectDef;
 import org.moparscape.elysium.def.GameObjectLoc;
 import org.moparscape.elysium.world.Point;
 
@@ -18,10 +20,22 @@ public final class GameObject implements Locatable {
 
     public GameObject(GameObjectLoc loc) {
         this.loc = loc;
+        this.location = new Point(loc.getX(), loc.getY());
+        this.direction = loc.getDirection();
+        this.type = loc.getType();
+        this.id = loc.getId();
     }
 
     public int getDirection() {
         return direction;
+    }
+
+    public DoorDef getDoorDef() {
+        return DefinitionHandler.getDoorDef(id);
+    }
+
+    public GameObjectDef getGameObjectDef() {
+        return DefinitionHandler.getGameObjectDef(id);
     }
 
     public int getId() {
@@ -32,19 +46,11 @@ public final class GameObject implements Locatable {
         return location;
     }
 
-    public void setLocation(Point location) {
-        this.location = location;
-    }
-
     public int getType() {
         return type;
     }
 
     public boolean isRemoved() {
         return false;
-    }
-
-    public void setLocation(Point location, boolean teleported) {
-        this.location = location;
     }
 }

@@ -13,6 +13,7 @@ import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.net.codec.ElysiumChannelInitializer;
 import org.moparscape.elysium.task.IssueUpdatePacketsTask;
 import org.moparscape.elysium.task.timed.TimedTask;
+import org.moparscape.elysium.util.Config;
 import org.moparscape.elysium.world.World;
 
 import java.net.InetSocketAddress;
@@ -28,50 +29,63 @@ import java.util.concurrent.Executors;
  */
 public class Server {
 
+    private static final Config CONFIG = new Config();
     private static final Server INSTANCE = new Server();
     private static final int PULSE_RUN_TIME_MILLISECONDS = 600;
-
-    private final EventLoopGroup bossGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
-    private final ExecutorService dataExecutorService = Executors.newSingleThreadExecutor();
-    private final Set<Session> sessions = new HashSet<>(1500);
-    private final PriorityQueue<UnregistrableSession> sessionsToUnregister =
-            new PriorityQueue<>(new EntityComparators.HeartbeatComparator());
+    private final EventLoopGroup bossGroup;
+    private final ExecutorService dataExecutorService;
+    private final Set<Session> sessions;
+    private final PriorityQueue<UnregistrableSession> sessionsToUnregister;
     /**
      * We used to use a PriorityBlockingQueue here. But upon inspecting the source code
      * I've learned that it acquires and release a lock EVERY TIME you peek/poll.
      * We're better off just synchronizing externally which is what's done now.
      */
-    private final PriorityQueue<TimedTask> taskQueue = new PriorityQueue<>();
-    private final IssueUpdatePacketsTask updatePacketBuilder = new IssueUpdatePacketsTask(sessions);
-    private final GameStateUpdater updater = new GameStateUpdater();
-    private final EventLoopGroup workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
+    private final PriorityQueue<TimedTask> taskQueue;
+    private final IssueUpdatePacketsTask updatePacketBuilder;
+    private final EventLoopGroup workerGroup;
     /**
      * An epoch timestamp (set using System.currentTimeMillis()) that can be used
      * for storing and comparing database timestamps.
      */
-    private long epochTimestamp = System.currentTimeMillis();
+    private long epochTimestamp;
     /**
      * A higher resolution (on most systems) timer that is used to accurately detect
      * when an update should be performed.
      */
-    private long highResolutionTimestamp = System.nanoTime() / 1000000;
+    private long highResolutionTimestamp;
     private long lastPositionUpdate = 0L;
     private long lastPulse = 0L;
     private boolean running = true;
-    private Set<Session> sessionsToRegister = new HashSet<>(10);
+    private Set<Session> sessionsToRegister;
+    private GameStateUpdater updater;
 
     private Server() {
         int cores = Runtime.getRuntime().availableProcessors();
         System.out.println("CPU cores: " + cores);
+
+        this.epochTimestamp = System.currentTimeMillis();
+        this.highResolutionTimestamp = getNanoTimeAsMilliseconds();
+
+        this.bossGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
+        this.workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
+        this.dataExecutorService = Executors.newSingleThreadExecutor();
+        this.sessions = new HashSet<>(1500);
+
+        this.sessionsToRegister = new HashSet<>(10);
+        this.sessionsToUnregister = new PriorityQueue<>(new EntityComparators.HeartbeatComparator());
+        this.taskQueue = new PriorityQueue<>();
+        this.updatePacketBuilder = new IssueUpdatePacketsTask(sessions);
     }
 
     public static Server getInstance() {
         return INSTANCE;
     }
 
-    public static void main(String[] args) {
-        Server server = Server.getInstance();
+    public static void main(String[] args) throws Exception {
         World.getInstance().seedWithEntities();
+        Server server = Server.getInstance();
+        server.setGameStateUpdater(new GameStateUpdater());
         ChannelFuture cf = server.listen();
 
         System.out.println("Server has started. :)");
@@ -298,6 +312,10 @@ public class Server {
         }
 
         temp.clear();
+    }
+
+    public void setGameStateUpdater(GameStateUpdater updater) {
+        this.updater = updater;
     }
 
     public void shutdown() {

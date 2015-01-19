@@ -1,6 +1,6 @@
 package org.moparscape.elysium.entity;
 
-import org.moparscape.elysium.entity.component.NpcLoc;
+import org.moparscape.elysium.def.NPCLoc;
 import org.moparscape.elysium.net.Session;
 
 /**
@@ -16,7 +16,7 @@ public final class DefaultEntityFactory implements EntityFactory {
         return INSTANCE;
     }
 
-    public Npc newNpc(NpcLoc loc) {
+    public Npc newNpc(NPCLoc loc) {
 //        Map<Class<? extends Component>, Component> components =
 //                new HashMap<Class<? extends Component>, Component>();
 //

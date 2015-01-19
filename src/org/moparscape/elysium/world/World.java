@@ -1,9 +1,13 @@
 package org.moparscape.elysium.world;
 
+import org.moparscape.elysium.def.NPCLoc;
 import org.moparscape.elysium.entity.*;
+import org.moparscape.elysium.io.WorldLoader;
 import org.moparscape.elysium.util.EntityList;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -23,15 +27,20 @@ public final class World {
     private static final EntityFactory ENTITY_FACTORY = new DefaultEntityFactory();
     private static final World INSTANCE;
     private final EntityList<Npc> npcList = new EntityList<>(MAX_NPCS);
-
-    static {
-        INSTANCE = new World();
-    }
-
     private final TileValue outsideWorld = new TileValue();
     private final EntityList<Player> playerList = new EntityList<>(MAX_PLAYERS);
+    private final List<Shop> shops = new ArrayList<>();
+    static {
+        INSTANCE = new World();
+        try {
+            WorldLoader loader = new WorldLoader();
+            loader.loadWorld(INSTANCE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalStateException("WorldLoader failed.");
+        }
+    }
     private final TileValue[][] tileType = new TileValue[MAX_WIDTH][MAX_HEIGHT];
-
     private int currentPlayerCount = 0;
 
     private World() {
@@ -79,12 +88,105 @@ public final class World {
         return t;
     }
 
-    public boolean registerNpc(Npc npc) {
-        return npcList.add(npc);
+    /**
+     * Updates the map to include a new door
+     */
+    public void registerDoor(GameObject o) {
+        if (o.getDoorDef().getDoorType() != 1) {
+            return;
+        }
+        int dir = o.getDirection();
+        Point location = o.getLocation();
+        int x = location.getX();
+        int y = location.getY();
+        if (dir == 0) {
+            getTileValue(x, y).objectValue |= 1;
+            getTileValue(x, y - 1).objectValue |= 4;
+        } else if (dir == 1) {
+            getTileValue(x, y).objectValue |= 2;
+            getTileValue(x - 1, y).objectValue |= 8;
+        } else if (dir == 2) {
+            getTileValue(x, y).objectValue |= 0x10;
+        } else if (dir == 3) {
+            getTileValue(x, y).objectValue |= 0x20;
+        }
+    }
+
+    public void registerGameObject(GameObject o) {
+        switch (o.getType()) {
+            case 0:
+                registerObject(o);
+                break;
+            case 1:
+                registerDoor(o);
+                break;
+        }
+    }
+
+    public boolean registerItem(Item item) {
+        Point location = item.getLocation();
+        if (location != null) {
+            Region r = Region.getRegion(location);
+            r.addItem(item);
+        }
+        return true;
+    }
+
+    public boolean registerNpc(Npc n) {
+        NPCLoc npc = n.getLoc();
+        if (npc.startX < npc.minX || npc.startX > npc.maxX || npc.startY < npc.minY || npc.startY > npc.maxY || (getTileValue(npc.startX, npc.startY).mapValue & 64) != 0) {
+            System.out.println("Fucked Npc: <id>" + npc.id + "</id><startX>" + npc.startX + "</startX><startY>" + npc.startY + "</startY>");
+        }
+        return npcList.add(n);
+    }
+
+    /**
+     * Updates the map to include a new object
+     */
+    public void registerObject(GameObject o) {
+        if (o.getGameObjectDef().getType() != 1 && o.getGameObjectDef().getType() != 2) {
+            return;
+        }
+        int dir = o.getDirection();
+        Point location = o.getLocation();
+        int baseX = location.getX();
+        int baseY = location.getY();
+        int width, height;
+        if (dir == 0 || dir == 4) {
+            width = o.getGameObjectDef().getWidth();
+            height = o.getGameObjectDef().getHeight();
+        } else {
+            height = o.getGameObjectDef().getWidth();
+            width = o.getGameObjectDef().getHeight();
+        }
+        for (int x = baseX; x < baseX + width; x++) {
+            for (int y = baseY; y < baseY + height; y++) {
+                if (o.getGameObjectDef().getType() == 1) {
+                    getTileValue(x, y).objectValue |= 0x40;
+                } else if (dir == 0) {
+                    getTileValue(x, y).objectValue |= 2;
+                    getTileValue(x - 1, y).objectValue |= 8;
+                } else if (dir == 2) {
+                    getTileValue(x, y).objectValue |= 4;
+                    getTileValue(x, y + 1).objectValue |= 1;
+                } else if (dir == 4) {
+                    getTileValue(x, y).objectValue |= 8;
+                    getTileValue(x + 1, y).objectValue |= 2;
+                } else if (dir == 6) {
+                    getTileValue(x, y).objectValue |= 1;
+                    getTileValue(x, y - 1).objectValue |= 4;
+                }
+            }
+        }
     }
 
     public boolean registerPlayer(Player p) {
         return playerList.add(p);
+    }
+
+    public void registerShop(final Shop shop) {
+        shop.setEquilibrium();
+        shops.add(shop);
     }
 
     public void seedWithEntities() {
@@ -92,24 +194,24 @@ public final class World {
         SecureRandom random = new SecureRandom();
         random.setSeed(13333333333337L);
 
-        for (int i = 0; i < 50; i++) {
-            int x = getRandomOrdinate(random, workingLocation.getX(), 10);
-            int y = getRandomOrdinate(random, workingLocation.getY(), 10);
-
-            Point loc = new Point(x, y);
-            Item item = new Item(i, 1, loc, null);
-            Region.getRegion(loc).addItem(item);
-        }
-
-        for (int i = 1; i < 20; i++) {
-            int x = getRandomOrdinate(random, workingLocation.getX(), 10);
-            int y = getRandomOrdinate(random, workingLocation.getY(), 10);
-
-            Point loc = new Point(x, y);
-            Npc npc = new Npc(95);
-            npc.setIndex(i);
-            npc.setLocation(loc, true);
-        }
+//        for (int i = 0; i < 50; i++) {
+//            int x = getRandomOrdinate(random, workingLocation.getX(), 10);
+//            int y = getRandomOrdinate(random, workingLocation.getY(), 10);
+//
+//            Point loc = new Point(x, y);
+//            Item item = new Item(i, 1, loc, null);
+//            Region.getRegion(loc).addItem(item);
+//        }
+//
+//        for (int i = 1; i < 20; i++) {
+//            int x = getRandomOrdinate(random, workingLocation.getX(), 10);
+//            int y = getRandomOrdinate(random, workingLocation.getY(), 10);
+//
+//            Point loc = new Point(x, y);
+//            Npc npc = new Npc(95);
+//            npc.setIndex(i);
+//            npc.setLocation(loc, true);
+//        }
     }
 
     public boolean unregisterPlayer(Player p) {

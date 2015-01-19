@@ -1,71 +1,56 @@
 package org.moparscape.elysium.def;
 
 public class GameObjectLoc {
-    /**
-     * The direction it faces
-     */
-    public int direction;
-    /**
-     * The id of the gameObject
-     */
-    public int id;
-    /**
-     * Type of object - 0: Object, 1: WallObject
-     */
-    public int type;
-    /**
-     * The objects x coord
-     */
-    public int x;
-    /**
-     * The objects y coord
-     */
-    public int y;
 
-    public GameObjectLoc(int id, int x, int y, int direction, int type) {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
-        this.type = type;
-    }
+	/**
+	 * The direction it faces
+	 */
+	public int direction;
+	/**
+	 * The id of the gameObject
+	 */
+	public int id;
+	/**
+	 * Type of object - 0: Object, 1: WallObject
+	 */
+	public int type;
+	/**
+	 * The objects x coord
+	 */
+	public int x;
+	/**
+	 * The objects y coord
+	 */
+	public int y;
 
-    public int getDirection() {
-        return direction;
-    }
+	public GameObjectLoc() {
+	}
 
-    public int getId() {
-        return id;
-    }
+	public GameObjectLoc(int id, int x, int y, int direction, int type) {
+		this.id = id;
+		this.x = x;
+		this.y = y;
+		this.direction = direction;
+		this.type = type;
+	}
 
-    public int getType() {
-        return type;
-    }
+	public int getDirection() {
+		return direction;
+	}
 
-    public int getX() {
-        return x;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public int getY() {
-        return y;
-    }
+	public int getType() {
+		return type;
+	}
 
-    @Override
-    public int hashCode() {
-        return id | x | y | type | direction;
-    }
+	public int getX() {
+		return x;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        }
-
-        if (o == null || !(o instanceof GameObjectLoc)) {
-            return false;
-        }
-
-        GameObjectLoc loc = (GameObjectLoc) o;
-        return id == loc.id && x == loc.x && y == loc.y && type == loc.type && direction == loc.direction;
-    }
+	public int getY() {
+		return y;
+	}
 }

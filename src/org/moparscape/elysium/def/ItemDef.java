@@ -9,8 +9,8 @@ public class ItemDef extends EntityDef {
 
     private final int basePrice;
     private final String command;
-    private final int mask;
     private final boolean members;
+    private final int pictureMask;
     private final int sprite;
     private final boolean stackable;
     private final boolean tradable;
@@ -26,7 +26,7 @@ public class ItemDef extends EntityDef {
         this.sprite = sprite;
         this.stackable = stackable;
         this.wieldable = wieldable;
-        this.mask = mask;
+        this.pictureMask = mask;
         this.members = members;
         this.tradable = tradable;
     }
@@ -40,7 +40,7 @@ public class ItemDef extends EntityDef {
     }
 
     public int getPictureMask() {
-        return mask;
+        return pictureMask;
     }
 
     public int getSprite() {
