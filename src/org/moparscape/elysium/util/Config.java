@@ -2,7 +2,6 @@ package org.moparscape.elysium.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -86,8 +85,6 @@ public final class Config {
 
     private static void loadProperties() throws IOException {
         Properties p = new Properties();
-        p.setProperty("elysium.conf.directory", "/conf/");
-        p.storeToXML(new FileOutputStream("ElysiumProperties.xml"), "Comment here");
         p.loadFromXML(new FileInputStream("ElysiumProperties.xml"));
         for (Object o : p.keySet()) {
             if (!(o instanceof String)) {

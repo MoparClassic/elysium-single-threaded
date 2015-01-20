@@ -44,4 +44,6 @@
     <entry key="ObjectFishingDef">org.moparscape.elysium.def.ObjectFishingDef</entry>
     <entry key="ObjectFishDef">org.moparscape.elysium.def.ObjectFishDef</entry>
     <entry key="ItemDropDef">org.moparscape.elysium.def.ItemDropDef</entry>
+    <entry key="ThievableObject">org.moparscape.elysium.def.ThievableObjectDef</entry>
+    <entry key="ThievableNPC">org.moparscape.elysium.def.ThievableNPCDef</entry>
 </properties>

@@ -1,112 +1,112 @@
 <map>
     <entry>
         <int>1034</int>
-        <org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        <ThievableObject>
             <loot>
                 <int>1</int>
                 <int>2</int>
                 <int>3</int>
             </loot>
             <requiredThievingLevel>99</requiredThievingLevel>
-        </org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        </ThievableObject>
     </entry>
     <entry>
         <int>326</int>
-        <org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        <ThievableObject>
             <loot>
                 <int>1</int>
                 <int>2</int>
                 <int>3</int>
             </loot>
             <requiredThievingLevel>99</requiredThievingLevel>
-        </org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        </ThievableObject>
     </entry>
     <entry>
         <int>327</int>
-        <org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        <ThievableObject>
             <loot>
                 <int>1</int>
                 <int>2</int>
                 <int>3</int>
             </loot>
             <requiredThievingLevel>99</requiredThievingLevel>
-        </org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        </ThievableObject>
     </entry>
     <entry>
         <int>324</int>
-        <org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        <ThievableObject>
             <loot>
                 <int>1</int>
                 <int>2</int>
                 <int>3</int>
             </loot>
             <requiredThievingLevel>99</requiredThievingLevel>
-        </org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        </ThievableObject>
     </entry>
     <entry>
         <int>325</int>
-        <org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        <ThievableObject>
             <loot>
                 <int>1</int>
                 <int>2</int>
                 <int>3</int>
             </loot>
             <requiredThievingLevel>99</requiredThievingLevel>
-        </org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        </ThievableObject>
     </entry>
     <entry>
         <int>322</int>
-        <org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        <ThievableObject>
             <loot>
                 <int>1</int>
                 <int>2</int>
                 <int>3</int>
             </loot>
             <requiredThievingLevel>99</requiredThievingLevel>
-        </org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        </ThievableObject>
     </entry>
     <entry>
         <int>323</int>
-        <org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        <ThievableObject>
             <loot>
                 <int>1</int>
                 <int>2</int>
                 <int>3</int>
             </loot>
             <requiredThievingLevel>99</requiredThievingLevel>
-        </org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        </ThievableObject>
     </entry>
     <entry>
         <int>999</int>
-        <org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        <ThievableObject>
             <loot>
                 <int>1</int>
                 <int>2</int>
                 <int>3</int>
             </loot>
             <requiredThievingLevel>99</requiredThievingLevel>
-        </org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        </ThievableObject>
     </entry>
     <entry>
         <int>1183</int>
-        <org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        <ThievableObject>
             <loot>
                 <int>1</int>
                 <int>2</int>
                 <int>3</int>
             </loot>
             <requiredThievingLevel>99</requiredThievingLevel>
-        </org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        </ThievableObject>
     </entry>
     <entry>
         <int>973</int>
-        <org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        <ThievableObject>
             <loot>
                 <int>1</int>
                 <int>2</int>
                 <int>3</int>
             </loot>
             <requiredThievingLevel>99</requiredThievingLevel>
-        </org.rscdaemon.server.entityhandling.defs.ThievableObject>
+        </ThievableObject>
     </entry>
 </map>

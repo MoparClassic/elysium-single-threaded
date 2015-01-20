@@ -16128,12 +16128,12 @@
                 <amount>2</amount>
                 <weight>10</weight>
             </ItemDropDef>
+            <ItemDropDef>
+                <id>626</id>
+                <amount>1</amount>
+                <weight>4</weight>
+            </ItemDropDef>
         </drops>
-        <ItemDropDef>
-            <id>626</id>
-            <amount>1</amount>
-            <weight>4</weight>
-        </ItemDropDef>
     </NPCDef>
     <NPCDef>
         <name>Owen</name>
