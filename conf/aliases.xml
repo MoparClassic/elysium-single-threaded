@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+    <comment>Stores aliases for the XStream engine</comment>
+    <entry key="Point">org.moparscape.elysium.world.Point</entry>
+    <entry key="TelePoint">org.moparscape.elysium.world.TelePoint</entry>
+
+    <entry key="Shop">org.moparscape.elysium.entity.Shop</entry>
+    <entry key="InvItem">org.moparscape.elysium.entity.InvItem</entry>
+
+    <entry key="CerterDef">org.moparscape.elysium.def.CerterDef</entry>
+    <entry key="CertDef">org.moparscape.elysium.def.CertDef</entry>
+
+    <entry key="GameObjectLoc">org.moparscape.elysium.def.GameObjectLoc</entry>
+    <entry key="ItemLoc">org.moparscape.elysium.def.ItemLoc</entry>
+    <entry key="NPCLoc">org.moparscape.elysium.def.NPCLoc</entry>
+
+    <entry key="TileDef">org.moparscape.elysium.def.TileDef</entry>
+    <entry key="GameObjectDef">org.moparscape.elysium.def.GameObjectDef</entry>
+    <entry key="DoorDef">org.moparscape.elysium.def.DoorDef</entry>
+    <entry key="ItemDef">org.moparscape.elysium.def.ItemDef</entry>
+    <entry key="PrayerDef">org.moparscape.elysium.def.PrayerDef</entry>
+    <entry key="SpellDef">org.moparscape.elysium.def.SpellDef</entry>
+    <entry key="NPCDef">org.moparscape.elysium.def.NPCDef</entry>
+
+    <entry key="ItemCraftingDef">org.moparscape.elysium.def.ItemCraftingDef</entry>
+    <entry key="ItemHerbSecond">org.moparscape.elysium.def.ItemHerbSecond</entry>
+    <entry key="ItemDartTipDef">org.moparscape.elysium.def.ItemDartTipDef</entry>
+    <entry key="ItemGemDef">org.moparscape.elysium.def.ItemGemDef</entry>
+    <entry key="ItemLogCutDef">org.moparscape.elysium.def.ItemLogCutDef</entry>
+    <entry key="ItemBowStringDef">org.moparscape.elysium.def.ItemBowStringDef</entry>
+    <entry key="ItemArrowHeadDef">org.moparscape.elysium.def.ItemArrowHeadDef</entry>
+    <entry key="FiremakingDef">org.moparscape.elysium.def.FiremakingDef</entry>
+    <entry key="ReqOreDef">org.moparscape.elysium.def.ReqOreDef</entry>
+    <entry key="ItemWieldableDef">org.moparscape.elysium.def.ItemWieldableDef</entry>
+    <entry key="ItemUnIdentHerbDef">org.moparscape.elysium.def.ItemUnIdentHerbDef</entry>
+    <entry key="ItemHerbDef">org.moparscape.elysium.def.ItemHerbDef</entry>
+    <entry key="ItemCookingDef">org.moparscape.elysium.def.ItemCookingDef</entry>
+    <entry key="ItemSmeltingDef">org.moparscape.elysium.def.ItemSmeltingDef</entry>
+    <entry key="ItemSmithingDef">org.moparscape.elysium.def.ItemSmithingDef</entry>
+    <entry key="ObjectMiningDef">org.moparscape.elysium.def.ObjectMiningDef</entry>
+    <entry key="ObjectWoodcuttingDef">org.moparscape.elysium.def.ObjectWoodcuttingDef</entry>
+    <entry key="ObjectFishingDef">org.moparscape.elysium.def.ObjectFishingDef</entry>
+    <entry key="ObjectFishDef">org.moparscape.elysium.def.ObjectFishDef</entry>
+    <entry key="ItemDropDef">org.moparscape.elysium.def.ItemDropDef</entry>
+</properties>

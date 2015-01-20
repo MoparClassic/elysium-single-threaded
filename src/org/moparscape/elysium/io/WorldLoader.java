@@ -105,16 +105,16 @@ public final class WorldLoader {
 
 //		try { out.close(); } catch(Exception e) { Logger.error(e); }
 
-        for (GameObjectLoc gameObject : (List<GameObjectLoc>) PersistenceManager.load("locs/GameObjectLoc.xml.gz")) {
+        for (GameObjectLoc gameObject : (List<GameObjectLoc>) PersistenceManager.load("locs/GameObjectLoc.xml")) {
             world.registerGameObject(new GameObject(gameObject));
         }
-        for (ItemLoc loc : (List<ItemLoc>) PersistenceManager.load("locs/ItemLoc.xml.gz")) {
+        for (ItemLoc loc : (List<ItemLoc>) PersistenceManager.load("locs/ItemLoc.xml")) {
             world.registerItem(new Item(loc));
         }
-        for (NPCLoc loc : (List<NPCLoc>) PersistenceManager.load("locs/NpcLoc.xml.gz")) {
+        for (NPCLoc loc : (List<NPCLoc>) PersistenceManager.load("locs/NpcLoc.xml")) {
             world.registerNpc(new Npc(loc));
         }
-        for (Shop shop : (List<Shop>) PersistenceManager.load("locs/Shops.xml.gz")) {
+        for (Shop shop : (List<Shop>) PersistenceManager.load("locs/Shops.xml")) {
             world.registerShop(shop);
         }
 

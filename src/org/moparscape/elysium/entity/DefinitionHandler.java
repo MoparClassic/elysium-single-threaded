@@ -320,42 +320,42 @@ public final class DefinitionHandler {
         return def;
     }
     static {
-        doors = (DoorDef[]) PersistenceManager.load("defs/DoorDef.xml.gz");
-        gameObjects = (GameObjectDef[]) PersistenceManager.load("defs/GameObjectDef.xml.gz");
-        npcs = (NPCDef[]) PersistenceManager.load("defs/NPCDef.xml.gz");
+        doors = (DoorDef[]) PersistenceManager.load("defs/DoorDef.xml");
+        gameObjects = (GameObjectDef[]) PersistenceManager.load("defs/GameObjectDef.xml");
+        npcs = (NPCDef[]) PersistenceManager.load("defs/NPCDef.xml");
 
-        thievableNPCs = (HashMap) PersistenceManager.load("defs/ThievableNpcs.xml.gz");
-        thievableObjects = (HashMap) PersistenceManager.load("defs/ThievableObjects.xml.gz");
+        thievableNPCs = (HashMap) PersistenceManager.load("defs/ThievableNpcs.xml");
+        thievableObjects = (HashMap) PersistenceManager.load("defs/ThievableObjects.xml");
 
-        prayers = (PrayerDef[]) PersistenceManager.load("defs/PrayerDef.xml.gz");
-        items = (ItemDef[]) PersistenceManager.load("defs/ItemDef.xml.gz");
-        spells = (SpellDef[]) PersistenceManager.load("defs/SpellDef.xml.gz");
-        tiles = (TileDef[]) PersistenceManager.load("defs/TileDef.xml.gz");
+        prayers = (PrayerDef[]) PersistenceManager.load("defs/PrayerDef.xml");
+        items = (ItemDef[]) PersistenceManager.load("defs/ItemDef.xml");
+        spells = (SpellDef[]) PersistenceManager.load("defs/SpellDef.xml");
+        tiles = (TileDef[]) PersistenceManager.load("defs/TileDef.xml");
 
-        keyChestLoots = (List[]) PersistenceManager.load("defs/extras/KeyChestLoot.xml.gz");
-        herbSeconds = (ItemHerbSecond[]) PersistenceManager.load("defs/extras/ItemHerbSecond.xml.gz");
-        dartTips = (HashMap) PersistenceManager.load("defs/extras/ItemDartTipDef.xml.gz");
-        gems = (HashMap) PersistenceManager.load("defs/extras/ItemGemDef.xml.gz");
-        logCut = (HashMap) PersistenceManager.load("defs/extras/ItemLogCutDef.xml.gz");
-        bowString = (HashMap) PersistenceManager.load("defs/extras/ItemBowStringDef.xml.gz");
-        arrowHeads = (HashMap) PersistenceManager.load("defs/extras/ItemArrowHeadDef.xml.gz");
-        firemaking = (HashMap) PersistenceManager.load("defs/extras/FiremakingDef.xml.gz");
-        itemAffectedTypes = (HashMap) PersistenceManager.load("defs/extras/ItemAffectedTypes.xml.gz");
-        itemWieldable = (HashMap) PersistenceManager.load("defs/extras/ItemWieldableDef.xml.gz");
-        itemUnIdentHerb = (HashMap) PersistenceManager.load("defs/extras/ItemUnIdentHerbDef.xml.gz");
-        itemHerb = (HashMap) PersistenceManager.load("defs/extras/ItemHerbDef.xml.gz");
-        itemEdibleHeals = (HashMap) PersistenceManager.load("defs/extras/ItemEdibleHeals.xml.gz");
-        itemCooking = (HashMap) PersistenceManager.load("defs/extras/ItemCookingDef.xml.gz");
-        itemSmelting = (HashMap) PersistenceManager.load("defs/extras/ItemSmeltingDef.xml.gz");
-        itemSmithing = (ItemSmithingDef[]) PersistenceManager.load("defs/extras/ItemSmithingDef.xml.gz");
-        itemCrafting = (ItemCraftingDef[]) PersistenceManager.load("defs/extras/ItemCraftingDef.xml.gz");
-        objectMining = (HashMap) PersistenceManager.load("defs/extras/ObjectMining.xml.gz");
-        objectWoodcutting = (HashMap) PersistenceManager.load("defs/extras/ObjectWoodcutting.xml.gz");
-        objectFishing = (HashMap) PersistenceManager.load("defs/extras/ObjectFishing.xml.gz");
-        spellAggressiveLvl = (HashMap) PersistenceManager.load("defs/extras/SpellAggressiveLvl.xml.gz");
+        keyChestLoots = (List[]) PersistenceManager.load("defs/extras/KeyChestLoot.xml");
+        herbSeconds = (ItemHerbSecond[]) PersistenceManager.load("defs/extras/ItemHerbSecond.xml");
+        dartTips = (HashMap) PersistenceManager.load("defs/extras/ItemDartTipDef.xml");
+        gems = (HashMap) PersistenceManager.load("defs/extras/ItemGemDef.xml");
+        logCut = (HashMap) PersistenceManager.load("defs/extras/ItemLogCutDef.xml");
+        bowString = (HashMap) PersistenceManager.load("defs/extras/ItemBowStringDef.xml");
+        arrowHeads = (HashMap) PersistenceManager.load("defs/extras/ItemArrowHeadDef.xml");
+        firemaking = (HashMap) PersistenceManager.load("defs/extras/FiremakingDef.xml");
+        itemAffectedTypes = (HashMap) PersistenceManager.load("defs/extras/ItemAffectedTypes.xml");
+        itemWieldable = (HashMap) PersistenceManager.load("defs/extras/ItemWieldableDef.xml");
+        itemUnIdentHerb = (HashMap) PersistenceManager.load("defs/extras/ItemUnIdentHerbDef.xml");
+        itemHerb = (HashMap) PersistenceManager.load("defs/extras/ItemHerbDef.xml");
+        itemEdibleHeals = (HashMap) PersistenceManager.load("defs/extras/ItemEdibleHeals.xml");
+        itemCooking = (HashMap) PersistenceManager.load("defs/extras/ItemCookingDef.xml");
+        itemSmelting = (HashMap) PersistenceManager.load("defs/extras/ItemSmeltingDef.xml");
+        itemSmithing = (ItemSmithingDef[]) PersistenceManager.load("defs/extras/ItemSmithingDef.xml");
+        itemCrafting = (ItemCraftingDef[]) PersistenceManager.load("defs/extras/ItemCraftingDef.xml");
+        objectMining = (HashMap) PersistenceManager.load("defs/extras/ObjectMining.xml");
+        objectWoodcutting = (HashMap) PersistenceManager.load("defs/extras/ObjectWoodcutting.xml");
+        objectFishing = (HashMap) PersistenceManager.load("defs/extras/ObjectFishing.xml");
+        spellAggressiveLvl = (HashMap) PersistenceManager.load("defs/extras/SpellAggressiveLvl.xml");
 
-        objectTelePoints = (HashMap) PersistenceManager.load("locs/extras/ObjectTelePoints.xml.gz");
-        certers = (HashMap) PersistenceManager.load("defs/extras/NpcCerters.xml.gz");
+        objectTelePoints = (HashMap) PersistenceManager.load("locs/extras/ObjectTelePoints.xml");
+        certers = (HashMap) PersistenceManager.load("defs/extras/NpcCerters.xml");
     }
 
     /**

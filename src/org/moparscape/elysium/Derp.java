@@ -1,9 +1,7 @@
 package org.moparscape.elysium;
 
-import org.moparscape.elysium.def.PrayerDef;
 import org.moparscape.elysium.entity.Heartbeat;
 import org.moparscape.elysium.entity.Indexable;
-import org.moparscape.elysium.util.PersistenceManager;
 import org.moparscape.elysium.world.Point;
 
 /**
@@ -20,8 +18,6 @@ public class Derp {
         System.out.println(Math.sqrt(Math.pow((p2.getX() - p1.getX()), 2) + Math.pow((p2.getY() - p1.getY()), 2)));
         System.out.println(Math.pow((p2.getX() - p1.getX()), 2) + Math.pow((p2.getY() - p1.getY()), 2));
 
-        PrayerDef[] prayers = (PrayerDef[]) PersistenceManager.load("defs/PrayerDef.xml.gz");
-        prayers.toString();
         if (true) return;
 
 //        final int TEST_ITERATIONS = 20;
