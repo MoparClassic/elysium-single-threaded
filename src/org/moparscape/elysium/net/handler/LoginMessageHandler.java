@@ -51,7 +51,7 @@ public final class LoginMessageHandler extends MessageHandler<LoginMessage> {
         Packets.sendWorldInfo(p);
         Packets.sendStats(p);
         Packets.sendLoginBox(p);
-        Packets.sendAppearanceScreen(p);
+//        Packets.sendAppearanceScreen(p);
 
         session.setAllowedToDisconnect(false);
         p.setLoggedIn(true);

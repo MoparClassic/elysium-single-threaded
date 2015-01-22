@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author lothy
  */
-public final class Item implements Locatable, Heartbeat {
+public final class Item implements Locatable {
 
     private final int amount;
     private final int itemId;
@@ -25,9 +25,7 @@ public final class Item implements Locatable, Heartbeat {
     private final int secondsUntilRespawn;
     private final long spawned;
     private final UUID uuid;
-    private boolean heartbeatCancelled = false;
     private ItemLoc loc; // Note: Should not need to keep a reference to this.
-    private long pulseTime = 0;
 
     public Item(ItemLoc loc) {
         this(loc.getId(), loc.getAmount(), new Point(loc.getX(), loc.getY()), null, loc.getRespawnTime());
@@ -62,26 +60,6 @@ public final class Item implements Locatable, Heartbeat {
 
     public Point getLocation() {
         return location;
-    }
-
-    @Override
-    public long getScheduledPulseTime() {
-        return pulseTime;
-    }
-
-    @Override
-    public void setScheduledPulseTime(long time) {
-        this.pulseTime = time;
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return heartbeatCancelled;
-    }
-
-    @Override
-    public void pulse() {
-
     }
 
     @Override

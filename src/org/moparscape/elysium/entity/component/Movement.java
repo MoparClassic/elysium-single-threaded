@@ -142,7 +142,7 @@ public final class Movement extends AbstractComponent {
     /**
      * Resets the path (stops movement)
      */
-    protected void resetPath() {
+    public void resetPath() {
         path = null;
         curWaypoint = -1;
     }

@@ -61,6 +61,7 @@ public final class PlayerSprite extends MobileSprite {
 
     public void setWornItem(int index, int itemId) {
         wornItems[index] = itemId;
+        appearanceChanged = true;
     }
 
     public void updateAppearanceId() {

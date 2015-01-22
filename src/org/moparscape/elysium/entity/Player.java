@@ -27,14 +27,24 @@ public final class Player extends MobileEntity implements Moveable {
     private int actionCount = 0;
     private boolean loggedIn = false;
     private Region region = null;
+    private PlayerState playerState;
 
     public Player(Session session) {
         this.session = session;
         this.setLocation(new Point(329, 552));
     }
 
+    public PlayerState getState() {
+        return playerState;
+    }
+
     public int getActionCount() {
         return actionCount;
+    }
+
+    public void setState(PlayerState state) {
+        this.playerState = state;
+        this.actionCount++;
     }
 
     public Bank getBank() {
@@ -118,10 +128,6 @@ public final class Player extends MobileEntity implements Moveable {
     @Override
     public boolean equals(Object o) {
         return this == o;
-    }
-
-    public int incrementActionCount() {
-        return ++actionCount;
     }
 
     public boolean isLoggedIn() {

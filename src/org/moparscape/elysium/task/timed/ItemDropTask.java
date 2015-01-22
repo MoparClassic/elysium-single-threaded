@@ -3,6 +3,7 @@ package org.moparscape.elysium.task.timed;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Item;
 import org.moparscape.elysium.entity.Player;
+import org.moparscape.elysium.entity.PlayerState;
 import org.moparscape.elysium.entity.component.Inventory;
 import org.moparscape.elysium.entity.component.Movement;
 import org.moparscape.elysium.net.Packets;
@@ -14,21 +15,21 @@ import org.moparscape.elysium.world.Region;
  *
  * @author lothy
  */
-public class ItemDropTask extends AbstractTimedTask {
+public final class ItemDropTask extends AbstractTimedTask {
 
-    private final int expectedActionCount;
     private final Inventory inventory;
     private final Movement movement;
     private final Player owner;
+    private final int originalActionCount;
     private final int slot;
     private boolean finished = false;
 
-    public ItemDropTask(Player owner, int slot, int actionCount) {
+    public ItemDropTask(Player owner, int slot, int originalAcountCount) {
         super(0, 0);
 
         this.owner = owner;
         this.slot = slot;
-        this.expectedActionCount = actionCount;
+        this.originalActionCount = originalAcountCount;
 
         this.movement = owner.getMovement();
         this.inventory = owner.getInventory();
@@ -41,8 +42,9 @@ public class ItemDropTask extends AbstractTimedTask {
 
         // If the player has started performing a new action,
         // cancel this task
-        int acount = owner.getActionCount();
-        if (acount != expectedActionCount) {
+        PlayerState state = owner.getState();
+        if (state != PlayerState.ITEM_DROP ||
+                originalActionCount != owner.getActionCount()) {
             finished = true;
             return;
         }

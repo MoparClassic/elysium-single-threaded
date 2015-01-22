@@ -113,6 +113,12 @@ public final class World {
     }
 
     public void registerGameObject(GameObject o) {
+        Point location = o.getLocation();
+        if (location != null) {
+            Region r = Region.getRegion(location);
+            r.addObject(o);
+        }
+
         switch (o.getType()) {
             case 0:
                 registerObject(o);
@@ -194,14 +200,14 @@ public final class World {
         SecureRandom random = new SecureRandom();
         random.setSeed(13333333333337L);
 
-//        for (int i = 0; i < 50; i++) {
-//            int x = getRandomOrdinate(random, workingLocation.getX(), 10);
-//            int y = getRandomOrdinate(random, workingLocation.getY(), 10);
-//
-//            Point loc = new Point(x, y);
-//            Item item = new Item(i, 1, loc, null);
-//            Region.getRegion(loc).addItem(item);
-//        }
+        for (int i = 0; i < 500; i++) {
+            int x = getRandomOrdinate(random, workingLocation.getX(), 10);
+            int y = getRandomOrdinate(random, workingLocation.getY(), 10);
+
+            Point loc = new Point(x, y);
+            Item item = new Item(i, 1, loc, null);
+            Region.getRegion(loc).addItem(item);
+        }
 //
 //        for (int i = 1; i < 20; i++) {
 //            int x = getRandomOrdinate(random, workingLocation.getX(), 10);

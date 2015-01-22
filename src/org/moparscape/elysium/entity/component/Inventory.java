@@ -42,6 +42,10 @@ public class Inventory extends AbstractComponent {
         this.maxItems = maxItems;
     }
 
+    public List<InvItem> getItems() {
+        return items;
+    }
+
     public int add(InvItem item) {
         if (item.getAmount() < 1) {
             return -1;
@@ -236,16 +240,11 @@ public class Inventory extends AbstractComponent {
     }
 
     public final void sendInventory() {
-        Player p = owner;
         Session s = owner.getSession();
-
-        int size = items.size();
-        int packetSize = (size * 6) + 1;
-
         PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 114);
-        pb.writeByte(size);
+        pb.writeByte(items.size());
         for (InvItem item : items) {
-            pb.writeShort(item.getItemId());
+            pb.writeShort(item.getItemId() + (item.isWielded() ? 32768 : 0));
             if (item.getDef().isStackable()) {
                 pb.writeInt(item.getAmount());
             }

@@ -57,9 +57,8 @@ public class Point {
     }
 
     public boolean withinRange(Point target, int radius) {
-        int xDiff = this.x - target.x;
-        int yDiff = this.y - target.y;
-
-        return xDiff <= radius && xDiff > -radius && yDiff <= radius && yDiff > -radius;
+        int xDiff = Math.abs(this.x - target.x);
+        int yDiff = Math.abs(this.y - target.y);
+        return xDiff <= radius && yDiff <= radius;
     }
 }

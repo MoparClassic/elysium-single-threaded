@@ -52,7 +52,7 @@ public final class MovementMessageDecoders {
         public WalkTargetMessage decode(ByteBuf buffer, int length) {
             int startX = buffer.readShort();
             int startY = buffer.readShort();
-            int steps = (length - 4) / 2;
+            int steps = buffer.readableBytes() / 2;
             byte[] xOffsets = new byte[steps];
             byte[] yOffsets = new byte[steps];
 

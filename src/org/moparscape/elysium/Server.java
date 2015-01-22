@@ -6,7 +6,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import org.moparscape.elysium.entity.EntityComparators;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.UnregistrableSession;
 import org.moparscape.elysium.net.Session;
@@ -73,7 +72,7 @@ public class Server {
         this.sessions = new HashSet<>(1500);
 
         this.sessionsToRegister = new HashSet<>(10);
-        this.sessionsToUnregister = new PriorityQueue<>(new EntityComparators.HeartbeatComparator());
+        this.sessionsToUnregister = new PriorityQueue<>();
         this.taskQueue = new PriorityQueue<>();
         this.updatePacketBuilder = new IssueUpdatePacketsTask(sessions);
     }
@@ -342,7 +341,7 @@ public class Server {
             UnregistrableSession us = null;
 
             while ((us = sessionsToUnregister.peek()) != null &&
-                    us.getScheduledPulseTime() <= time) {
+                    us.getExecutionTime() <= time) {
                 us = sessionsToUnregister.poll();
 
                 Session s = us.getSession();

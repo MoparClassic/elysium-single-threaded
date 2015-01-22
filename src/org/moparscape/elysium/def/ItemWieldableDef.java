@@ -1,5 +1,7 @@
 package org.moparscape.elysium.def;
 
+import org.moparscape.elysium.entity.DefinitionHandler;
+
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -96,5 +98,13 @@ public class ItemWieldableDef {
 
     public int getWieldPos() {
         return wieldPos;
+    }
+
+    public int[] getAffectedTypes() {
+        int[] affectedTypes = DefinitionHandler.getItemAffectedTypes(type);
+        if (affectedTypes != null) {
+            return affectedTypes;
+        }
+        return new int[0];
     }
 }

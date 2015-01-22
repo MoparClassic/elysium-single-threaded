@@ -1,6 +1,7 @@
 package org.moparscape.elysium.entity;
 
 import org.moparscape.elysium.def.ItemDef;
+import org.moparscape.elysium.def.ItemWieldableDef;
 
 /**
  * Created by IntelliJ IDEA.
@@ -64,5 +65,25 @@ public final class InvItem {
 
     public void setWielded(boolean wield) {
         wielded = wield;
+    }
+
+    public boolean isWieldable() {
+        return DefinitionHandler.getItemWieldableDef(id) != null;
+    }
+
+    public boolean wieldingAffectsItem(InvItem i) {
+        if (!i.isWieldable() || !isWieldable()) {
+            return false;
+        }
+        for (int affected : getWieldableDef().getAffectedTypes()) {
+            if (i.getWieldableDef().getType() == affected) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ItemWieldableDef getWieldableDef() {
+        return DefinitionHandler.getItemWieldableDef(id);
     }
 }

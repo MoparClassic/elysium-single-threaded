@@ -17,9 +17,9 @@ public final class Skills extends AbstractComponent {
 
     public Skills() {
         for (int i = 0; i < SKILL_COUNT; i++) {
-            curStat[i] = 99;
-            maxStat[i] = 99;
-            exp[i] = 14000000;
+            curStat[i] = 1;
+            maxStat[i] = 1;
+            exp[i] = 0;
         }
     }
 
