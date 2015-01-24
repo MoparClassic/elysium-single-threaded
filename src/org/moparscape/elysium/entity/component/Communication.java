@@ -2,10 +2,7 @@ package org.moparscape.elysium.entity.component;
 
 import org.moparscape.elysium.entity.ChatMessage;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,20 +14,8 @@ public final class Communication extends AbstractComponent {
     public static final int MAX_FRIENDS = 100;
 
     public static final int MAX_IGNORES = 50;
-    /**
-     * This should be fine as a standard linked list as the only time it is
-     * modified is when a player explicitly adds another player to the list.
-     * This means that only one thread (the thread handling the incoming
-     * packet from the player) will modify this list at a time.
-     */
-    private final List<Long> friends = new ArrayList<>();
-    /**
-     * This should be fine as a standard linked list as the only time it is
-     * modified is when a player explicitly adds another player to the list.
-     * This means that only one thread (the thread handling the incoming
-     * packet from the player) will modify this list at a time.
-     */
-    private final List<Long> ignores = new ArrayList<>();
+    private final Set<Long> friends = new HashSet<>();
+    private final Set<Long> ignores = new HashSet<>();
     private final Queue<ChatMessage> messages = new LinkedList<>();
     private final List<ChatMessage> messagesToDisplay = new ArrayList<>();
     private final List<ChatMessage> npcMessagesToDisplay = new ArrayList<>();
@@ -67,11 +52,11 @@ public final class Communication extends AbstractComponent {
         return messagesToDisplay;
     }
 
-    public List<Long> getFriendList() {
+    public Set<Long> getFriendList() {
         return friends;
     }
 
-    public List<Long> getIgnoreList() {
+    public Set<Long> getIgnoreList() {
         return ignores;
     }
 

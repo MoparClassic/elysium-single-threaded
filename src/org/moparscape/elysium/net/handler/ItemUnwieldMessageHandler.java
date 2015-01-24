@@ -39,7 +39,7 @@ public final class ItemUnwieldMessageHandler extends MessageHandler<ItemUnwieldM
         item.setWielded(false);
         sprite.setWornItem(wieldableDef.getWieldPos(), appearance.getSprite(wieldableDef.getWieldPos()));
         Packets.sendSound(player, "click");
-        inventory.sendInventory();
+        Packets.sendInventory(player);
 
         return true;
     }

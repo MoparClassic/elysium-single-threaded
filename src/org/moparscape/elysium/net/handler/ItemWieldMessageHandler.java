@@ -88,7 +88,7 @@ public final class ItemWieldMessageHandler extends MessageHandler<ItemWieldMessa
         item.setWielded(true);
         sprite.setWornItem(wieldableDef.getWieldPos(), wieldableDef.getSprite());
         Packets.sendSound(player, "click");
-        inventory.sendInventory();
+        Packets.sendInventory(player);
 
         return true;
     }

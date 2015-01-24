@@ -42,6 +42,8 @@ public final class EntityList<E extends Indexable> implements Iterable<E> {
     }
 
     public E get(int index) {
+        if (index < 0 || index >= size) return null;
+
         return (E) entities[index];
     }
 

@@ -1,9 +1,14 @@
 package org.moparscape.elysium.net;
 
 import io.netty.channel.ChannelFuture;
+import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
+import org.moparscape.elysium.entity.component.Combat;
+import org.moparscape.elysium.entity.component.Inventory;
 import org.moparscape.elysium.entity.component.Skills;
 import org.moparscape.elysium.util.Formulae;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -82,12 +87,12 @@ public final class Packets {
 //    public static ChannelFuture sendDuelSettingUpdate(Player player) {
 //        throw new UnsupportedOperationException();
 //    }
-//
-//    public static ChannelFuture sendDuelWindowClose(Player player) {
-//        PacketBuilder pb = new PacketBuilder(0);
-//        pb.setId(160);
-//        return player.getSession().write(pb.toPacket());
-//    }
+
+    public static void sendDuelWindowClose(Player player) {
+        Session s = player.getSession();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 160);
+        pb.finalisePacket();
+    }
 
 //    public static ChannelFuture sendDuelWindowOpen(Player player) {
 //        throw new UnsupportedOperationException();
@@ -144,6 +149,21 @@ public final class Packets {
 //        }
 //        return player.getSession().write(pb.toPacket());
 //    }
+
+    public static void sendInventory(Player player) {
+        Session s = player.getSession();
+        Inventory inventory = player.getInventory();
+
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 114);
+        pb.writeByte(inventory.size());
+        for (InvItem item : inventory.getItems()) {
+            pb.writeShort(item.getItemId() + (item.isWielded() ? 32768 : 0));
+            if (item.getDef().isStackable()) {
+                pb.writeInt(item.getAmount());
+            }
+        }
+        pb.finalisePacket();
+    }
 
     public static void sendLoginBox(Player player) {
         Session s = player.getSession();
@@ -266,26 +286,75 @@ public final class Packets {
 //        return player.getSession().write(pb.toPacket());
 //    }
 
-    public static ChannelFuture sendTradeAccept(Player player) {
-        throw new UnsupportedOperationException();
+    public static void sendTradeAccept(Player player) {
+        Player tradePartner = player.getTradingDueling().getWishToTrade();
+        if (tradePartner == null) return;
+
+        Session s = player.getSession();
+        List<InvItem> playerOffer = player.getTradingDueling().getTradeOffer();
+        List<InvItem> tradePartnerOffer = tradePartner.getTradingDueling().getTradeOffer();
+
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 251);
+        pb.writeLong(tradePartner.getCredentials().getUsernameHash());
+        pb.writeByte(tradePartnerOffer.size());
+        for (InvItem item : tradePartnerOffer) {
+            pb.writeShort(item.getItemId());
+            pb.writeInt(item.getAmount());
+        }
+
+        pb.writeByte(playerOffer.size());
+        for (InvItem item : playerOffer) {
+            pb.writeShort(item.getItemId());
+            pb.writeInt(item.getAmount());
+        }
+
+        pb.finalisePacket();
     }
 
-    public static ChannelFuture sendTradeAcceptUpdate(Player player) {
-        throw new UnsupportedOperationException();
+    public static void sendTradeAcceptUpdate(Player player) {
+        Player tradePartner = player.getTradingDueling().getWishToTrade();
+        if (tradePartner == null) return;
+
+        Session s = player.getSession();
+        PacketBuilder one = new PacketBuilder(s.getByteBuf(), 18);
+        one.writeByte(player.getTradingDueling().isTradeOfferAccepted() ? 1 : 0);
+        one.finalisePacket();
+
+        PacketBuilder two = new PacketBuilder(s.getByteBuf(), 92);
+        two.writeByte(tradePartner.getTradingDueling().isTradeOfferAccepted() ? 1 : 0);
+        two.finalisePacket();
     }
 
-    public static ChannelFuture sendTradeItems(Player player) {
-        throw new UnsupportedOperationException();
+    public static void sendTradeItems(Player player) {
+        Player tradePartner = player.getTradingDueling().getWishToTrade();
+        if (tradePartner == null) return;
+
+        List<InvItem> itemsOffered = tradePartner.getTradingDueling().getTradeOffer();
+        Session s = player.getSession();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 250);
+        pb.writeByte(itemsOffered.size());
+        for (InvItem item : itemsOffered) {
+            pb.writeShort(item.getItemId());
+            pb.writeInt(item.getAmount());
+        }
+
+        pb.finalisePacket();
     }
 
-//    public static ChannelFuture sendTradeWindowClose(Player player) {
-//        PacketBuilder pb = new PacketBuilder(0);
-//        pb.setId(187);
-//        return player.getSession().write(pb.toPacket());
-//    }
+    public static void sendTradeWindowClose(Player player) {
+        Session s = player.getSession();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 187);
+        pb.finalisePacket();
+    }
 
-    public static ChannelFuture sendTradeWindowOpen(Player player) {
-        throw new UnsupportedOperationException();
+    public static void sendTradeWindowOpen(Player player) {
+        Player target = player.getTradingDueling().getWishToTrade();
+        if (target == null) return;
+
+        Session s = player.getSession();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 4);
+        pb.writeShort(target.getIndex());
+        pb.finalisePacket();
     }
 
     public static void sendWorldInfo(Player player) {
@@ -296,6 +365,19 @@ public final class Packets {
         pb.writeShort(1776);
         pb.writeShort(Formulae.getHeight(player.getLocation()));
         pb.writeShort(944);
+        pb.finalisePacket();
+    }
+
+    public static void sendEquipmentStats(Player player) {
+        Session s = player.getSession();
+        Combat combat = player.getCombat();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 177);
+        pb.writeShort(combat.getArmourPoints());
+        pb.writeShort(combat.getWeaponAimPoints());
+        pb.writeShort(combat.getWeaponPowerPoints());
+        pb.writeShort(combat.getMagicPoints());
+        pb.writeShort(combat.getPrayerPoints());
+        pb.writeShort(combat.getRangePoints());
         pb.finalisePacket();
     }
 

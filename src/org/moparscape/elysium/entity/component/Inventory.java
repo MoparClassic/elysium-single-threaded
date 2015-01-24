@@ -155,6 +155,15 @@ public class Inventory extends AbstractComponent {
         return items.get(index);
     }
 
+    public InvItem get(InvItem item) {
+        for (int index = items.size() - 1; index >= 0; index--) {
+            if (items.get(index).equals(item)) {
+                return items.get(index);
+            }
+        }
+        return null;
+    }
+
     public final InvItem getById(int itemId) {
         for (InvItem item : items) {
             if (item.getItemId() == itemId) {

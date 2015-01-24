@@ -16,19 +16,19 @@ public final class Settings {
     public static final int HIDE_ROOFS_INDEX = 4;
     public static final int MOUSE_BUTTONS_INDEX = 2;
     public static final int SOUND_EFFECTS_INDEX = 3;
-    private boolean[] communicationSettings = new boolean[4];
+    private boolean[] privacySettings = new boolean[4];
     private boolean[] gameSettings = new boolean[7];
 
     public Settings() {
 
     }
 
-    public boolean getCommunicationSetting(int index) {
-        return communicationSettings[index];
+    public boolean getPrivacySetting(int index) {
+        return privacySettings[index];
     }
 
-    public boolean[] getCommunicationSettings() {
-        return communicationSettings;
+    public boolean[] getPrivacySettings() {
+        return privacySettings;
     }
 
     public boolean getGameSetting(int index) {
@@ -40,15 +40,15 @@ public final class Settings {
     }
 
     public void updateCommunicationSetting(int index, boolean flag) {
-        communicationSettings[index] = flag;
+        privacySettings[index] = flag;
     }
 
     public void updateCommunicationSettings(boolean blockChatMessages, boolean blockPrivateMessages,
                                             boolean blockTradeRequests, boolean blockDuelRequests) {
-        communicationSettings[BLOCK_CHAT_MESSAGES_INDEX] = blockChatMessages;
-        communicationSettings[BLOCK_PRIVATE_MESSAGES_INDEX] = blockPrivateMessages;
-        communicationSettings[BLOCK_TRADE_REQUESTS_INDEX] = blockTradeRequests;
-        communicationSettings[BLOCK_DUEL_REQUESTS_INDEX] = blockDuelRequests;
+        privacySettings[BLOCK_CHAT_MESSAGES_INDEX] = blockChatMessages;
+        privacySettings[BLOCK_PRIVATE_MESSAGES_INDEX] = blockPrivateMessages;
+        privacySettings[BLOCK_TRADE_REQUESTS_INDEX] = blockTradeRequests;
+        privacySettings[BLOCK_DUEL_REQUESTS_INDEX] = blockDuelRequests;
     }
 
     public void updateGameSetting(int index, boolean flag) {

@@ -13,16 +13,17 @@ import org.moparscape.elysium.world.Region;
 public final class Player extends MobileEntity implements Moveable {
 
     private final Bank bank = new Bank(this);
-    private final Combat combat = new Combat();
     private final Communication communication = new Communication();
     private final Credentials credentials = new Credentials();
     private final Inventory inventory = new Inventory(this);
+    private final Combat combat = new Combat(this, inventory);
     private final Session session;
     private final Settings settings = new Settings();
     private final Skills skills = new Skills();
     private final PlayerSprite sprite = new PlayerSprite(this);
     private final Movement movement = new Movement(this, sprite);
     private final Observer observer = new Observer(this, sprite);
+    private final TradingDueling tradingDueling = new TradingDueling(this);
     private final UpdateProxy updateProxy = new UpdateProxy(communication, credentials, movement, observer, skills, sprite);
     private int actionCount = 0;
     private boolean loggedIn = false;
@@ -65,6 +66,10 @@ public final class Player extends MobileEntity implements Moveable {
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public TradingDueling getTradingDueling() {
+        return tradingDueling;
     }
 
     public Point getLocation() {

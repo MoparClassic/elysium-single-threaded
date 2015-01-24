@@ -83,11 +83,11 @@ public final class HandlerLookupService {
             bindings.bind(SpellNpcMessage.class, SpellNpcMessageHandler.class);
             bindings.bind(SpellPlayerMessage.class, SpellPlayerMessageHandler.class);
             bindings.bind(SpellSelfMessage.class, SpellSelfMessageHandler.class);
-            bindings.bind(TradeAcceptMessage.class, TradeAcceptMessageHandler.class);
-            bindings.bind(TradeConfirmAcceptMessage.class, TradeConfirmAcceptMessageHandler.class);
-            bindings.bind(TradeDeclineMessage.class, TradeDeclineMessageHandler.class);
-            bindings.bind(TradeInformationMessage.class, TradeInformationMessageHandler.class);
-            bindings.bind(TradeRequestMessage.class, TradeRequestMessageHandler.class);
+            bindings.bind(TradeAcceptMessage.class, TradeMessageHandlers.TradeAcceptMessageHandler.class);
+            bindings.bind(TradeConfirmAcceptMessage.class, TradeMessageHandlers.TradeConfirmAcceptMessageHandler.class);
+            bindings.bind(TradeDeclineMessage.class, TradeMessageHandlers.TradeDeclineMessageHandler.class);
+            bindings.bind(TradeInformationMessage.class, TradeMessageHandlers.TradeInformationMessageHandler.class);
+            bindings.bind(TradeRequestMessage.class, TradeMessageHandlers.TradeRequestMessageHandler.class);
             bindings.bind(TrapMessage.class, TrapMessageHandler.class);
             bindings.bind(WalkMessage.class, WalkMessageHandler.class);
             bindings.bind(WalkTargetMessage.class, WalkTargetMessageHandler.class);

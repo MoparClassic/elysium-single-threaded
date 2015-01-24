@@ -7,5 +7,6 @@ public enum PlayerState {
 
     ITEM_PICKUP,
     ITEM_DROP,
-    WALKING
+    WALKING,
+    IDLE
 }

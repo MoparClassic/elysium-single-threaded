@@ -64,6 +64,10 @@ public final class World {
         return playerList;
     }
 
+    public Player getPlayer(int index) {
+        return playerList.get(index);
+    }
+
     private int getRandomOrdinate(Random r, int basePoint, int maxDistance) {
         boolean negative = r.nextBoolean();
         int offset = r.nextInt() % maxDistance;
