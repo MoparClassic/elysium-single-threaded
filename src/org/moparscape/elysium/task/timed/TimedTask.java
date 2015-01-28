@@ -9,11 +9,11 @@ public interface TimedTask extends Runnable, Comparable<TimedTask> {
 
     long getExecutionTime();
 
-    void updateExecutionTime();
-
     void setExecutionTime(long executionTime);
 
     void setDelay(long delay);
 
     boolean shouldRepeat();
+
+    void updateExecutionTime();
 }

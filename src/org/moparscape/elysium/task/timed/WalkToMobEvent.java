@@ -19,6 +19,15 @@ public abstract class WalkToMobEvent extends AbstractTimedTask {
         }
     }
 
+    public abstract void arrived();
+
+    public void failed() {
+    } // Not abstract as isn't required
+
+    public Moveable getAffectedMob() {
+        return affectedMob;
+    }
+
     public final void run() {
         if (owner.getLocation().withinRange(affectedMob.getLocation(), radius)) {
             arrived();
@@ -28,15 +37,6 @@ public abstract class WalkToMobEvent extends AbstractTimedTask {
             failed();
         }
         running = false;
-    }
-
-    public abstract void arrived();
-
-    public void failed() {
-    } // Not abstract as isn't required
-
-    public Moveable getAffectedMob() {
-        return affectedMob;
     }
 
 }

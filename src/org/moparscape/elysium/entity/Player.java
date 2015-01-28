@@ -1,9 +1,11 @@
 package org.moparscape.elysium.entity;
 
 import org.moparscape.elysium.Server;
+import org.moparscape.elysium.def.PrayerDef;
 import org.moparscape.elysium.entity.component.*;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
+import org.moparscape.elysium.task.timed.PrayerDrainTask;
 import org.moparscape.elysium.world.Point;
 import org.moparscape.elysium.world.Region;
 
@@ -21,29 +23,43 @@ public final class Player extends MobileEntity implements Moveable {
     public static final int DUEL_OPTION_ALLOW_PRAYER_INDEX = 2;
     public static final int DUEL_OPTION_ALLOW_WEAPONS_INDEX = 3;
     public static final int DUEL_OPTION_NO_RETREAT_INDEX = 0;
+    public static final int PRIVACY_BLOCK_CHAT_MESSAGES_INDEX = 0;
+    public static final int PRIVACY_BLOCK_DUEL_REQUESTS_INDEX = 3;
+    public static final int PRIVACY_BLOCK_PRIVATE_MESSAGES_INDEX = 1;
+    public static final int PRIVACY_BLOCK_TRADE_REQUESTS_INDEX = 2;
+    public static final int SETTING_AUTO_SCREENSHOTS_INDEX = 5;
+    public static final int SETTING_CAMERA_ANGLE_MODE_INDEX = 0;
+    public static final int SETTING_FIGHTMODE_SELECTOR_INDEX = 6;
+    public static final int SETTING_HIDE_ROOFS_INDEX = 4;
+    public static final int SETTING_MOUSE_BUTTONS_INDEX = 2;
+    public static final int SETTING_SOUND_EFFECTS_INDEX = 3;
     private final Bank bank = new Bank(this);
     private final Communication communication = new Communication();
     private final Credentials credentials = new Credentials();
+    private final PrayerDrainTask drainer = new PrayerDrainTask();
     private final Inventory inventory = new Inventory(this);
     private final Session session;
-    private final Settings settings = new Settings();
     private final Skills skills = new Skills();
-    private final Combat combat = new Combat(this, inventory, skills);
     private final PlayerSprite sprite = new PlayerSprite(this);
     private final Movement movement = new Movement(this, sprite);
     private final Observer observer = new Observer(this, sprite);
     private final UpdateProxy updateProxy = new UpdateProxy(communication, credentials, movement, observer, skills, sprite);
     private int actionCount = 0;
+    private boolean[] activatedPrayers = new boolean[14];
     private boolean busy = false;
+    private int combatStyle = 0;
+    private int drainRate = 0;
     private boolean duelConfirmAccepted = false;
     private List<InvItem> duelOffer = new ArrayList<>(9);
     private boolean duelOfferAccepted = false;
     private boolean[] duelOptions = new boolean[4];
+    private boolean[] gameSettings = new boolean[7];
     private boolean isDueling = false;
     private boolean isTrading = false;
     private long lastTradeDuelRequest;
     private boolean loggedIn = false;
     private PlayerState playerState;
+    private boolean[] privacySettings = new boolean[4];
     private Region region = null;
     private boolean tradeConfirmAccepted = false;
     private List<InvItem> tradeOffer = new ArrayList<>(9);
@@ -54,6 +70,12 @@ public final class Player extends MobileEntity implements Moveable {
     public Player(Session session) {
         this.session = session;
         this.setLocation(new Point(329, 552));
+    }
+
+    public void addPrayerDrain(int prayerID) {
+        PrayerDef prayer = DefinitionHandler.getPrayerDef(prayerID);
+        drainRate += prayer.getDrainRate();
+        drainer.setDelay((int) (240000 / drainRate));
     }
 
     public void addToDuelOffer(InvItem item) {
@@ -74,12 +96,26 @@ public final class Player extends MobileEntity implements Moveable {
         return actionCount;
     }
 
+    public int getArmourPoints() {
+        int points = 1;
+        for (InvItem item : inventory.getItems()) {
+            if (item.isWielded()) {
+                points += item.getWieldableDef().getArmourPoints();
+            }
+        }
+        return Math.max(points, 1);
+    }
+
     public Bank getBank() {
         return bank;
     }
 
-    public Combat getCombat() {
-        return combat;
+    public int getCombatStyle() {
+        return combatStyle;
+    }
+
+    public void setCombatStyle(int style) {
+        this.combatStyle = style;
     }
 
     public Communication getCommunication() {
@@ -96,6 +132,14 @@ public final class Player extends MobileEntity implements Moveable {
 
     public boolean getDuelSetting(int i) {
         return duelOptions[i];
+    }
+
+    public boolean getGameSetting(int index) {
+        return gameSettings[index];
+    }
+
+    public boolean[] getGameSettings() {
+        return gameSettings;
     }
 
     public Inventory getInventory() {
@@ -127,6 +171,16 @@ public final class Player extends MobileEntity implements Moveable {
         }
     }
 
+    public int getMagicPoints() {
+        int points = 1;
+        for (InvItem item : inventory.getItems()) {
+            if (item.isWielded()) {
+                points += item.getWieldableDef().getMagicPoints();
+            }
+        }
+        return Math.max(points, 1);
+    }
+
     public Movement getMovement() {
         return movement;
     }
@@ -135,12 +189,36 @@ public final class Player extends MobileEntity implements Moveable {
         return observer;
     }
 
-    public Session getSession() {
-        return session;
+    public int getPrayerPoints() {
+        int points = 1;
+        for (InvItem item : inventory.getItems()) {
+            if (item.isWielded()) {
+                points += item.getWieldableDef().getPrayerPoints();
+            }
+        }
+        return Math.max(points, 1);
     }
 
-    public Settings getSettings() {
-        return settings;
+    public boolean getPrivacySetting(int index) {
+        return privacySettings[index];
+    }
+
+    public boolean[] getPrivacySettings() {
+        return privacySettings;
+    }
+
+    public int getRangePoints() {
+        int points = 1;
+        for (InvItem item : inventory.getItems()) {
+            if (item.isWielded()) {
+                points += item.getWieldableDef().getRangePoints();
+            }
+        }
+        return Math.max(points, 1);
+    }
+
+    public Session getSession() {
+        return session;
     }
 
     public Skills getSkills() {
@@ -166,6 +244,26 @@ public final class Player extends MobileEntity implements Moveable {
 
     public UpdateProxy getUpdateProxy() {
         return updateProxy;
+    }
+
+    public int getWeaponAimPoints() {
+        int points = 1;
+        for (InvItem item : inventory.getItems()) {
+            if (item.isWielded()) {
+                points += item.getWieldableDef().getWeaponAimPoints();
+            }
+        }
+        return Math.max(points, 1);
+    }
+
+    public int getWeaponPowerPoints() {
+        int points = 1;
+        for (InvItem item : inventory.getItems()) {
+            if (item.isWielded()) {
+                points += item.getWieldableDef().getWeaponPowerPoints();
+            }
+        }
+        return Math.max(points, 1);
     }
 
     public Player getWishToDuel() {
@@ -234,6 +332,10 @@ public final class Player extends MobileEntity implements Moveable {
         this.loggedIn = loggedIn;
     }
 
+    public boolean isPrayerActivated(int pID) {
+        return activatedPrayers[pID];
+    }
+
     public boolean isTradeConfirmAccepted() {
         return tradeConfirmAccepted;
     }
@@ -256,6 +358,17 @@ public final class Player extends MobileEntity implements Moveable {
 
     public void setTrading(boolean trading) {
         this.isTrading = trading;
+    }
+
+    public void removePrayerDrain(int prayerID) {
+        PrayerDef prayer = DefinitionHandler.getPrayerDef(prayerID);
+        drainRate -= prayer.getDrainRate();
+        if (drainRate <= 0) {
+            drainRate = 0;
+            drainer.setDelay(Integer.MAX_VALUE);
+        } else {
+            drainer.setDelay((int) (240000 / drainRate));
+        }
     }
 
     public void resetAllExceptDueling() {
@@ -321,6 +434,10 @@ public final class Player extends MobileEntity implements Moveable {
         duelOptions[i] = b;
     }
 
+    public void setPrayer(int pID, boolean b) {
+        activatedPrayers[pID] = b;
+    }
+
     @Override
     public String toString() {
         return credentials + " (" + getLocation().getX() + ", " + getLocation().getY() + ")";
@@ -333,5 +450,21 @@ public final class Player extends MobileEntity implements Moveable {
             return false;
         }
         return true;
+    }
+
+    public void updateCommunicationSetting(int index, boolean flag) {
+        privacySettings[index] = flag;
+    }
+
+    public void updateCommunicationSettings(boolean blockChatMessages, boolean blockPrivateMessages,
+                                            boolean blockTradeRequests, boolean blockDuelRequests) {
+        privacySettings[PRIVACY_BLOCK_CHAT_MESSAGES_INDEX] = blockChatMessages;
+        privacySettings[PRIVACY_BLOCK_PRIVATE_MESSAGES_INDEX] = blockPrivateMessages;
+        privacySettings[PRIVACY_BLOCK_TRADE_REQUESTS_INDEX] = blockTradeRequests;
+        privacySettings[PRIVACY_BLOCK_DUEL_REQUESTS_INDEX] = blockDuelRequests;
+    }
+
+    public void updateGameSetting(int index, boolean flag) {
+        gameSettings[index] = flag;
     }
 }

@@ -30,6 +30,7 @@ public final class World {
     private final TileValue outsideWorld = new TileValue();
     private final EntityList<Player> playerList = new EntityList<>(MAX_PLAYERS);
     private final List<Shop> shops = new ArrayList<>();
+
     static {
         INSTANCE = new World();
         try {
@@ -40,6 +41,7 @@ public final class World {
             throw new IllegalStateException("WorldLoader failed.");
         }
     }
+
     private final TileValue[][] tileType = new TileValue[MAX_WIDTH][MAX_HEIGHT];
     private int currentPlayerCount = 0;
 
@@ -60,12 +62,12 @@ public final class World {
         return npcList;
     }
 
-    public EntityList<Player> getPlayers() {
-        return playerList;
-    }
-
     public Player getPlayer(int index) {
         return playerList.get(index);
+    }
+
+    public EntityList<Player> getPlayers() {
+        return playerList;
     }
 
     private int getRandomOrdinate(Random r, int basePoint, int maxDistance) {

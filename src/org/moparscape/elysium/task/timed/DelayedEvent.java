@@ -6,15 +6,29 @@ import org.moparscape.elysium.world.World;
 
 public abstract class DelayedEvent {
     public static final World world = World.getInstance();
-    protected boolean running = true;
     protected int delay = 500;
     protected Player owner;
+    protected boolean running = true;
     private long lastRun = System.currentTimeMillis();
 
     public DelayedEvent(Player owner, int delay) {
         this.owner = owner;
         this.delay = delay;
     }
+
+    public boolean belongsTo(Player player) {
+        return owner != null && owner.equals(player);
+    }
+
+    public Player getOwner() {
+        return owner;
+    }
+
+    public boolean hasOwner() {
+        return owner != null;
+    }
+
+    public abstract void run();
 
     public void setDelay(int delay) {
         this.delay = delay;
@@ -24,8 +38,16 @@ public abstract class DelayedEvent {
         lastRun = time;
     }
 
+    public final boolean shouldRemove() {
+        return !running;
+    }
+
     public final boolean shouldRun() {
         return running && System.currentTimeMillis() - lastRun >= delay;
+    }
+
+    public final void stop() {
+        running = false;
     }
 
     public int timeTillNextRun() {
@@ -33,30 +55,8 @@ public abstract class DelayedEvent {
         return time < 0 ? 0 : time;
     }
 
-    public abstract void run();
-
     public final void updateLastRun() {
         lastRun = System.currentTimeMillis();
-    }
-
-    public final void stop() {
-        running = false;
-    }
-
-    public final boolean shouldRemove() {
-        return !running;
-    }
-
-    public boolean belongsTo(Player player) {
-        return owner != null && owner.equals(player);
-    }
-
-    public boolean hasOwner() {
-        return owner != null;
-    }
-
-    public Player getOwner() {
-        return owner;
     }
 
 }

@@ -10,11 +10,11 @@ import org.moparscape.elysium.world.Point;
 public abstract class WalkToPointTask extends AbstractTimedTask {
 
     protected final Point location;
-    protected final Player owner;
     protected final int originalActionCount;
+    protected final Player owner;
+    protected boolean running = true;
     private int radius;
     private boolean stop;
-    protected boolean running = true;
 
     public WalkToPointTask(Player owner, Point location, int radius, boolean stop) {
         super(Server.getInstance().getHighResolutionTimestamp() + 1, 0);
@@ -29,6 +29,8 @@ public abstract class WalkToPointTask extends AbstractTimedTask {
             running = false;
         }
     }
+
+    public abstract void arrived();
 
     public final void run() {
         if (originalActionCount != owner.getActionCount()) {
@@ -51,6 +53,4 @@ public abstract class WalkToPointTask extends AbstractTimedTask {
     public boolean shouldRepeat() {
         return running;
     }
-
-    public abstract void arrived();
 }

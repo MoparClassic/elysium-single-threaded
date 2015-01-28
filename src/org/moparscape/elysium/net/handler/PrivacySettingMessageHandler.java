@@ -1,7 +1,6 @@
 package org.moparscape.elysium.net.handler;
 
 import org.moparscape.elysium.entity.Player;
-import org.moparscape.elysium.entity.component.Settings;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.net.codec.decoder.message.PrivacySettingMessage;
 
@@ -13,9 +12,7 @@ import org.moparscape.elysium.net.codec.decoder.message.PrivacySettingMessage;
 public final class PrivacySettingMessageHandler extends MessageHandler<PrivacySettingMessage> {
     @Override
     public boolean handle(Session session, Player player, PrivacySettingMessage message) {
-        Settings settings = player.getSettings();
-
-        settings.updateCommunicationSettings(
+        player.updateCommunicationSettings(
                 message.getBlockChatMessages(),
                 message.getBlockPrivateMessages(),
                 message.getBlockTradeRequests(),

@@ -35,6 +35,10 @@ public final class InvItem {
         return id;
     }
 
+    public ItemWieldableDef getWieldableDef() {
+        return DefinitionHandler.getItemWieldableDef(id);
+    }
+
     @Override
     public int hashCode() {
         return id;
@@ -59,16 +63,16 @@ public final class InvItem {
         return "ID: " + id + " Amount: " + amount;
     }
 
+    public boolean isWieldable() {
+        return DefinitionHandler.getItemWieldableDef(id) != null;
+    }
+
     public boolean isWielded() {
         return wielded;
     }
 
     public void setWielded(boolean wield) {
         wielded = wield;
-    }
-
-    public boolean isWieldable() {
-        return DefinitionHandler.getItemWieldableDef(id) != null;
     }
 
     public boolean wieldingAffectsItem(InvItem i) {
@@ -81,9 +85,5 @@ public final class InvItem {
             }
         }
         return false;
-    }
-
-    public ItemWieldableDef getWieldableDef() {
-        return DefinitionHandler.getItemWieldableDef(id);
     }
 }

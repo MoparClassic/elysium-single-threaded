@@ -3,7 +3,6 @@ package org.moparscape.elysium.net;
 import io.netty.channel.ChannelFuture;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
-import org.moparscape.elysium.entity.component.Combat;
 import org.moparscape.elysium.entity.component.Inventory;
 import org.moparscape.elysium.entity.component.Skills;
 import org.moparscape.elysium.util.Formulae;
@@ -157,11 +156,15 @@ public final class Packets {
         pb.finalisePacket();
     }
 
-    public static void sendFatigue(Player player) {
+    public static void sendEquipmentStats(Player player) {
         Session s = player.getSession();
-        Skills skills = player.getSkills();
-        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 126);
-        pb.writeShort(skills.getFatigue());
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 177);
+        pb.writeShort(player.getArmourPoints());
+        pb.writeShort(player.getWeaponAimPoints());
+        pb.writeShort(player.getWeaponPowerPoints());
+        pb.writeShort(player.getMagicPoints());
+        pb.writeShort(player.getPrayerPoints());
+        pb.writeShort(player.getRangePoints());
         pb.finalisePacket();
     }
 
@@ -205,6 +208,14 @@ public final class Packets {
 //        return player.getSession().write(pb.toPacket());
 //    }
 
+    public static void sendFatigue(Player player) {
+        Session s = player.getSession();
+        Skills skills = player.getSkills();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 126);
+        pb.writeShort(skills.getFatigue());
+        pb.finalisePacket();
+    }
+
     public static void sendInventory(Player player) {
         Session s = player.getSession();
         Inventory inventory = player.getInventory();
@@ -234,12 +245,6 @@ public final class Packets {
         s.getByteBuf().writeByte(response.getResponseCode());
     }
 
-    public static void sendLogout(Player player) {
-        Session s = player.getSession();
-        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 222);
-        pb.finalisePacket();
-    }
-
 //    public static ChannelFuture sendMenu(Player player, String[] options) {
 //        PacketBuilder pb = new PacketBuilder();
 //        pb.setId(223);
@@ -251,6 +256,12 @@ public final class Packets {
 //        return player.getSession().write(pb.toPacket());
 //    }
 
+    public static void sendLogout(Player player) {
+        Session s = player.getSession();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 222);
+        pb.finalisePacket();
+    }
+
     public static void sendMessage(Player player, String message) {
         Session s = player.getSession();
         byte[] msg = message.getBytes();
@@ -261,16 +272,11 @@ public final class Packets {
 
     public static void sendPrayers(Player player) {
         Session s = player.getSession();
-        Combat combat = player.getCombat();
         PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 209);
         for (int i = 0; i < 14; i++) {
-            pb.writeByte(combat.isPrayerActivated(i) ? 1 : 0);
+            pb.writeByte(player.isPrayerActivated(i) ? 1 : 0);
         }
         pb.finalisePacket();
-    }
-
-    public static ChannelFuture sendPrivacySettings(Player player) {
-        throw new UnsupportedOperationException();
     }
 
 //    public static ChannelFuture sendPrivateMessage(Player player, long usernameHash, byte[] message) {
@@ -287,19 +293,16 @@ public final class Packets {
 //        return player.getSession().write(pb.toPacket());
 //    }
 
+    public static ChannelFuture sendPrivacySettings(Player player) {
+        throw new UnsupportedOperationException();
+    }
+
     public static void sendServerInfo(Player player) {
         Session s = player.getSession();
         String location = "Australia";
         PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 110);
         pb.writeLong(System.currentTimeMillis()); // Start time
         pb.writeBytes(location.getBytes());
-        pb.finalisePacket();
-    }
-
-    public static void sendSound(Player player, String soundName) {
-        Session s = player.getSession();
-        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 11);
-        pb.writeBytes(soundName.getBytes());
         pb.finalisePacket();
     }
 
@@ -311,6 +314,23 @@ public final class Packets {
 //        pb.writeByte(skills.getCurStat(stat));
 //        pb.writeByte(skills.getMaxStat(stat));
 //        pb.writeInt(skills.getExp(stat));
+//        return player.getSession().write(pb.toPacket());
+//    }
+
+    public static void sendSound(Player player, String soundName) {
+        Session s = player.getSession();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 11);
+        pb.writeBytes(soundName.getBytes());
+        pb.finalisePacket();
+    }
+
+//    public static ChannelFuture sendTeleBubble(Player player, int x, int y, boolean grab) {
+//        Point loc = player.getLocation();
+//        PacketBuilder pb = new PacketBuilder(3);
+//        pb.setId(23);
+//        pb.writeByte(grab ? 1 : 0);
+//        pb.writeByte(x - loc.getX());
+//        pb.writeByte(y - loc.getY());
 //        return player.getSession().write(pb.toPacket());
 //    }
 
@@ -336,16 +356,6 @@ public final class Packets {
 
         pb.finalisePacket();
     }
-
-//    public static ChannelFuture sendTeleBubble(Player player, int x, int y, boolean grab) {
-//        Point loc = player.getLocation();
-//        PacketBuilder pb = new PacketBuilder(3);
-//        pb.setId(23);
-//        pb.writeByte(grab ? 1 : 0);
-//        pb.writeByte(x - loc.getX());
-//        pb.writeByte(y - loc.getY());
-//        return player.getSession().write(pb.toPacket());
-//    }
 
     public static void sendTradeAccept(Player player) {
         Player tradePartner = player.getWishToTrade();
@@ -426,19 +436,6 @@ public final class Packets {
         pb.writeShort(1776);
         pb.writeShort(Formulae.getHeight(player.getLocation()));
         pb.writeShort(944);
-        pb.finalisePacket();
-    }
-
-    public static void sendEquipmentStats(Player player) {
-        Session s = player.getSession();
-        Combat combat = player.getCombat();
-        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 177);
-        pb.writeShort(combat.getArmourPoints());
-        pb.writeShort(combat.getWeaponAimPoints());
-        pb.writeShort(combat.getWeaponPowerPoints());
-        pb.writeShort(combat.getMagicPoints());
-        pb.writeShort(combat.getPrayerPoints());
-        pb.writeShort(combat.getRangePoints());
         pb.finalisePacket();
     }
 

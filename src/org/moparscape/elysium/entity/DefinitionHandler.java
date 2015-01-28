@@ -319,6 +319,7 @@ public final class DefinitionHandler {
         ThievableNPCDef def = thievableNPCs.get(id);
         return def;
     }
+
     static {
         doors = (DoorDef[]) PersistenceManager.load("defs/DoorDef.xml");
         gameObjects = (GameObjectDef[]) PersistenceManager.load("defs/GameObjectDef.xml");

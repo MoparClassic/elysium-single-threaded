@@ -19,8 +19,8 @@ public final class ItemDropTask extends AbstractTimedTask {
 
     private final Inventory inventory;
     private final Movement movement;
-    private final Player owner;
     private final int originalActionCount;
+    private final Player owner;
     private final int slot;
     private boolean finished = false;
 

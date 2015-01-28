@@ -11,11 +11,11 @@ public abstract class SingleEvent extends AbstractTimedTask {
         super(Server.getInstance().getHighResolutionTimestamp() + 1, delay);
     }
 
+    public abstract void action();
+
     public void run() {
         action();
         running = false;
     }
-
-    public abstract void action();
 
 }

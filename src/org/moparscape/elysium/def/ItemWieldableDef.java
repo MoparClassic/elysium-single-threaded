@@ -60,6 +60,14 @@ public class ItemWieldableDef {
         return femaleOnly;
     }
 
+    public int[] getAffectedTypes() {
+        int[] affectedTypes = DefinitionHandler.getItemAffectedTypes(type);
+        if (affectedTypes != null) {
+            return affectedTypes;
+        }
+        return new int[0];
+    }
+
     public int getArmourPoints() {
         return armourPoints;
     }
@@ -98,13 +106,5 @@ public class ItemWieldableDef {
 
     public int getWieldPos() {
         return wieldPos;
-    }
-
-    public int[] getAffectedTypes() {
-        int[] affectedTypes = DefinitionHandler.getItemAffectedTypes(type);
-        if (affectedTypes != null) {
-            return affectedTypes;
-        }
-        return new int[0];
     }
 }

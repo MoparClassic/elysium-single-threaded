@@ -17,6 +17,11 @@ import org.moparscape.elysium.world.World;
  */
 public final class DuelMessageHandlers {
 
+    private static boolean busy(Player player) {
+        return false;
+//        return player.isBusy() || player.isRanging() || player.accessingBank() || player.isDueling();
+    }
+
     public static final class DuelAcceptMessageHandler extends MessageHandler<DuelAcceptMessage> {
         @Override
         public boolean handle(Session session, Player player, DuelAcceptMessage message) {
@@ -102,17 +107,15 @@ public final class DuelMessageHandlers {
 
                 }
 
-                Combat playerCombat = player.getCombat();
-                Combat targetCombat = target.getCombat();
                 if (player.getDuelSetting(2)) {
                     for (int x = 0; x < 14; x++) {
-                        if (playerCombat.isPrayerActivated(x)) {
-                            playerCombat.removePrayerDrain(x);
-                            playerCombat.setPrayer(x, false);
+                        if (player.isPrayerActivated(x)) {
+                            player.removePrayerDrain(x);
+                            player.setPrayer(x, false);
                         }
-                        if (targetCombat.isPrayerActivated(x)) {
-                            targetCombat.removePrayerDrain(x);
-                            targetCombat.setPrayer(x, false);
+                        if (target.isPrayerActivated(x)) {
+                            target.removePrayerDrain(x);
+                            target.setPrayer(x, false);
                         }
                     }
                     Packets.sendPrayers(player);
@@ -314,8 +317,8 @@ public final class DuelMessageHandlers {
             Credentials playerCreds = player.getCredentials();
             long playerUsernameHash = playerCreds.getUsernameHash();
             Communication targetCom = target.getCommunication();
-            Settings targetSettings = target.getSettings();
-            if ((targetSettings.getPrivacySetting(3) && !targetCom.isFriendsWith(playerUsernameHash)) ||
+            if ((target.getPrivacySetting(Player.PRIVACY_BLOCK_DUEL_REQUESTS_INDEX) &&
+                    !targetCom.isFriendsWith(playerUsernameHash)) ||
                     targetCom.isIgnoring(playerUsernameHash)) {
                 Packets.sendMessage(player, "This player has duel requests blocked.");
                 return true;
@@ -353,10 +356,5 @@ public final class DuelMessageHandlers {
             }
             return true;
         }
-    }
-
-    private static boolean busy(Player player) {
-        return false;
-//        return player.isBusy() || player.isRanging() || player.accessingBank() || player.isDueling();
     }
 }

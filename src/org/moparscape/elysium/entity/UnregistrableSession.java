@@ -23,11 +23,11 @@ public final class UnregistrableSession extends AbstractTimedTask {
         this.session = session;
     }
 
-    public void run() {
-
-    }
-
     public Session getSession() {
         return session;
+    }
+
+    public void run() {
+
     }
 }

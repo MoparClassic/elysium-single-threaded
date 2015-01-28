@@ -3,7 +3,10 @@ package org.moparscape.elysium.net.handler;
 import org.moparscape.elysium.entity.Appearance;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
-import org.moparscape.elysium.entity.component.*;
+import org.moparscape.elysium.entity.component.Communication;
+import org.moparscape.elysium.entity.component.Credentials;
+import org.moparscape.elysium.entity.component.Inventory;
+import org.moparscape.elysium.entity.component.PlayerSprite;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.net.codec.decoder.message.*;
@@ -16,6 +19,12 @@ import java.util.List;
  * Created by daniel on 24/01/2015.
  */
 public final class TradeMessageHandlers {
+
+    private static boolean busy(Player player) {
+        return false;
+//        throw new NotImplementedException();
+//        return player.isBusy() || player.isRanging() || player.accessingBank() || player.isDueling();
+    }
 
     public static final class TradeAcceptMessageHandler extends MessageHandler<TradeAcceptMessage> {
         @Override
@@ -230,8 +239,8 @@ public final class TradeMessageHandlers {
             Credentials playerCreds = player.getCredentials();
             long playerUsernameHash = playerCreds.getUsernameHash();
             Communication targetCom = target.getCommunication();
-            Settings targetSettings = target.getSettings();
-            if ((targetSettings.getPrivacySetting(2) && !targetCom.isFriendsWith(playerUsernameHash)) ||
+            if ((target.getPrivacySetting(Player.PRIVACY_BLOCK_TRADE_REQUESTS_INDEX) &&
+                    !targetCom.isFriendsWith(playerUsernameHash)) ||
                     targetCom.isIgnoring(playerUsernameHash)) {
                 Packets.sendMessage(player, "This player has trade requests blocked.");
                 return true;
@@ -262,11 +271,5 @@ public final class TradeMessageHandlers {
             }
             return true;
         }
-    }
-
-    private static boolean busy(Player player) {
-        return false;
-//        throw new NotImplementedException();
-//        return player.isBusy() || player.isRanging() || player.accessingBank() || player.isDueling();
     }
 }

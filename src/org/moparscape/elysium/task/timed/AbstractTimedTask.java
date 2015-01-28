@@ -9,8 +9,8 @@ import org.moparscape.elysium.Server;
  */
 public abstract class AbstractTimedTask implements TimedTask {
 
-    private long recurringTime;
     private long execTime = 0L;
+    private long recurringTime;
 
     public AbstractTimedTask(long firstRunTime, long recurringTime) {
         this.execTime = firstRunTime;
@@ -34,16 +34,6 @@ public abstract class AbstractTimedTask implements TimedTask {
         return execTime;
     }
 
-    /**
-     * Sets the next time that this task should be executed.
-     * <p>
-     * This implementation sets the task to re-execute immediately
-     * at the next chance.
-     */
-    public final void updateExecutionTime() {
-        this.execTime = Server.getInstance().getHighResolutionTimestamp() + recurringTime;
-    }
-
     public void setExecutionTime(long executionTime) {
         this.execTime = executionTime;
     }
@@ -64,5 +54,15 @@ public abstract class AbstractTimedTask implements TimedTask {
      */
     public boolean shouldRepeat() {
         return false;
+    }
+
+    /**
+     * Sets the next time that this task should be executed.
+     * <p>
+     * This implementation sets the task to re-execute immediately
+     * at the next chance.
+     */
+    public final void updateExecutionTime() {
+        this.execTime = Server.getInstance().getHighResolutionTimestamp() + recurringTime;
     }
 }

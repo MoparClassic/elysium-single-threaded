@@ -12,6 +12,18 @@ public class DuelEvent extends DelayedEvent {
         hits = 0;
     }
 
+    public boolean equals(Object o) {
+        if (o instanceof DuelEvent) {
+            DuelEvent e = (DuelEvent) o;
+            return e.belongsTo(owner) && e.getAffectedPlayer().equals(affectedPlayer);
+        }
+        return false;
+    }
+
+    public Player getAffectedPlayer() {
+        return affectedPlayer;
+    }
+
     public void run() {
 //        if (!owner.isLoggedIn() || !affectedPlayer.isLoggedIn()) {
 //            owner.resetCombat(CombatState.ERROR);
@@ -82,17 +94,5 @@ public class DuelEvent extends DelayedEvent {
 //            attacker.resetDueling();
 //            opponent.resetDueling();
 //        }
-    }
-
-    public Player getAffectedPlayer() {
-        return affectedPlayer;
-    }
-
-    public boolean equals(Object o) {
-        if (o instanceof DuelEvent) {
-            DuelEvent e = (DuelEvent) o;
-            return e.belongsTo(owner) && e.getAffectedPlayer().equals(affectedPlayer);
-        }
-        return false;
     }
 }
