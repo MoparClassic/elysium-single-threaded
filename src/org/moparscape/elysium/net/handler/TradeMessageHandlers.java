@@ -20,25 +20,23 @@ public final class TradeMessageHandlers {
     public static final class TradeAcceptMessageHandler extends MessageHandler<TradeAcceptMessage> {
         @Override
         public boolean handle(Session session, Player player, TradeAcceptMessage message) {
-            TradingDueling playerTrading = player.getTradingDueling();
-            Player target = playerTrading.getWishToTrade();
-            TradingDueling targetTrading = target.getTradingDueling();
+            Player target = player.getWishToTrade();
 
             if (target == null || busy(target) ||
-                    !playerTrading.isTrading() ||
-                    !targetTrading.isTrading()) { // This shouldn't happen
+                    !player.isTrading() ||
+                    !target.isTrading()) { // This shouldn't happen
 //                player.setSuspiciousPlayer(true);
-                playerTrading.resetTrading();
-                targetTrading.resetTrading();
+                player.resetTrading();
+                target.resetTrading();
                 return true;
             }
 
-            playerTrading.setTradeOfferAccepted(true);
+            player.setTradeOfferAccepted(true);
 
             Packets.sendTradeAcceptUpdate(player);
             Packets.sendTradeAcceptUpdate(target);
 
-            if (targetTrading.isTradeOfferAccepted()) {
+            if (target.isTradeOfferAccepted()) {
                 Packets.sendTradeAccept(player);
                 Packets.sendTradeAccept(target);
             }
@@ -49,26 +47,24 @@ public final class TradeMessageHandlers {
     public static final class TradeConfirmAcceptMessageHandler extends MessageHandler<TradeConfirmAcceptMessage> {
         @Override
         public boolean handle(Session session, Player player, TradeConfirmAcceptMessage message) {
-            TradingDueling playerTrading = player.getTradingDueling();
-            Player target = playerTrading.getWishToTrade();
-            TradingDueling targetTrading = target.getTradingDueling();
+            Player target = player.getWishToTrade();
             if (target == null || busy(target) ||
-                    !playerTrading.isTrading() ||
-                    !targetTrading.isTrading() ||
-                    !playerTrading.isTradeOfferAccepted() ||
-                    !targetTrading.isTradeOfferAccepted()) { // This shouldn't happen
+                    !player.isTrading() ||
+                    !target.isTrading() ||
+                    !player.isTradeOfferAccepted() ||
+                    !target.isTradeOfferAccepted()) { // This shouldn't happen
 //                player.setSuspiciousPlayer(true);
-                playerTrading.resetTrading();
-                targetTrading.resetTrading();
+                player.resetTrading();
+                target.resetTrading();
                 return true;
             }
 
-            playerTrading.setTradeConfirmAccepted(true);
+            player.setTradeConfirmAccepted(true);
 
-            if (!targetTrading.isTradeConfirmAccepted()) return true;
+            if (!target.isTradeConfirmAccepted()) return true;
 
-            List<InvItem> myOffer = playerTrading.getTradeOffer();
-            List<InvItem> theirOffer = targetTrading.getTradeOffer();
+            List<InvItem> myOffer = player.getTradeOffer();
+            List<InvItem> theirOffer = target.getTradeOffer();
 
             int myRequiredSlots = player.getInventory().getRequiredSlots(theirOffer);
             int myAvailableSlots = (30 - player.getInventory().size()) + player.getInventory().getFreedSlots(myOffer);
@@ -79,15 +75,15 @@ public final class TradeMessageHandlers {
             if (theirRequiredSlots > theirAvailableSlots) {
                 Packets.sendMessage(player, "The other player does not have room to accept your items.");
                 Packets.sendMessage(target, "You do not have room in your inventory to hold those items.");
-                playerTrading.resetTrading();
-                targetTrading.resetTrading();
+                player.resetTrading();
+                target.resetTrading();
                 return true;
             }
             if (myRequiredSlots > myAvailableSlots) {
                 Packets.sendMessage(player, "You do not have room in your inventory to hold those items.");
                 Packets.sendMessage(target, "The other player does not have room to accept your items.");
-                playerTrading.resetTrading();
-                targetTrading.resetTrading();
+                player.resetTrading();
+                target.resetTrading();
                 return true;
             }
 
@@ -97,8 +93,8 @@ public final class TradeMessageHandlers {
                 InvItem affectedItem = player.getInventory().get(offeredItem);
                 if (affectedItem == null || affectedItem.getAmount() < offeredItem.getAmount()) {
 //                    player.setSuspiciousPlayer(true);
-                    playerTrading.resetTrading();
-                    targetTrading.resetTrading();
+                    player.resetTrading();
+                    target.resetTrading();
                     return true;
                 }
                 if (affectedItem.isWielded()) {
@@ -116,8 +112,8 @@ public final class TradeMessageHandlers {
                 InvItem affectedItem = target.getInventory().get(offeredItem);
                 if (affectedItem == null || affectedItem.getAmount() < offeredItem.getAmount()) {
 //                    target.setSuspiciousPlayer(true);
-                    playerTrading.resetTrading();
-                    targetTrading.resetTrading();
+                    player.resetTrading();
+                    target.resetTrading();
                     return true;
                 }
                 if (affectedItem.isWielded()) {
@@ -143,8 +139,8 @@ public final class TradeMessageHandlers {
             Packets.sendEquipmentStats(target);
             Packets.sendMessage(target, "Trade completed.");
 
-            playerTrading.resetTrading();
-            targetTrading.resetTrading();
+            player.resetTrading();
+            target.resetTrading();
             return true;
         }
     }
@@ -152,24 +148,22 @@ public final class TradeMessageHandlers {
     public static final class TradeDeclineMessageHandler extends MessageHandler<TradeDeclineMessage> {
         @Override
         public boolean handle(Session session, Player player, TradeDeclineMessage message) {
-            TradingDueling playerTrading = player.getTradingDueling();
-            Player target = playerTrading.getWishToTrade();
-            TradingDueling targetTrading = target.getTradingDueling();
+            Player target = player.getWishToTrade();
             if (target == null ||
                     busy(target) ||
-                    !playerTrading.isTrading() ||
-                    !targetTrading.isTrading()) { // This shouldn't happen
+                    !player.isTrading() ||
+                    !target.isTrading()) { // This shouldn't happen
 //                player.setSuspiciousPlayer(true);
-                playerTrading.resetTrading();
-                targetTrading.resetTrading();
+                player.resetTrading();
+                target.resetTrading();
                 return true;
             }
 
             Credentials playerCreds = player.getCredentials();
             Packets.sendMessage(target, playerCreds.getUsername() + " has declined the trade.");
 
-            playerTrading.resetTrading();
-            targetTrading.resetTrading();
+            player.resetTrading();
+            target.resetTrading();
             return true;
         }
     }
@@ -177,31 +171,27 @@ public final class TradeMessageHandlers {
     public static final class TradeInformationMessageHandler extends MessageHandler<TradeInformationMessage> {
         @Override
         public boolean handle(Session session, Player player, TradeInformationMessage message) {
-            TradingDueling playerTrading = player.getTradingDueling();
-            Player target = playerTrading.getWishToTrade();
-            TradingDueling targetTrading = target.getTradingDueling();
+            Player target = player.getWishToTrade();
             if (target == null || busy(target) ||
-                    !playerTrading.isTrading() ||
-                    !targetTrading.isTrading() ||
-                    (playerTrading.isTradeOfferAccepted() && targetTrading.isTradeOfferAccepted()) ||
-                    playerTrading.isTradeConfirmAccepted() ||
-                    targetTrading.isTradeConfirmAccepted()) { // This shouldn't happen
-                playerTrading.resetTrading();
-                targetTrading.resetTrading();
+                    !player.isTrading() ||
+                    !target.isTrading() ||
+                    (player.isTradeOfferAccepted() && target.isTradeOfferAccepted()) ||
+                    player.isTradeConfirmAccepted() ||
+                    target.isTradeConfirmAccepted()) { // This shouldn't happen
+                player.resetTrading();
+                target.resetTrading();
                 return true;
             }
 
-            playerTrading.setTradeOfferAccepted(false);
-            playerTrading.setTradeConfirmAccepted(false);
-            targetTrading.setTradeOfferAccepted(false);
-            targetTrading.setTradeConfirmAccepted(false);
+            player.setTradeOfferAccepted(false);
+            player.setTradeConfirmAccepted(false);
+            target.setTradeOfferAccepted(false);
+            target.setTradeConfirmAccepted(false);
 
             Packets.sendTradeAcceptUpdate(player);
             Packets.sendTradeAcceptUpdate(target);
 
-            Inventory tradeOffer = new Inventory(null);
-            playerTrading.resetTradeOffer();
-            int count = message.getItemCount();
+            player.resetTradeOffer();
 
             Inventory inventory = player.getInventory();
             for (TradeInformationMessage.TradeItem item : message.getItems()) {
@@ -216,7 +206,7 @@ public final class TradeMessageHandlers {
                     continue;
                 }
 
-                playerTrading.addToTradeOffer(new InvItem(item.getItemId(), item.getAmount()));
+                player.addToTradeOffer(new InvItem(item.getItemId(), item.getAmount()));
             }
 //            player.setRequiresOfferUpdate(true);
             Packets.sendTradeItems(target);
@@ -230,11 +220,10 @@ public final class TradeMessageHandlers {
             Player target = World.getInstance().getPlayer(message.getPlayerIndex());
             Point playerLoc = player.getLocation();
             Point targetLoc = target.getLocation();
-            TradingDueling playerTrading = player.getTradingDueling();
 
             if (target == null || !playerLoc.withinRange(targetLoc, 8) ||
-                    playerTrading.isTrading() || playerTrading.tradeDuelThrottling()) {
-                playerTrading.resetTrading();
+                    player.isTrading() || player.tradeDuelThrottling()) {
+                player.resetTrading();
                 return true;
             }
 
@@ -248,26 +237,25 @@ public final class TradeMessageHandlers {
                 return true;
             }
 
-            TradingDueling targetTrading = target.getTradingDueling();
             Credentials targetCreds = target.getCredentials();
 
-            playerTrading.setWishToTrade(target);
-            Packets.sendMessage(player, targetTrading.isTrading() ?
+            player.setWishToTrade(target);
+            Packets.sendMessage(player, target.isTrading() ?
                     targetCreds.getUsername() + " is already in a trade" :
                     "Sending trade request");
 
             Packets.sendMessage(target, playerCreds.getUsername() + " wishes to trade with you");
 
-            if (!playerTrading.isTrading() &&
-                    targetTrading.getWishToTrade() != null &&
-                    targetTrading.getWishToTrade().equals(player) &&
-                    !targetTrading.isTrading()) {
-                playerTrading.setTrading(true);
+            if (!player.isTrading() &&
+                    target.getWishToTrade() != null &&
+                    target.getWishToTrade().equals(player) &&
+                    !target.isTrading()) {
+                player.setTrading(true);
                 player.getMovement().resetPath();
-                playerTrading.resetAllExceptTrading();
-                targetTrading.setTrading(true);
+                player.resetAllExceptTrading();
+                target.setTrading(true);
                 target.getMovement().resetPath();
-                targetTrading.resetAllExceptTrading();
+                target.resetAllExceptTrading();
 
                 Packets.sendTradeWindowOpen(player);
                 Packets.sendTradeWindowOpen(target);
@@ -277,6 +265,8 @@ public final class TradeMessageHandlers {
     }
 
     private static boolean busy(Player player) {
-        return false; //player.isBusy() || player.isRanging() || player.accessingBank() || player.isDueling();
+        return false;
+//        throw new NotImplementedException();
+//        return player.isBusy() || player.isRanging() || player.accessingBank() || player.isDueling();
     }
 }

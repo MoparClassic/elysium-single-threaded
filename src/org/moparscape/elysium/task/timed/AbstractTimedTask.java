@@ -1,5 +1,7 @@
 package org.moparscape.elysium.task.timed;
 
+import org.moparscape.elysium.Server;
+
 /**
  * Created by IntelliJ IDEA.
  *
@@ -7,7 +9,7 @@ package org.moparscape.elysium.task.timed;
  */
 public abstract class AbstractTimedTask implements TimedTask {
 
-    private final long recurringTime;
+    private long recurringTime;
     private long execTime = 0L;
 
     public AbstractTimedTask(long firstRunTime, long recurringTime) {
@@ -37,12 +39,17 @@ public abstract class AbstractTimedTask implements TimedTask {
      * <p>
      * This implementation sets the task to re-execute immediately
      * at the next chance.
-     *
-     * @param lastExecuted The current time (possibly estimate) that the
-     *                     task was last executed
      */
-    public final void setNextRunningTime(long lastExecuted) {
-        execTime = lastExecuted + recurringTime;
+    public final void updateExecutionTime() {
+        this.execTime = Server.getInstance().getHighResolutionTimestamp() + recurringTime;
+    }
+
+    public void setExecutionTime(long executionTime) {
+        this.execTime = executionTime;
+    }
+
+    public void setDelay(long delay) {
+        this.recurringTime = delay;
     }
 
     /**

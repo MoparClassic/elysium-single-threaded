@@ -72,21 +72,74 @@ public final class Packets {
 //        throw new UnsupportedOperationException();
 //    }
 
-//    public static ChannelFuture sendDuelAccept(Player player) {
-//        throw new UnsupportedOperationException();
-//    }
-//
-//    public static ChannelFuture sendDuelAcceptUpdate(Player player) {
-//        throw new UnsupportedOperationException();
-//    }
-//
-//    public static ChannelFuture sendDuelItems(Player player) {
-//        throw new UnsupportedOperationException();
-//    }
-//
-//    public static ChannelFuture sendDuelSettingUpdate(Player player) {
-//        throw new UnsupportedOperationException();
-//    }
+    public static void sendDuelAccept(Player player) {
+        Player duelPartner = player.getWishToDuel();
+        if (duelPartner == null) return;
+
+        Session s = player.getSession();
+        List<InvItem> playerOffer = player.getDuelOffer();
+        List<InvItem> duelPartnerOffer = duelPartner.getDuelOffer();
+
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 147);
+        pb.writeLong(duelPartner.getCredentials().getUsernameHash());
+        pb.writeByte(duelPartnerOffer.size());
+        for (InvItem item : duelPartnerOffer) {
+            pb.writeShort(item.getItemId());
+            pb.writeInt(item.getAmount());
+        }
+
+        pb.writeByte(playerOffer.size());
+        for (InvItem item : playerOffer) {
+            pb.writeShort(item.getItemId());
+            pb.writeInt(item.getAmount());
+        }
+
+        pb.writeByte(player.getDuelSetting(Player.DUEL_OPTION_NO_RETREAT_INDEX) ? 1 : 0); // Can't retreat.
+        pb.writeByte(player.getDuelSetting(Player.DUEL_OPTION_ALLOW_MAGIC_INDEX) ? 1 : 0); // Allow magic.
+        pb.writeByte(player.getDuelSetting(Player.DUEL_OPTION_ALLOW_PRAYER_INDEX) ? 1 : 0); // Allow prayer.
+        pb.writeByte(player.getDuelSetting(Player.DUEL_OPTION_ALLOW_WEAPONS_INDEX) ? 1 : 0); // Allow weapons.
+
+        pb.finalisePacket();
+    }
+
+    public static void sendDuelAcceptUpdate(Player player) {
+        Player duelPartner = player.getWishToDuel();
+        if (duelPartner == null) return;
+
+        Session s = player.getSession();
+        PacketBuilder one = new PacketBuilder(s.getByteBuf(), 97);
+        one.writeByte(player.isDuelOfferAccepted() ? 1 : 0);
+        one.finalisePacket();
+
+        PacketBuilder two = new PacketBuilder(s.getByteBuf(), 65);
+        two.writeByte(duelPartner.isDuelOfferAccepted() ? 1 : 0);
+        two.finalisePacket();
+    }
+
+    public static void sendDuelItems(Player player) {
+        Player duelPartner = player.getWishToDuel();
+        if (duelPartner == null) return;
+
+        List<InvItem> itemsOffered = duelPartner.getDuelOffer();
+        Session s = player.getSession();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 63);
+        pb.writeByte(itemsOffered.size());
+        for (InvItem item : itemsOffered) {
+            pb.writeShort(item.getItemId());
+            pb.writeInt(item.getAmount());
+        }
+        pb.finalisePacket();
+    }
+
+    public static void sendDuelSettingUpdate(Player player) {
+        Session s = player.getSession();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 198);
+        pb.writeByte(player.getDuelSetting(Player.DUEL_OPTION_NO_RETREAT_INDEX) ? 1 : 0);
+        pb.writeByte(player.getDuelSetting(Player.DUEL_OPTION_ALLOW_MAGIC_INDEX) ? 1 : 0);
+        pb.writeByte(player.getDuelSetting(Player.DUEL_OPTION_ALLOW_PRAYER_INDEX) ? 1 : 0);
+        pb.writeByte(player.getDuelSetting(Player.DUEL_OPTION_ALLOW_WEAPONS_INDEX) ? 1 : 0);
+        pb.finalisePacket();
+    }
 
     public static void sendDuelWindowClose(Player player) {
         Session s = player.getSession();
@@ -94,13 +147,15 @@ public final class Packets {
         pb.finalisePacket();
     }
 
-//    public static ChannelFuture sendDuelWindowOpen(Player player) {
-//        throw new UnsupportedOperationException();
-//    }
-//
-//    public static ChannelFuture sendEquipmentStats(Player player) {
-//        throw new UnsupportedOperationException();
-//    }
+    public static void sendDuelWindowOpen(Player player) {
+        Player duelPartner = player.getWishToDuel();
+        if (duelPartner == null) return;
+
+        Session s = player.getSession();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 229);
+        pb.writeShort(duelPartner.getIndex());
+        pb.finalisePacket();
+    }
 
     public static void sendFatigue(Player player) {
         Session s = player.getSession();
@@ -204,8 +259,14 @@ public final class Packets {
         pb.finalisePacket();
     }
 
-    public static ChannelFuture sendPrayers(Player player) {
-        throw new UnsupportedOperationException();
+    public static void sendPrayers(Player player) {
+        Session s = player.getSession();
+        Combat combat = player.getCombat();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 209);
+        for (int i = 0; i < 14; i++) {
+            pb.writeByte(combat.isPrayerActivated(i) ? 1 : 0);
+        }
+        pb.finalisePacket();
     }
 
     public static ChannelFuture sendPrivacySettings(Player player) {
@@ -287,12 +348,12 @@ public final class Packets {
 //    }
 
     public static void sendTradeAccept(Player player) {
-        Player tradePartner = player.getTradingDueling().getWishToTrade();
+        Player tradePartner = player.getWishToTrade();
         if (tradePartner == null) return;
 
         Session s = player.getSession();
-        List<InvItem> playerOffer = player.getTradingDueling().getTradeOffer();
-        List<InvItem> tradePartnerOffer = tradePartner.getTradingDueling().getTradeOffer();
+        List<InvItem> playerOffer = player.getTradeOffer();
+        List<InvItem> tradePartnerOffer = tradePartner.getTradeOffer();
 
         PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 251);
         pb.writeLong(tradePartner.getCredentials().getUsernameHash());
@@ -312,24 +373,24 @@ public final class Packets {
     }
 
     public static void sendTradeAcceptUpdate(Player player) {
-        Player tradePartner = player.getTradingDueling().getWishToTrade();
+        Player tradePartner = player.getWishToTrade();
         if (tradePartner == null) return;
 
         Session s = player.getSession();
         PacketBuilder one = new PacketBuilder(s.getByteBuf(), 18);
-        one.writeByte(player.getTradingDueling().isTradeOfferAccepted() ? 1 : 0);
+        one.writeByte(player.isTradeOfferAccepted() ? 1 : 0);
         one.finalisePacket();
 
         PacketBuilder two = new PacketBuilder(s.getByteBuf(), 92);
-        two.writeByte(tradePartner.getTradingDueling().isTradeOfferAccepted() ? 1 : 0);
+        two.writeByte(tradePartner.isTradeOfferAccepted() ? 1 : 0);
         two.finalisePacket();
     }
 
     public static void sendTradeItems(Player player) {
-        Player tradePartner = player.getTradingDueling().getWishToTrade();
+        Player tradePartner = player.getWishToTrade();
         if (tradePartner == null) return;
 
-        List<InvItem> itemsOffered = tradePartner.getTradingDueling().getTradeOffer();
+        List<InvItem> itemsOffered = tradePartner.getTradeOffer();
         Session s = player.getSession();
         PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 250);
         pb.writeByte(itemsOffered.size());
@@ -348,7 +409,7 @@ public final class Packets {
     }
 
     public static void sendTradeWindowOpen(Player player) {
-        Player target = player.getTradingDueling().getWishToTrade();
+        Player target = player.getWishToTrade();
         if (target == null) return;
 
         Session s = player.getSession();

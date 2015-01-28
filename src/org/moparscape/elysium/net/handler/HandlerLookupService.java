@@ -30,12 +30,12 @@ public final class HandlerLookupService {
             bindings.bind(BankWithdrawMessage.class, BankWithdrawMessageHandler.class);
             bindings.bind(BotDetectionMessage.class, BotDetectionMessageHandler.class);
             bindings.bind(CommandMessage.class, CommandMessageHandler.class);
-            bindings.bind(DuelAcceptMessage.class, DuelAcceptMessageHandler.class);
-            bindings.bind(DuelConfirmAcceptMessage.class, DuelConfirmAcceptMessageHandler.class);
-            bindings.bind(DuelDeclineMessage.class, DuelDeclineMessageHandler.class);
-            bindings.bind(DuelInformationMessage.class, DuelInformationMessageHandler.class);
-            bindings.bind(DuelOptionsMessage.class, DuelOptionsMessageHandler.class);
-            bindings.bind(DuelRequestMessage.class, DuelRequestMessageHandler.class);
+            bindings.bind(DuelAcceptMessage.class, DuelMessageHandlers.DuelAcceptMessageHandler.class);
+            bindings.bind(DuelConfirmAcceptMessage.class, DuelMessageHandlers.DuelConfirmAcceptMessageHandler.class);
+            bindings.bind(DuelDeclineMessage.class, DuelMessageHandlers.DuelDeclineMessageHandler.class);
+            bindings.bind(DuelInformationMessage.class, DuelMessageHandlers.DuelInformationMessageHandler.class);
+            bindings.bind(DuelOptionsMessage.class, DuelMessageHandlers.DuelOptionsMessageHandler.class);
+            bindings.bind(DuelRequestMessage.class, DuelMessageHandlers.DuelRequestMessageHandler.class);
             bindings.bind(DummyMessage.class, DummyMessageHandler.class);
             bindings.bind(ExceptionMessage.class, ExceptionMessageHandler.class);
             bindings.bind(FollowRequestMessage.class, FollowRequestMessageHandler.class);
