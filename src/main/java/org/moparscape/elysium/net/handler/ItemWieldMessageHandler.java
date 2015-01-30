@@ -5,7 +5,6 @@ import org.moparscape.elysium.entity.Appearance;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.component.Inventory;
-import org.moparscape.elysium.entity.component.Skills;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.net.codec.decoder.message.ItemWieldMessage;
@@ -39,11 +38,10 @@ public final class ItemWieldMessageHandler extends MessageHandler<ItemWieldMessa
         ItemWieldableDef wieldableDef = item.getWieldableDef();
 
         // Check stats required.
-        Skills skills = player.getSkills();
         StringBuilder outer = null;
         StringBuilder inner = null;
         for (Map.Entry<Integer, Integer> e : wieldableDef.getStatsRequired()) {
-            if (skills.getMaxStat(e.getKey()) < e.getValue()) {
+            if (player.getMaxStat(e.getKey()) < e.getValue()) {
                 if (outer == null) {
                     outer = new StringBuilder(100);
                     inner = new StringBuilder(50);

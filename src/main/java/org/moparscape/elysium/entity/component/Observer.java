@@ -12,7 +12,7 @@ import java.util.*;
  *
  * @author lothy
  */
-public final class Observer extends AbstractComponent {
+public final class Observer {
 
     private static final int MAX_VISIBLE_ITEMS = 254;
     private static final int MAX_VISIBLE_NPCS = 100;
@@ -164,11 +164,6 @@ public final class Observer extends AbstractComponent {
         }
 
         return false;
-    }
-
-    @Override
-    public void resolveDependencies(Map<Class<? extends Component>, Component> components) {
-
     }
 
     public void revalidateWatchedEntities() {

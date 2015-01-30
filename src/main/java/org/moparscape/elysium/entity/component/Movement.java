@@ -12,7 +12,7 @@ import org.moparscape.elysium.world.World;
  *
  * @author lothy
  */
-public final class Movement extends AbstractComponent {
+public final class Movement {
 
     private static final World world = World.getInstance();
     private int curWaypoint;

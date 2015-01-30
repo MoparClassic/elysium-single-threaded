@@ -219,12 +219,11 @@ public final class IssueUpdatePacketsTask {
             }
 
             for (Player p : playerHitUpdates) {
-                UpdateProxy targetProxy = p.getUpdateProxy();
                 pb.writeShort(p.getIndex());
                 pb.writeByte(2);
-                pb.writeByte(targetProxy.getLastDamage());
-                pb.writeByte(targetProxy.getHits());
-                pb.writeByte(targetProxy.getMaxHits());
+                pb.writeByte(p.getLastDamage());
+                pb.writeByte(p.getHits());
+                pb.writeByte(p.getMaxHits());
             }
 
             for (Projectile p : projectiles) {
@@ -256,7 +255,7 @@ public final class IssueUpdatePacketsTask {
                 pb.writeByte(app.getTopColour());
                 pb.writeByte(app.getTrouserColour());
                 pb.writeByte(app.getSkinColour());
-                pb.writeByte(targetProxy.getCombatLevel());
+                pb.writeByte(p.getCombatLevel());
                 pb.writeByte(p.isSkulled() ? 1 : 0);
                 pb.writeByte(0); // 3: Admin 2: Mod 1; Pmod 0: None
             }

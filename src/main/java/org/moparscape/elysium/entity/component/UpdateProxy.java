@@ -10,16 +10,14 @@ import java.util.List;
  *
  * @author lothy
  */
-public final class UpdateProxy extends AbstractComponent {
+public final class UpdateProxy {
 
     private Movement movement;
     private Observer observer;
-    private Skills skills;
 
-    public UpdateProxy(Movement movement, Observer observer, Skills skills) {
+    public UpdateProxy(Movement movement, Observer observer) {
         this.movement = movement;
         this.observer = observer;
-        this.skills = skills;
     }
 
     public void cleanupViewableEntities() {
@@ -32,22 +30,6 @@ public final class UpdateProxy extends AbstractComponent {
 
     public List<Bubble> getBubblesNeedingDisplayed() {
         return observer.getBubblesNeedingDisplayed();
-    }
-
-    public int getCombatLevel() {
-        return skills.getCombatLevel();
-    }
-
-    public int getHits() {
-        return skills.getHits();
-    }
-
-    public int getLastDamage() {
-        return skills.getLastDamage();
-    }
-
-    public int getMaxHits() {
-        return skills.getMaxHits();
     }
 
     public List<Npc> getNpcHitUpdates() {

@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author lothy
  */
-public class Inventory extends AbstractComponent {
+public class Inventory {
 
     private static final World world = World.getInstance();
 
@@ -286,7 +286,6 @@ public class Inventory extends AbstractComponent {
     }
 
     public final void updateInventoryItem(int slot, InvItem item) {
-        Player p = owner;
         Session s = owner.getSession();
 
         PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 228);

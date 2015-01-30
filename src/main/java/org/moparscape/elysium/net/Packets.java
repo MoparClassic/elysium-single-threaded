@@ -4,7 +4,6 @@ import io.netty.channel.ChannelFuture;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.component.Inventory;
-import org.moparscape.elysium.entity.component.Skills;
 import org.moparscape.elysium.util.Formulae;
 
 import java.util.List;
@@ -210,9 +209,8 @@ public final class Packets {
 
     public static void sendFatigue(Player player) {
         Session s = player.getSession();
-        Skills skills = player.getSkills();
         PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 126);
-        pb.writeShort(skills.getFatigue());
+        pb.writeShort(player.getFatigue());
         pb.finalisePacket();
     }
 
@@ -336,20 +334,19 @@ public final class Packets {
 
     public static void sendStats(Player player) {
         Session s = player.getSession();
-        Skills skills = player.getSkills();
         PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 180);
 
-        int[] curStats = skills.getCurStats();
+        int[] curStats = player.getCurStats();
         for (int i = 0; i < curStats.length; i++) {
             pb.writeByte(curStats[i]);
         }
 
-        int[] maxStats = skills.getMaxStats();
+        int[] maxStats = player.getMaxStats();
         for (int i = 0; i < maxStats.length; i++) {
             pb.writeByte(maxStats[i]);
         }
 
-        int[] exps = skills.getExps();
+        int[] exps = player.getExps();
         for (int i = 0; i < exps.length; i++) {
             pb.writeInt(exps[i]);
         }

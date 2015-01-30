@@ -37,6 +37,7 @@ public final class Player extends MobileEntity implements Moveable {
     public static final int SETTING_MOUSE_BUTTONS_INDEX = 2;
     public static final int SETTING_SOUND_EFFECTS_INDEX = 3;
     private static final int MAX_WORN_ITEMS = 12;
+    private static final int SKILL_COUNT = 18;
     private final Bank bank = new Bank(this);
     private final PrayerDrainTask drainer = new PrayerDrainTask();
     private final Set<Long> friends = new HashSet<>();
@@ -48,29 +49,34 @@ public final class Player extends MobileEntity implements Moveable {
     private final List<ChatMessage> npcMessagesToDisplay = new ArrayList<>();
     private final Observer observer = new Observer(this);
     private final Session session;
-    private final Skills skills = new Skills();
-    private final UpdateProxy updateProxy = new UpdateProxy(movement, observer, skills);
+    private final UpdateProxy updateProxy = new UpdateProxy(movement, observer);
     private int actionCount = 0;
     private boolean[] activatedPrayers = new boolean[14];
     private Appearance appearance = new Appearance();
     private final int[] wornItems = appearance.getSprites();
     private boolean busy = false;
+    private int combatLevel = 3;
     private int combatStyle = 0;
     private int drainRate = 0;
     private boolean duelConfirmAccepted = false;
     private List<InvItem> duelOffer = new ArrayList<>(9);
     private boolean duelOfferAccepted = false;
     private boolean[] duelOptions = new boolean[4];
+    private int fatigue;
     private boolean[] gameSettings = new boolean[7];
     private long hash;
     private boolean isDueling = false;
     private boolean isTrading = false;
+    private int lastDamage = 0;
     private long lastTradeDuelRequest;
     private boolean loggedIn = false;
     private String password;
     private PlayerState playerState;
     private boolean[] privacySettings = new boolean[4];
     private Region region = null;
+    private int[] skillsCurrentLevel = new int[SKILL_COUNT];
+    private int[] skillsExperience = new int[SKILL_COUNT];
+    private int[] skillsMaxLevel = new int[SKILL_COUNT];
     private boolean skulled = false;
     private boolean tradeConfirmAccepted = false;
     private List<InvItem> tradeOffer = new ArrayList<>(9);
@@ -79,10 +85,15 @@ public final class Player extends MobileEntity implements Moveable {
     private Player wishToDuel;
     private Player wishToTrade;
 
-
     public Player(Session session) {
         this.session = session;
         this.setLocation(new Point(329, 552));
+
+        for (int i = 0; i < SKILL_COUNT; i++) {
+            skillsCurrentLevel[i] = 99;
+            skillsMaxLevel[i] = 99;
+            skillsExperience[i] = 14_000_000;
+        }
     }
 
     public void addChatMessage(ChatMessage message) {
@@ -169,6 +180,10 @@ public final class Player extends MobileEntity implements Moveable {
         return messagesToDisplay;
     }
 
+    public int getCombatLevel() {
+        return combatLevel;
+    }
+
     public int getCombatStyle() {
         return combatStyle;
     }
@@ -177,12 +192,36 @@ public final class Player extends MobileEntity implements Moveable {
         this.combatStyle = style;
     }
 
+    public int getCurStat(int id) {
+        return skillsCurrentLevel[id];
+    }
+
+    public int[] getCurStats() {
+        return skillsCurrentLevel;
+    }
+
     public List<InvItem> getDuelOffer() {
         return duelOffer;
     }
 
     public boolean getDuelSetting(int i) {
         return duelOptions[i];
+    }
+
+    public int getExp(int id) {
+        return skillsExperience[id];
+    }
+
+    public int[] getExps() {
+        return skillsExperience;
+    }
+
+    public int getFatigue() {
+        return fatigue;
+    }
+
+    public void setFatigue(int fatigue) {
+        this.fatigue = fatigue;
     }
 
     public Set<Long> getFriendList() {
@@ -197,12 +236,20 @@ public final class Player extends MobileEntity implements Moveable {
         return gameSettings;
     }
 
+    public int getHits() {
+        return skillsCurrentLevel[3];
+    }
+
     public Set<Long> getIgnoreList() {
         return ignores;
     }
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public int getLastDamage() {
+        return lastDamage;
     }
 
     public Point getLocation() {
@@ -238,6 +285,18 @@ public final class Player extends MobileEntity implements Moveable {
             }
         }
         return Math.max(points, 1);
+    }
+
+    public int getMaxHits() {
+        return skillsMaxLevel[3];
+    }
+
+    public int getMaxStat(int id) {
+        return skillsMaxLevel[id];
+    }
+
+    public int[] getMaxStats() {
+        return skillsMaxLevel;
     }
 
     public Movement getMovement() {
@@ -294,10 +353,6 @@ public final class Player extends MobileEntity implements Moveable {
 
     public Session getSession() {
         return session;
-    }
-
-    public Skills getSkills() {
-        return skills;
     }
 
     public int[] getSprites() {

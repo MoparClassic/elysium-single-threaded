@@ -5,7 +5,6 @@ import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.PlayerState;
 import org.moparscape.elysium.entity.component.Inventory;
-import org.moparscape.elysium.entity.component.Skills;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.net.codec.decoder.message.*;
@@ -326,11 +325,9 @@ public final class DuelMessageHandlers {
                     target.getUsername() + " is already in a duel" :
                     "Sending duel request");
 
-            Skills playerSkills = player.getSkills();
-            Skills targetSkills = target.getSkills();
             Packets.sendMessage(target, player.getUsername() + " " +
-                    Formulae.getLvlDiffColour(targetSkills.getCombatLevel() - playerSkills.getCombatLevel()) +
-                    "(level-" + playerSkills.getCombatLevel() + ")@whi@ wishes to duel with you");
+                    Formulae.getLvlDiffColour(target.getCombatLevel() - player.getCombatLevel()) +
+                    "(level-" + player.getCombatLevel() + ")@whi@ wishes to duel with you");
 
             if (!player.isDueling() &&
                     target.getWishToDuel() != null &&
