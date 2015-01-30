@@ -12,7 +12,6 @@ public abstract class MobileEntity extends Entity implements Moveable {
             {4, -1, 0},
             {5, 6, 7}
     };
-    protected MobileEntity owner;
     protected int sprite = 1;
     protected boolean spriteChanged = true;
     private boolean appearanceChanged = true;
@@ -54,7 +53,8 @@ public abstract class MobileEntity extends Entity implements Moveable {
     }
 
     public void updateSprite(Point newLocation) {
-        Point curLoc = this.owner.getLocation();
+        Point curLoc = getLocation();
+        if (curLoc == null) return;
 
         try {
             int xIndex = curLoc.getX() - newLocation.getX() + 1;
