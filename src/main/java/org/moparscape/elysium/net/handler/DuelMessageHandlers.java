@@ -4,7 +4,6 @@ import org.moparscape.elysium.entity.Appearance;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.PlayerState;
-import org.moparscape.elysium.entity.component.Communication;
 import org.moparscape.elysium.entity.component.Inventory;
 import org.moparscape.elysium.entity.component.PlayerSprite;
 import org.moparscape.elysium.entity.component.Skills;
@@ -318,10 +317,9 @@ public final class DuelMessageHandlers {
             }
 
             long playerUsernameHash = player.getUsernameHash();
-            Communication targetCom = target.getCommunication();
             if ((target.getPrivacySetting(Player.PRIVACY_BLOCK_DUEL_REQUESTS_INDEX) &&
-                    !targetCom.isFriendsWith(playerUsernameHash)) ||
-                    targetCom.isIgnoring(playerUsernameHash)) {
+                    !target.isFriendsWith(playerUsernameHash)) ||
+                    target.isIgnoring(playerUsernameHash)) {
                 Packets.sendMessage(player, "This player has duel requests blocked.");
                 return true;
             }

@@ -16,7 +16,7 @@ public final class PublicChatMessageHandler extends MessageHandler<PublicChatMes
         //To change body of implemented methods use File | Settings | File Templates.
         System.out.println("Public chat message received!");
         ChatMessage cm = new ChatMessage(player, message.getMessagePayload());
-        player.getCommunication().addChatMessage(cm);
+        player.addChatMessage(cm);
 
         return true;
     }

@@ -12,16 +12,13 @@ import java.util.List;
  */
 public final class UpdateProxy extends AbstractComponent {
 
-    private Communication communication;
     private Movement movement;
     private Observer observer;
     private Skills skills;
     private PlayerSprite sprite;
 
-    public UpdateProxy(Communication communication,
-                       Movement movement, Observer observer, Skills skills,
+    public UpdateProxy(Movement movement, Observer observer, Skills skills,
                        PlayerSprite sprite) {
-        this.communication = communication;
         this.movement = movement;
         this.observer = observer;
         this.skills = skills;
@@ -30,11 +27,6 @@ public final class UpdateProxy extends AbstractComponent {
 
     public void cleanupViewableEntities() {
         observer.cleanupViewableEntities();
-    }
-
-    public void clearChatLists() {
-        communication.clearChatMessagesNeedingDisplayed();
-        communication.clearNpcMessagesNeedingDisplayed();
     }
 
     public void clearDisplayLists() {
@@ -53,10 +45,6 @@ public final class UpdateProxy extends AbstractComponent {
         return observer.getBubblesNeedingDisplayed();
     }
 
-    public List<ChatMessage> getChatMessagesNeedingDisplayed() {
-        return communication.getChatMessagesNeedingDisplayed();
-    }
-
     public int getCombatLevel() {
         return skills.getCombatLevel();
     }
@@ -73,16 +61,8 @@ public final class UpdateProxy extends AbstractComponent {
         return skills.getMaxHits();
     }
 
-    public ChatMessage getNextChatMessage() {
-        return communication.getNextChatMessage();
-    }
-
     public List<Npc> getNpcHitUpdates() {
         return observer.getNpcHitUpdates();
-    }
-
-    public List<ChatMessage> getNpcMessagesNeedingDisplayed() {
-        return communication.getNpcMessagesNeedingDisplayed();
     }
 
     public List<Player> getPlayerAppearanceUpdates() {
@@ -123,18 +103,6 @@ public final class UpdateProxy extends AbstractComponent {
 
     public boolean hasMoved() {
         return movement.hasMoved();
-    }
-
-    public void informOfChatMessage(ChatMessage message) {
-        communication.informOfChatMessage(message);
-    }
-
-    public boolean isFriendsWith(long usernameHash) {
-        return communication.isFriendsWith(usernameHash);
-    }
-
-    public boolean isIgnoring(long usernameHash) {
-        return communication.isIgnoring(usernameHash);
     }
 
     public boolean isSkulled() {

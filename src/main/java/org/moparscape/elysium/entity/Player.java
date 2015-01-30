@@ -3,6 +3,7 @@ package org.moparscape.elysium.entity;
 import org.moparscape.elysium.Server;
 import org.moparscape.elysium.def.PrayerDef;
 import org.moparscape.elysium.entity.component.*;
+import org.moparscape.elysium.entity.component.Observer;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.task.timed.PrayerDrainTask;
@@ -10,8 +11,7 @@ import org.moparscape.elysium.util.DataConversions;
 import org.moparscape.elysium.world.Point;
 import org.moparscape.elysium.world.Region;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,6 +20,8 @@ import java.util.List;
  */
 public final class Player extends MobileEntity implements Moveable {
 
+    public static final int COMMUNICATION_MAX_FRIENDS = 100;
+    public static final int COMMUNICATION_MAX_IGNORES = 50;
     public static final int DUEL_OPTION_ALLOW_MAGIC_INDEX = 1;
     public static final int DUEL_OPTION_ALLOW_PRAYER_INDEX = 2;
     public static final int DUEL_OPTION_ALLOW_WEAPONS_INDEX = 3;
@@ -35,15 +37,19 @@ public final class Player extends MobileEntity implements Moveable {
     public static final int SETTING_MOUSE_BUTTONS_INDEX = 2;
     public static final int SETTING_SOUND_EFFECTS_INDEX = 3;
     private final Bank bank = new Bank(this);
-    private final Communication communication = new Communication();
     private final PrayerDrainTask drainer = new PrayerDrainTask();
+    private final Set<Long> friends = new HashSet<>();
+    private final Set<Long> ignores = new HashSet<>();
     private final Inventory inventory = new Inventory(this);
+    private final Queue<ChatMessage> messages = new LinkedList<>();
+    private final List<ChatMessage> messagesToDisplay = new ArrayList<>();
+    private final List<ChatMessage> npcMessagesToDisplay = new ArrayList<>();
     private final Session session;
     private final Skills skills = new Skills();
     private final PlayerSprite sprite = new PlayerSprite(this);
     private final Movement movement = new Movement(this, sprite);
     private final Observer observer = new Observer(this, sprite);
-    private final UpdateProxy updateProxy = new UpdateProxy(communication, movement, observer, skills, sprite);
+    private final UpdateProxy updateProxy = new UpdateProxy(movement, observer, skills, sprite);
     private int actionCount = 0;
     private boolean[] activatedPrayers = new boolean[14];
     private boolean busy = false;
@@ -75,6 +81,26 @@ public final class Player extends MobileEntity implements Moveable {
         this.setLocation(new Point(329, 552));
     }
 
+    public void addChatMessage(ChatMessage message) {
+        messages.add(message);
+    }
+
+    public boolean addFriend(long usernameHash) {
+        if (!friends.contains(usernameHash) && friends.size() < COMMUNICATION_MAX_FRIENDS) {
+            return friends.add(usernameHash);
+        }
+
+        return false;
+    }
+
+    public boolean addIgnore(long usernameHash) {
+        if (!ignores.contains(usernameHash) && ignores.size() < COMMUNICATION_MAX_IGNORES) {
+            return ignores.add(usernameHash);
+        }
+
+        return false;
+    }
+
     public void addPrayerDrain(int prayerID) {
         PrayerDef prayer = DefinitionHandler.getPrayerDef(prayerID);
         drainRate += prayer.getDrainRate();
@@ -89,10 +115,23 @@ public final class Player extends MobileEntity implements Moveable {
         tradeOffer.add(item);
     }
 
+    public void clearChatLists() {
+        clearChatMessagesNeedingDisplayed();
+        clearNpcMessagesNeedingDisplayed();
+    }
+
+    public void clearChatMessagesNeedingDisplayed() {
+        messagesToDisplay.clear();
+    }
+
     public void clearDuelOptions() {
         for (int i = 0; i < 4; i++) {
             duelOptions[i] = false;
         }
+    }
+
+    public void clearNpcMessagesNeedingDisplayed() {
+        npcMessagesToDisplay.clear();
     }
 
     public int getActionCount() {
@@ -113,16 +152,16 @@ public final class Player extends MobileEntity implements Moveable {
         return bank;
     }
 
+    public List<ChatMessage> getChatMessagesNeedingDisplayed() {
+        return messagesToDisplay;
+    }
+
     public int getCombatStyle() {
         return combatStyle;
     }
 
     public void setCombatStyle(int style) {
         this.combatStyle = style;
-    }
-
-    public Communication getCommunication() {
-        return communication;
     }
 
     public List<InvItem> getDuelOffer() {
@@ -133,12 +172,20 @@ public final class Player extends MobileEntity implements Moveable {
         return duelOptions[i];
     }
 
+    public Set<Long> getFriendList() {
+        return friends;
+    }
+
     public boolean getGameSetting(int index) {
         return gameSettings[index];
     }
 
     public boolean[] getGameSettings() {
         return gameSettings;
+    }
+
+    public Set<Long> getIgnoreList() {
+        return ignores;
     }
 
     public Inventory getInventory() {
@@ -182,6 +229,14 @@ public final class Player extends MobileEntity implements Moveable {
 
     public Movement getMovement() {
         return movement;
+    }
+
+    public ChatMessage getNextChatMessage() {
+        return messages.poll();
+    }
+
+    public List<ChatMessage> getNpcMessagesNeedingDisplayed() {
+        return npcMessagesToDisplay;
     }
 
     public Observer getObserver() {
@@ -312,6 +367,14 @@ public final class Player extends MobileEntity implements Moveable {
         return this == o;
     }
 
+    public void informOfChatMessage(ChatMessage message) {
+        messagesToDisplay.add(message); // Use offer, it doesn't block
+    }
+
+    public void informOfNpcChatMessage(ChatMessage message) {
+        npcMessagesToDisplay.add(message);
+    }
+
     public boolean isBusy() {
         return busy;
     }
@@ -342,6 +405,14 @@ public final class Player extends MobileEntity implements Moveable {
 
     public void setDueling(boolean dueling) {
         this.isDueling = dueling;
+    }
+
+    public boolean isFriendsWith(long usernameHash) {
+        return friends.contains(usernameHash);
+    }
+
+    public boolean isIgnoring(long usernameHash) {
+        return ignores.contains(usernameHash);
     }
 
     public boolean isLoggedIn() {
@@ -378,6 +449,14 @@ public final class Player extends MobileEntity implements Moveable {
 
     public void setTrading(boolean trading) {
         this.isTrading = trading;
+    }
+
+    public void removeFriend(long usernameHash) {
+        friends.remove(usernameHash);
+    }
+
+    public void removeIgnore(long usernameHash) {
+        ignores.remove(usernameHash);
     }
 
     public void removePrayerDrain(int prayerID) {

@@ -122,7 +122,7 @@ public final class IssueUpdatePacketsTask {
     }
 
     private void updateNpcAppearances(Session s, Player p, UpdateProxy proxy) {
-        List<ChatMessage> messages = proxy.getNpcMessagesNeedingDisplayed();
+        List<ChatMessage> messages = p.getNpcMessagesNeedingDisplayed();
         List<Npc> hitUpdates = proxy.getNpcHitUpdates();
 
         int messageCount = messages.size();
@@ -192,7 +192,7 @@ public final class IssueUpdatePacketsTask {
 
     private void updatePlayerAppearances(Session s, Player player, UpdateProxy proxy) {
         List<Bubble> bubbles = proxy.getBubblesNeedingDisplayed();
-        List<ChatMessage> chatMessages = proxy.getChatMessagesNeedingDisplayed();
+        List<ChatMessage> chatMessages = player.getChatMessagesNeedingDisplayed();
         List<Player> playerHitUpdates = proxy.getPlayerHitUpdates();
 
         List<Projectile> projectiles = proxy.getProjectilesNeedingDisplayed();

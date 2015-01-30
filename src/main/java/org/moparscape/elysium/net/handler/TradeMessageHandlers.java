@@ -3,7 +3,6 @@ package org.moparscape.elysium.net.handler;
 import org.moparscape.elysium.entity.Appearance;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
-import org.moparscape.elysium.entity.component.Communication;
 import org.moparscape.elysium.entity.component.Inventory;
 import org.moparscape.elysium.entity.component.PlayerSprite;
 import org.moparscape.elysium.net.Packets;
@@ -235,10 +234,9 @@ public final class TradeMessageHandlers {
             }
 
             long playerUsernameHash = player.getUsernameHash();
-            Communication targetCom = target.getCommunication();
             if ((target.getPrivacySetting(Player.PRIVACY_BLOCK_TRADE_REQUESTS_INDEX) &&
-                    !targetCom.isFriendsWith(playerUsernameHash)) ||
-                    targetCom.isIgnoring(playerUsernameHash)) {
+                    !target.isFriendsWith(playerUsernameHash)) ||
+                    target.isIgnoring(playerUsernameHash)) {
                 Packets.sendMessage(player, "This player has trade requests blocked.");
                 return true;
             }

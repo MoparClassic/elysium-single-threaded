@@ -26,7 +26,7 @@ public final class GameStateUpdater {
 
             proxy.updateEntityLists();
             proxy.clearDisplayLists();
-            proxy.clearChatLists();
+            p.clearChatLists();
 
             proxy.resetSpriteChanged();
             proxy.setAppearanceChanged(false);
@@ -66,16 +66,14 @@ public final class GameStateUpdater {
 
         for (Player p : playerList) {
             try {
-                UpdateProxy proxy = p.getUpdateProxy();
-                ChatMessage message = proxy.getNextChatMessage();
+                ChatMessage message = p.getNextChatMessage();
 
                 if (message == null || !p.isLoggedIn()) {
                     continue;
                 }
 
                 for (Player target : Region.getViewablePlayers(p, 16)) {
-                    UpdateProxy targetProxy = target.getUpdateProxy();
-                    targetProxy.informOfChatMessage(message);
+                    target.informOfChatMessage(message);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
