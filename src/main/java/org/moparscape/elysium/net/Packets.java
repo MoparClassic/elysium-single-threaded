@@ -80,7 +80,7 @@ public final class Packets {
         List<InvItem> duelPartnerOffer = duelPartner.getDuelOffer();
 
         PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 147);
-        pb.writeLong(duelPartner.getCredentials().getUsernameHash());
+        pb.writeLong(duelPartner.getUsernameHash());
         pb.writeByte(duelPartnerOffer.size());
         for (InvItem item : duelPartnerOffer) {
             pb.writeShort(item.getItemId());
@@ -366,7 +366,7 @@ public final class Packets {
         List<InvItem> tradePartnerOffer = tradePartner.getTradeOffer();
 
         PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 251);
-        pb.writeLong(tradePartner.getCredentials().getUsernameHash());
+        pb.writeLong(tradePartner.getUsernameHash());
         pb.writeByte(tradePartnerOffer.size());
         for (InvItem item : tradePartnerOffer) {
             pb.writeShort(item.getItemId());

@@ -13,17 +13,15 @@ import java.util.List;
 public final class UpdateProxy extends AbstractComponent {
 
     private Communication communication;
-    private Credentials credentials;
     private Movement movement;
     private Observer observer;
     private Skills skills;
     private PlayerSprite sprite;
 
-    public UpdateProxy(Communication communication, Credentials credentials,
+    public UpdateProxy(Communication communication,
                        Movement movement, Observer observer, Skills skills,
                        PlayerSprite sprite) {
         this.communication = communication;
-        this.credentials = credentials;
         this.movement = movement;
         this.observer = observer;
         this.skills = skills;
@@ -101,14 +99,6 @@ public final class UpdateProxy extends AbstractComponent {
 
     public int getSprite() {
         return sprite.getSprite();
-    }
-
-    public String getUsername() {
-        return credentials.getUsername();
-    }
-
-    public long getUsernameHash() {
-        return credentials.getUsernameHash();
     }
 
     public StatefulEntityCollection<Item> getWatchedItems() {

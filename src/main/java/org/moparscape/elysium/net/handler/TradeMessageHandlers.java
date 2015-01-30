@@ -4,7 +4,6 @@ import org.moparscape.elysium.entity.Appearance;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.component.Communication;
-import org.moparscape.elysium.entity.component.Credentials;
 import org.moparscape.elysium.entity.component.Inventory;
 import org.moparscape.elysium.entity.component.PlayerSprite;
 import org.moparscape.elysium.net.Packets;
@@ -168,8 +167,7 @@ public final class TradeMessageHandlers {
                 return true;
             }
 
-            Credentials playerCreds = player.getCredentials();
-            Packets.sendMessage(target, playerCreds.getUsername() + " has declined the trade.");
+            Packets.sendMessage(target, player.getUsername() + " has declined the trade.");
 
             player.resetTrading();
             target.resetTrading();
@@ -236,8 +234,7 @@ public final class TradeMessageHandlers {
                 return true;
             }
 
-            Credentials playerCreds = player.getCredentials();
-            long playerUsernameHash = playerCreds.getUsernameHash();
+            long playerUsernameHash = player.getUsernameHash();
             Communication targetCom = target.getCommunication();
             if ((target.getPrivacySetting(Player.PRIVACY_BLOCK_TRADE_REQUESTS_INDEX) &&
                     !targetCom.isFriendsWith(playerUsernameHash)) ||
@@ -246,14 +243,12 @@ public final class TradeMessageHandlers {
                 return true;
             }
 
-            Credentials targetCreds = target.getCredentials();
-
             player.setWishToTrade(target);
             Packets.sendMessage(player, target.isTrading() ?
-                    targetCreds.getUsername() + " is already in a trade" :
+                    target.getUsername() + " is already in a trade" :
                     "Sending trade request");
 
-            Packets.sendMessage(target, playerCreds.getUsername() + " wishes to trade with you");
+            Packets.sendMessage(target, player.getUsername() + " wishes to trade with you");
 
             if (!player.isTrading() &&
                     target.getWishToTrade() != null &&

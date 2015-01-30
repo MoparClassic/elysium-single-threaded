@@ -240,7 +240,7 @@ public final class IssueUpdatePacketsTask {
                 pb.writeShort(p.getIndex());
                 pb.writeByte(5);
                 pb.writeShort(targetProxy.getAppearanceId());
-                pb.writeLong(targetProxy.getUsernameHash());
+                pb.writeLong(p.getUsernameHash());
 
 //                System.out.println("Sending appearance update to " + player.getCredentials().getUsername() +
 //                        " for player " + targetProxy.getUsername() + " (Target AID: " + targetProxy.getAppearanceId() + ")");

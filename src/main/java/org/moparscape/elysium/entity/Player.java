@@ -6,6 +6,7 @@ import org.moparscape.elysium.entity.component.*;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.task.timed.PrayerDrainTask;
+import org.moparscape.elysium.util.DataConversions;
 import org.moparscape.elysium.world.Point;
 import org.moparscape.elysium.world.Region;
 
@@ -35,7 +36,6 @@ public final class Player extends MobileEntity implements Moveable {
     public static final int SETTING_SOUND_EFFECTS_INDEX = 3;
     private final Bank bank = new Bank(this);
     private final Communication communication = new Communication();
-    private final Credentials credentials = new Credentials();
     private final PrayerDrainTask drainer = new PrayerDrainTask();
     private final Inventory inventory = new Inventory(this);
     private final Session session;
@@ -43,7 +43,7 @@ public final class Player extends MobileEntity implements Moveable {
     private final PlayerSprite sprite = new PlayerSprite(this);
     private final Movement movement = new Movement(this, sprite);
     private final Observer observer = new Observer(this, sprite);
-    private final UpdateProxy updateProxy = new UpdateProxy(communication, credentials, movement, observer, skills, sprite);
+    private final UpdateProxy updateProxy = new UpdateProxy(communication, movement, observer, skills, sprite);
     private int actionCount = 0;
     private boolean[] activatedPrayers = new boolean[14];
     private boolean busy = false;
@@ -54,16 +54,19 @@ public final class Player extends MobileEntity implements Moveable {
     private boolean duelOfferAccepted = false;
     private boolean[] duelOptions = new boolean[4];
     private boolean[] gameSettings = new boolean[7];
+    private long hash;
     private boolean isDueling = false;
     private boolean isTrading = false;
     private long lastTradeDuelRequest;
     private boolean loggedIn = false;
+    private String password;
     private PlayerState playerState;
     private boolean[] privacySettings = new boolean[4];
     private Region region = null;
     private boolean tradeConfirmAccepted = false;
     private List<InvItem> tradeOffer = new ArrayList<>(9);
     private boolean tradeOfferAccepted = false;
+    private String username;
     private Player wishToDuel;
     private Player wishToTrade;
 
@@ -120,10 +123,6 @@ public final class Player extends MobileEntity implements Moveable {
 
     public Communication getCommunication() {
         return communication;
-    }
-
-    public Credentials getCredentials() {
-        return credentials;
     }
 
     public List<InvItem> getDuelOffer() {
@@ -189,6 +188,14 @@ public final class Player extends MobileEntity implements Moveable {
         return observer;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public int getPrayerPoints() {
         int points = 1;
         for (InvItem item : inventory.getItems()) {
@@ -244,6 +251,19 @@ public final class Player extends MobileEntity implements Moveable {
 
     public UpdateProxy getUpdateProxy() {
         return updateProxy;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+        this.hash = DataConversions.usernameToHash(username);
+    }
+
+    public long getUsernameHash() {
+        return hash;
     }
 
     public int getWeaponAimPoints() {
@@ -440,7 +460,7 @@ public final class Player extends MobileEntity implements Moveable {
 
     @Override
     public String toString() {
-        return credentials + " (" + getLocation().getX() + ", " + getLocation().getY() + ")";
+        return getUsername() + " (" + getLocation().getX() + ", " + getLocation().getY() + ")";
     }
 
     public boolean tradeDuelThrottling() {

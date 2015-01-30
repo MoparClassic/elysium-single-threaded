@@ -274,10 +274,9 @@ public class Inventory extends AbstractComponent {
     }
 
     public String toString() {
-        Credentials creds = owner.getCredentials();
         StringBuilder sb = new StringBuilder(1000);
         sb.append("Inventory contents for ");
-        sb.append(creds.getUsername()).append("\n");
+        sb.append(owner.getUsername()).append("\n");
 
         for (InvItem item : items) {
             sb.append("\t").append(item).append("\n");

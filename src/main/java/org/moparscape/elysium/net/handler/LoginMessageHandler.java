@@ -4,7 +4,6 @@ import org.moparscape.elysium.Server;
 import org.moparscape.elysium.entity.DefaultEntityFactory;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.UnregistrableSession;
-import org.moparscape.elysium.entity.component.Credentials;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.net.codec.decoder.message.LoginMessage;
@@ -32,9 +31,8 @@ public final class LoginMessageHandler extends MessageHandler<LoginMessage> {
                 message.getUsername(), message.getPassword());
 
         Player p = DefaultEntityFactory.getInstance().newPlayer(session);
-        Credentials creds = p.getCredentials();
-        creds.setUsername(message.getUsername());
-        creds.setPassword(message.getPassword());
+        p.setUsername(message.getUsername());
+        p.setPassword(message.getPassword());
 
         session.setPlayer(p);
 

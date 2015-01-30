@@ -4,7 +4,10 @@ import org.moparscape.elysium.entity.Appearance;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.PlayerState;
-import org.moparscape.elysium.entity.component.*;
+import org.moparscape.elysium.entity.component.Communication;
+import org.moparscape.elysium.entity.component.Inventory;
+import org.moparscape.elysium.entity.component.PlayerSprite;
+import org.moparscape.elysium.entity.component.Skills;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.net.codec.decoder.message.*;
@@ -203,7 +206,7 @@ public final class DuelMessageHandlers {
                 return true;
             }
 
-            Packets.sendMessage(target, player.getCredentials().getUsername() + " has declined the duel.");
+            Packets.sendMessage(target, player.getUsername() + " has declined the duel.");
 
             player.resetDueling();
             target.resetDueling();
@@ -314,8 +317,7 @@ public final class DuelMessageHandlers {
                 return true;
             }
 
-            Credentials playerCreds = player.getCredentials();
-            long playerUsernameHash = playerCreds.getUsernameHash();
+            long playerUsernameHash = player.getUsernameHash();
             Communication targetCom = target.getCommunication();
             if ((target.getPrivacySetting(Player.PRIVACY_BLOCK_DUEL_REQUESTS_INDEX) &&
                     !targetCom.isFriendsWith(playerUsernameHash)) ||
@@ -324,16 +326,14 @@ public final class DuelMessageHandlers {
                 return true;
             }
 
-            Credentials targetCreds = target.getCredentials();
-
             player.setWishToDuel(target);
             Packets.sendMessage(player, target.isDueling() ?
-                    targetCreds.getUsername() + " is already in a duel" :
+                    target.getUsername() + " is already in a duel" :
                     "Sending duel request");
 
             Skills playerSkills = player.getSkills();
             Skills targetSkills = target.getSkills();
-            Packets.sendMessage(target, playerCreds.getUsername() + " " +
+            Packets.sendMessage(target, player.getUsername() + " " +
                     Formulae.getLvlDiffColour(targetSkills.getCombatLevel() - playerSkills.getCombatLevel()) +
                     "(level-" + playerSkills.getCombatLevel() + ")@whi@ wishes to duel with you");
 
