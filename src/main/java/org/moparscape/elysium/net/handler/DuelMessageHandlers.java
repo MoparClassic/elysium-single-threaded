@@ -5,7 +5,6 @@ import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.PlayerState;
 import org.moparscape.elysium.entity.component.Inventory;
-import org.moparscape.elysium.entity.component.PlayerSprite;
 import org.moparscape.elysium.entity.component.Skills;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
@@ -81,12 +80,11 @@ public final class DuelMessageHandlers {
                 target.setState(PlayerState.DUELING_PLAYER);
 
                 if (player.getDuelSetting(3)) {
-                    PlayerSprite playerSprite = player.getSprite();
-                    Appearance playerAppearance = playerSprite.getAppearance();
+                    Appearance playerAppearance = player.getAppearance();
                     for (InvItem item : player.getInventory().getItems()) {
                         if (item.isWielded()) {
                             item.setWielded(false);
-                            playerSprite.setWornItem(item.getWieldableDef().getWieldPos(),
+                            player.setWornItem(item.getWieldableDef().getWieldPos(),
                                     playerAppearance.getSprite(item.getWieldableDef().getWieldPos()));
                         }
                     }
@@ -94,12 +92,11 @@ public final class DuelMessageHandlers {
                     Packets.sendInventory(player);
                     Packets.sendEquipmentStats(player);
 
-                    PlayerSprite targetSprite = target.getSprite();
-                    Appearance targetAppearance = targetSprite.getAppearance();
+                    Appearance targetAppearance = target.getAppearance();
                     for (InvItem item : target.getInventory().getItems()) {
                         if (item.isWielded()) {
                             item.setWielded(false);
-                            targetSprite.setWornItem(item.getWieldableDef().getWieldPos(),
+                            target.setWornItem(item.getWieldableDef().getWieldPos(),
                                     targetAppearance.getSprite(item.getWieldableDef().getWieldPos()));
                         }
                     }

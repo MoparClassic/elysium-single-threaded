@@ -3,7 +3,6 @@ package org.moparscape.elysium.entity;
 import org.moparscape.elysium.Server;
 import org.moparscape.elysium.def.NPCDef;
 import org.moparscape.elysium.def.NPCLoc;
-import org.moparscape.elysium.entity.component.MobileSprite;
 import org.moparscape.elysium.entity.component.Movement;
 import org.moparscape.elysium.util.Formulae;
 import org.moparscape.elysium.world.Point;
@@ -27,8 +26,7 @@ public final class Npc extends MobileEntity {
     private int lastDamage = 0;
     private long lastMoved = 0L;
     private NPCLoc loc;
-    private MobileSprite mobSprite = new MobileSprite(this);
-    private Movement movement = new Movement(this, mobSprite);
+    private Movement movement = new Movement(this);
 
     public Npc(int id) {
         this.id = id;
@@ -126,10 +124,6 @@ public final class Npc extends MobileEntity {
         return def.getHits();
     }
 
-    public int getSprite() {
-        return mobSprite.getSprite();
-    }
-
     public int getStrength() {
         return def.getStr();
     }
@@ -158,14 +152,6 @@ public final class Npc extends MobileEntity {
 
     public void resetMoved() {
         movement.resetMoved();
-    }
-
-    public void resetSpriteChanged() {
-        mobSprite.resetSpriteChanged();
-    }
-
-    public boolean spriteChanged() {
-        return mobSprite.spriteChanged();
     }
 
     public void updatePosition() {

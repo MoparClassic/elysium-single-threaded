@@ -1,6 +1,6 @@
 package org.moparscape.elysium.entity.component;
 
-import org.moparscape.elysium.entity.Moveable;
+import org.moparscape.elysium.entity.MobileEntity;
 import org.moparscape.elysium.entity.Path;
 import org.moparscape.elysium.world.Point;
 import org.moparscape.elysium.world.Region;
@@ -18,14 +18,12 @@ public final class Movement extends AbstractComponent {
     private int curWaypoint;
     private boolean hasMoved = false;
     private Point location;
-    private Moveable owner;
+    private MobileEntity owner;
     private Path path;
     private Region region;
-    private MobileSprite sprite;
 
-    public Movement(Moveable owner, MobileSprite sprite) {
+    public Movement(MobileEntity owner) {
         this.owner = owner;
-        this.sprite = sprite;
     }
 
     protected boolean atStart() {
@@ -150,7 +148,7 @@ public final class Movement extends AbstractComponent {
     public void setLocation(Point location, boolean teleport) {
         if (!teleport) {
             hasMoved = true;
-            sprite.updateSprite(location);
+            owner.updateSprite(location);
         }
 
         Region newRegion = Region.getRegion(location);

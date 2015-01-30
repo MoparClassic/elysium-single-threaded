@@ -15,14 +15,11 @@ public final class UpdateProxy extends AbstractComponent {
     private Movement movement;
     private Observer observer;
     private Skills skills;
-    private PlayerSprite sprite;
 
-    public UpdateProxy(Movement movement, Observer observer, Skills skills,
-                       PlayerSprite sprite) {
+    public UpdateProxy(Movement movement, Observer observer, Skills skills) {
         this.movement = movement;
         this.observer = observer;
         this.skills = skills;
-        this.sprite = sprite;
     }
 
     public void cleanupViewableEntities() {
@@ -31,14 +28,6 @@ public final class UpdateProxy extends AbstractComponent {
 
     public void clearDisplayLists() {
         observer.clearDisplayLists();
-    }
-
-    public Appearance getAppearance() {
-        return sprite.getAppearance();
-    }
-
-    public int getAppearanceId() {
-        return sprite.getAppearanceId();
     }
 
     public List<Bubble> getBubblesNeedingDisplayed() {
@@ -77,10 +66,6 @@ public final class UpdateProxy extends AbstractComponent {
         return observer.getProjectilesNeedingDisplayed();
     }
 
-    public int getSprite() {
-        return sprite.getSprite();
-    }
-
     public StatefulEntityCollection<Item> getWatchedItems() {
         return observer.getWatchedItems();
     }
@@ -97,40 +82,16 @@ public final class UpdateProxy extends AbstractComponent {
         return observer.getWatchedPlayers();
     }
 
-    public int[] getWornItems() {
-        return sprite.getWornItems();
-    }
-
     public boolean hasMoved() {
         return movement.hasMoved();
-    }
-
-    public boolean isSkulled() {
-        return sprite.isSkulled();
     }
 
     public void resetMoved() {
         movement.resetMoved();
     }
 
-    public void resetSpriteChanged() {
-        sprite.resetSpriteChanged();
-    }
-
     public void revalidateWatchedEntities() {
         observer.revalidateWatchedEntities();
-    }
-
-    public void setAppearanceChanged(boolean changed) {
-        sprite.setAppearanceChanged(changed);
-    }
-
-    public boolean spriteChanged() {
-        return sprite.spriteChanged();
-    }
-
-    public void updateAppearanceId() {
-        sprite.updateAppearanceId();
     }
 
     public void updateEntityLists() {

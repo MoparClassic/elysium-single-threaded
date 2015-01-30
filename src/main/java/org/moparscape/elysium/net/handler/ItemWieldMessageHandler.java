@@ -5,7 +5,6 @@ import org.moparscape.elysium.entity.Appearance;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.component.Inventory;
-import org.moparscape.elysium.entity.component.PlayerSprite;
 import org.moparscape.elysium.entity.component.Skills;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
@@ -69,8 +68,7 @@ public final class ItemWieldMessageHandler extends MessageHandler<ItemWieldMessa
 
         // If the item is female-only and they're male then tell them
         // that they can't wear the item.
-        PlayerSprite sprite = player.getSprite();
-        Appearance appearance = sprite.getAppearance();
+        Appearance appearance = player.getAppearance();
         if (wieldableDef.femaleOnly() && appearance.isMale()) {
             Packets.sendMessage(player, "Only females can wear that item.");
             return true;
@@ -81,12 +79,12 @@ public final class ItemWieldMessageHandler extends MessageHandler<ItemWieldMessa
             if (i.isWielded() && item.wieldingAffectsItem(i)) {
                 i.setWielded(false);
                 ItemWieldableDef def = i.getWieldableDef();
-                sprite.setWornItem(def.getWieldPos(), appearance.getSprite(def.getWieldPos()));
+                player.setWornItem(def.getWieldPos(), appearance.getSprite(def.getWieldPos()));
             }
         }
 
         item.setWielded(true);
-        sprite.setWornItem(wieldableDef.getWieldPos(), wieldableDef.getSprite());
+        player.setWornItem(wieldableDef.getWieldPos(), wieldableDef.getSprite());
         Packets.sendSound(player, "click");
         Packets.sendInventory(player);
 

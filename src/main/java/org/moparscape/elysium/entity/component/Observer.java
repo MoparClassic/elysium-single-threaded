@@ -36,15 +36,13 @@ public final class Observer extends AbstractComponent {
     private List<GameObject> allViewableObjects;
     private List<Player> allViewablePlayers;
     private Player owner;
-    private PlayerSprite sprite;
     private boolean visibleItemLimitBreached = false;
     private boolean visibleNpcLimitBreached = false;
     private boolean visibleObjectLimitBreached = false;
     private boolean visiblePlayerLimitBreached = false;
 
-    public Observer(Player owner, PlayerSprite sprite) {
+    public Observer(Player owner) {
         this.owner = owner;
-        this.sprite = sprite;
     }
 
     public void addPlayerAppearanceIds(int[] indices, int[] appearanceIds) {
@@ -115,7 +113,7 @@ public final class Observer extends AbstractComponent {
         List<Player> needingUpdates = new ArrayList<>(newEntities.size() + knownEntities.size());
 
         needingUpdates.addAll(watchedPlayers.getNewEntities());
-        if (sprite.appearanceChanged()) {
+        if (owner.appearanceChanged()) {
             needingUpdates.add(owner);
         }
 
@@ -154,15 +152,14 @@ public final class Observer extends AbstractComponent {
 
     private boolean needsAppearanceUpdateFor(Player target) {
         int targetIndex = target.getIndex();
-        PlayerSprite targetSprite = target.getSprite();
         if (knownPlayerAppearanceIds.containsKey(targetIndex)) {
             int knownAppearanceId = knownPlayerAppearanceIds.get(targetIndex);
-            if (knownAppearanceId != targetSprite.getAppearanceId()) {
-                knownPlayerAppearanceIds.put(targetIndex, targetSprite.getAppearanceId());
+            if (knownAppearanceId != target.getAppearanceId()) {
+                knownPlayerAppearanceIds.put(targetIndex, target.getAppearanceId());
                 return true;
             }
         } else {
-            knownPlayerAppearanceIds.put(targetIndex, targetSprite.getAppearanceId());
+            knownPlayerAppearanceIds.put(targetIndex, target.getAppearanceId());
             return true;
         }
 
@@ -171,7 +168,7 @@ public final class Observer extends AbstractComponent {
 
     @Override
     public void resolveDependencies(Map<Class<? extends Component>, Component> components) {
-        this.sprite = PlayerSprite.class.cast(components.get(PlayerSprite.class));
+
     }
 
     public void revalidateWatchedEntities() {

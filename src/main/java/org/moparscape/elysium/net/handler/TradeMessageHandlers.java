@@ -4,7 +4,6 @@ import org.moparscape.elysium.entity.Appearance;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.component.Inventory;
-import org.moparscape.elysium.entity.component.PlayerSprite;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.net.codec.decoder.message.*;
@@ -94,8 +93,7 @@ public final class TradeMessageHandlers {
                 return true;
             }
 
-            PlayerSprite playerSprite = player.getSprite();
-            Appearance playerAppearance = playerSprite.getAppearance();
+            Appearance playerAppearance = player.getAppearance();
             for (InvItem offeredItem : myOffer) {
                 InvItem affectedItem = player.getInventory().get(offeredItem);
                 if (affectedItem == null || affectedItem.getAmount() < offeredItem.getAmount()) {
@@ -106,15 +104,14 @@ public final class TradeMessageHandlers {
                 }
                 if (affectedItem.isWielded()) {
                     affectedItem.setWielded(false);
-                    playerSprite.setWornItem(
+                    player.setWornItem(
                             affectedItem.getWieldableDef().getWieldPos(),
                             playerAppearance.getSprite(affectedItem.getWieldableDef().getWieldPos()));
                 }
                 player.getInventory().remove(offeredItem);
             }
 
-            PlayerSprite targetSprite = target.getSprite();
-            Appearance targetAppearance = targetSprite.getAppearance();
+            Appearance targetAppearance = target.getAppearance();
             for (InvItem offeredItem : theirOffer) {
                 InvItem affectedItem = target.getInventory().get(offeredItem);
                 if (affectedItem == null || affectedItem.getAmount() < offeredItem.getAmount()) {
@@ -125,7 +122,7 @@ public final class TradeMessageHandlers {
                 }
                 if (affectedItem.isWielded()) {
                     affectedItem.setWielded(false);
-                    targetSprite.setWornItem(
+                    target.setWornItem(
                             affectedItem.getWieldableDef().getWieldPos(),
                             targetAppearance.getSprite(affectedItem.getWieldableDef().getWieldPos()));
                 }

@@ -9,17 +9,17 @@ public final class Skills extends AbstractComponent {
 
     private static final int SKILL_COUNT = 18;
     private int combatLevel = 3;
-    private int[] curStat = new int[SKILL_COUNT];
-    private int[] exp = new int[SKILL_COUNT];
     private int fatigue;
     private int lastDamage = 0;
-    private int[] maxStat = new int[SKILL_COUNT];
+    private int[] skillsCurrentLevel = new int[SKILL_COUNT];
+    private int[] skillsExperience = new int[SKILL_COUNT];
+    private int[] skillsMaxLevel = new int[SKILL_COUNT];
 
     public Skills() {
         for (int i = 0; i < SKILL_COUNT; i++) {
-            curStat[i] = 1;
-            maxStat[i] = 1;
-            exp[i] = 0;
+            skillsCurrentLevel[i] = 1;
+            skillsMaxLevel[i] = 1;
+            skillsExperience[i] = 0;
         }
     }
 
@@ -28,19 +28,19 @@ public final class Skills extends AbstractComponent {
     }
 
     public int getCurStat(int id) {
-        return curStat[id];
+        return skillsCurrentLevel[id];
     }
 
     public int[] getCurStats() {
-        return curStat;
+        return skillsCurrentLevel;
     }
 
     public int getExp(int id) {
-        return exp[id];
+        return skillsExperience[id];
     }
 
     public int[] getExps() {
-        return exp;
+        return skillsExperience;
     }
 
     public int getFatigue() {
@@ -52,7 +52,7 @@ public final class Skills extends AbstractComponent {
     }
 
     public int getHits() {
-        return curStat[3];
+        return skillsCurrentLevel[3];
     }
 
     public int getLastDamage() {
@@ -60,14 +60,14 @@ public final class Skills extends AbstractComponent {
     }
 
     public int getMaxHits() {
-        return maxStat[3];
+        return skillsMaxLevel[3];
     }
 
     public int getMaxStat(int id) {
-        return maxStat[id];
+        return skillsMaxLevel[id];
     }
 
     public int[] getMaxStats() {
-        return maxStat;
+        return skillsMaxLevel;
     }
 }

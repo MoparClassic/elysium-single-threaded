@@ -5,7 +5,6 @@ import org.moparscape.elysium.entity.Appearance;
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.entity.component.Inventory;
-import org.moparscape.elysium.entity.component.PlayerSprite;
 import org.moparscape.elysium.net.Packets;
 import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.net.codec.decoder.message.ItemUnwieldMessage;
@@ -33,11 +32,10 @@ public final class ItemUnwieldMessageHandler extends MessageHandler<ItemUnwieldM
         }
 
         ItemWieldableDef wieldableDef = item.getWieldableDef();
-        PlayerSprite sprite = player.getSprite();
-        Appearance appearance = sprite.getAppearance();
+        Appearance appearance = player.getAppearance();
 
         item.setWielded(false);
-        sprite.setWornItem(wieldableDef.getWieldPos(), appearance.getSprite(wieldableDef.getWieldPos()));
+        player.setWornItem(wieldableDef.getWieldPos(), appearance.getSprite(wieldableDef.getWieldPos()));
         Packets.sendSound(player, "click");
         Packets.sendInventory(player);
 

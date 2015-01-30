@@ -12,7 +12,7 @@ import org.moparscape.elysium.net.codec.decoder.message.AppearanceUpdateMessage;
 public final class AppearanceUpdateMessageHandler extends MessageHandler<AppearanceUpdateMessage> {
 
     public boolean handle(Session session, Player player, AppearanceUpdateMessage message) {
-        player.getSprite().setAppearance(message.getAppearance());
+        player.setAppearance(message.getAppearance());
         return true;
     }
 }

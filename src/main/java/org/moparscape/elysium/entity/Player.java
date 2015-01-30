@@ -36,6 +36,7 @@ public final class Player extends MobileEntity implements Moveable {
     public static final int SETTING_HIDE_ROOFS_INDEX = 4;
     public static final int SETTING_MOUSE_BUTTONS_INDEX = 2;
     public static final int SETTING_SOUND_EFFECTS_INDEX = 3;
+    private static final int MAX_WORN_ITEMS = 12;
     private final Bank bank = new Bank(this);
     private final PrayerDrainTask drainer = new PrayerDrainTask();
     private final Set<Long> friends = new HashSet<>();
@@ -43,15 +44,16 @@ public final class Player extends MobileEntity implements Moveable {
     private final Inventory inventory = new Inventory(this);
     private final Queue<ChatMessage> messages = new LinkedList<>();
     private final List<ChatMessage> messagesToDisplay = new ArrayList<>();
+    private final Movement movement = new Movement(this);
     private final List<ChatMessage> npcMessagesToDisplay = new ArrayList<>();
+    private final Observer observer = new Observer(this);
     private final Session session;
     private final Skills skills = new Skills();
-    private final PlayerSprite sprite = new PlayerSprite(this);
-    private final Movement movement = new Movement(this, sprite);
-    private final Observer observer = new Observer(this, sprite);
-    private final UpdateProxy updateProxy = new UpdateProxy(movement, observer, skills, sprite);
+    private final UpdateProxy updateProxy = new UpdateProxy(movement, observer, skills);
     private int actionCount = 0;
     private boolean[] activatedPrayers = new boolean[14];
+    private Appearance appearance = new Appearance();
+    private final int[] wornItems = appearance.getSprites();
     private boolean busy = false;
     private int combatStyle = 0;
     private int drainRate = 0;
@@ -69,12 +71,14 @@ public final class Player extends MobileEntity implements Moveable {
     private PlayerState playerState;
     private boolean[] privacySettings = new boolean[4];
     private Region region = null;
+    private boolean skulled = false;
     private boolean tradeConfirmAccepted = false;
     private List<InvItem> tradeOffer = new ArrayList<>(9);
     private boolean tradeOfferAccepted = false;
     private String username;
     private Player wishToDuel;
     private Player wishToTrade;
+
 
     public Player(Session session) {
         this.session = session;
@@ -136,6 +140,15 @@ public final class Player extends MobileEntity implements Moveable {
 
     public int getActionCount() {
         return actionCount;
+    }
+
+    public Appearance getAppearance() {
+        return appearance;
+    }
+
+    public void setAppearance(Appearance app) {
+        appearance = app;
+        setAppearanceChanged(true);
     }
 
     public int getArmourPoints() {
@@ -287,8 +300,8 @@ public final class Player extends MobileEntity implements Moveable {
         return skills;
     }
 
-    public PlayerSprite getSprite() {
-        return sprite;
+    public int[] getSprites() {
+        return appearance.getSprites();
     }
 
     public PlayerState getState() {
@@ -355,6 +368,10 @@ public final class Player extends MobileEntity implements Moveable {
 
     public void setWishToTrade(Player target) {
         this.wishToTrade = target;
+    }
+
+    public int[] getWornItems() {
+        return wornItems;
     }
 
     @Override
@@ -425,6 +442,14 @@ public final class Player extends MobileEntity implements Moveable {
 
     public boolean isPrayerActivated(int pID) {
         return activatedPrayers[pID];
+    }
+
+    public boolean isSkulled() {
+        return skulled;
+    }
+
+    public void setSkulled(boolean skulled) {
+        this.skulled = skulled;
     }
 
     public boolean isTradeConfirmAccepted() {
@@ -535,6 +560,11 @@ public final class Player extends MobileEntity implements Moveable {
 
     public void setPrayer(int pID, boolean b) {
         activatedPrayers[pID] = b;
+    }
+
+    public void setWornItem(int index, int itemId) {
+        wornItems[index] = itemId;
+        setAppearanceChanged(true);
     }
 
     @Override

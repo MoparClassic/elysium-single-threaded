@@ -239,25 +239,25 @@ public final class IssueUpdatePacketsTask {
                 UpdateProxy targetProxy = p.getUpdateProxy();
                 pb.writeShort(p.getIndex());
                 pb.writeByte(5);
-                pb.writeShort(targetProxy.getAppearanceId());
+                pb.writeShort(p.getAppearanceId());
                 pb.writeLong(p.getUsernameHash());
 
 //                System.out.println("Sending appearance update to " + player.getCredentials().getUsername() +
 //                        " for player " + targetProxy.getUsername() + " (Target AID: " + targetProxy.getAppearanceId() + ")");
 
-                int[] wornItems = targetProxy.getWornItems();
+                int[] wornItems = p.getWornItems();
                 pb.writeByte(wornItems.length);
                 for (int i = 0; i < wornItems.length; i++) {
                     pb.writeByte(wornItems[i]);
                 }
 
-                Appearance app = targetProxy.getAppearance();
+                Appearance app = p.getAppearance();
                 pb.writeByte(app.getHairColour());
                 pb.writeByte(app.getTopColour());
                 pb.writeByte(app.getTrouserColour());
                 pb.writeByte(app.getSkinColour());
                 pb.writeByte(targetProxy.getCombatLevel());
-                pb.writeByte(targetProxy.isSkulled() ? 1 : 0);
+                pb.writeByte(p.isSkulled() ? 1 : 0);
                 pb.writeByte(0); // 3: Admin 2: Mod 1; Pmod 0: None
             }
 
@@ -274,7 +274,7 @@ public final class IssueUpdatePacketsTask {
         Bitpacker pb = new Bitpacker(s.getByteBuf(), 145);
         pb.addBits(loc.getX(), 11);
         pb.addBits(loc.getY(), 13);
-        pb.addBits(proxy.getSprite(), 4);
+        pb.addBits(player.getSprite(), 4);
         pb.addBits(knownPlayers.size(), 8);
         for (Player p : knownPlayers) {
             UpdateProxy targetProxy = p.getUpdateProxy();
@@ -288,12 +288,12 @@ public final class IssueUpdatePacketsTask {
                 //System.out.println("Moving: " + targetProxy.getUsername() + " has moved for " + proxy.getUsername());
                 pb.addBits(1, 1);
                 pb.addBits(0, 1);
-                pb.addBits(targetProxy.getSprite(), 3);
-            } else if (targetProxy.spriteChanged()) {
+                pb.addBits(p.getSprite(), 3);
+            } else if (p.spriteChanged()) {
                 //System.out.println("PlayerSprite changed: " + targetProxy.getUsername() + " sprite changed in view of " + proxy.getUsername());
                 pb.addBits(1, 1);
                 pb.addBits(1, 1);
-                pb.addBits(targetProxy.getSprite(), 4);
+                pb.addBits(p.getSprite(), 4);
             } else {
                 pb.addBits(0, 1);
             }
@@ -305,7 +305,7 @@ public final class IssueUpdatePacketsTask {
             pb.addBits(p.getIndex(), 16);
             pb.addBits(offsets[0], 5);
             pb.addBits(offsets[1], 5);
-            pb.addBits(targetProxy.getSprite(), 4);
+            pb.addBits(p.getSprite(), 4);
             pb.addBits(0, 1);
         }
 

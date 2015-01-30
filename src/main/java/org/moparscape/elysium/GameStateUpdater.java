@@ -28,8 +28,8 @@ public final class GameStateUpdater {
             proxy.clearDisplayLists();
             p.clearChatLists();
 
-            proxy.resetSpriteChanged();
-            proxy.setAppearanceChanged(false);
+            p.resetSpriteChanged();
+            p.setAppearanceChanged(false);
         }
 
         // TODO: Reset the npcs
@@ -52,7 +52,7 @@ public final class GameStateUpdater {
 
             proxy.resetMoved();
             proxy.updatePosition();
-            proxy.updateAppearanceId();
+            p.updateAppearanceId();
         }
 
         for (Player p : playerList) {
