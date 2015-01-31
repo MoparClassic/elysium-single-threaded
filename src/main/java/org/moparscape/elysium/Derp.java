@@ -2,7 +2,6 @@ package org.moparscape.elysium;
 
 import org.moparscape.elysium.entity.Heartbeat;
 import org.moparscape.elysium.entity.Indexable;
-import org.moparscape.elysium.world.Point;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,12 +11,6 @@ import org.moparscape.elysium.world.Point;
 public class Derp {
 
     public static void main(String[] args) throws Exception {
-        Point p1 = new Point(10, 10);
-        Point p2 = new Point(14, 6);
-
-        System.out.println(Math.sqrt(Math.pow((p2.getX() - p1.getX()), 2) + Math.pow((p2.getY() - p1.getY()), 2)));
-        System.out.println(Math.pow((p2.getX() - p1.getX()), 2) + Math.pow((p2.getY() - p1.getY()), 2));
-
         if (true) return;
 
 //        final int TEST_ITERATIONS = 20;
