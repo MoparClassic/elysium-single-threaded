@@ -26,6 +26,7 @@ public final class Player extends MobileEntity implements Moveable {
     public static final int DUEL_OPTION_ALLOW_PRAYER_INDEX = 2;
     public static final int DUEL_OPTION_ALLOW_WEAPONS_INDEX = 3;
     public static final int DUEL_OPTION_NO_RETREAT_INDEX = 0;
+    public static final int MAX_WORN_ITEMS = 12;
     public static final int PRIVACY_BLOCK_CHAT_MESSAGES_INDEX = 0;
     public static final int PRIVACY_BLOCK_DUEL_REQUESTS_INDEX = 3;
     public static final int PRIVACY_BLOCK_PRIVATE_MESSAGES_INDEX = 1;
@@ -36,8 +37,7 @@ public final class Player extends MobileEntity implements Moveable {
     public static final int SETTING_HIDE_ROOFS_INDEX = 4;
     public static final int SETTING_MOUSE_BUTTONS_INDEX = 2;
     public static final int SETTING_SOUND_EFFECTS_INDEX = 3;
-    private static final int MAX_WORN_ITEMS = 12;
-    private static final int SKILL_COUNT = 18;
+    public static final int SKILL_COUNT = 18;
     private final Bank bank = new Bank(this);
     private final PrayerDrainTask drainer = new PrayerDrainTask();
     private final Set<Long> friends = new HashSet<>();

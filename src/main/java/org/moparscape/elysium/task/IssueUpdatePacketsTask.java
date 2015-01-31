@@ -235,7 +235,6 @@ public final class IssueUpdatePacketsTask {
             }
 
             for (Player p : playerAppearanceUpdates) {
-                UpdateProxy targetProxy = p.getUpdateProxy();
                 pb.writeShort(p.getIndex());
                 pb.writeByte(5);
                 pb.writeShort(p.getAppearanceId());
@@ -298,7 +297,6 @@ public final class IssueUpdatePacketsTask {
             }
         }
         for (Player p : newPlayers) {
-            UpdateProxy targetProxy = p.getUpdateProxy();
             //System.out.println("New player: " + targetProxy.getUsername() + " added to world view of " + proxy.getUsername());
             byte[] offsets = DataConversions.getMobPositionOffsets(p.getLocation(), loc);
             pb.addBits(p.getIndex(), 16);
