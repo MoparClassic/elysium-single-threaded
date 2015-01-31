@@ -38,7 +38,7 @@ public final class HandlerLookupService {
             bindings.bind(DuelRequestMessage.class, DuelMessageHandlers.DuelRequestMessageHandler.class);
             bindings.bind(DummyMessage.class, DummyMessageHandler.class);
             bindings.bind(ExceptionMessage.class, ExceptionMessageHandler.class);
-            bindings.bind(FollowRequestMessage.class, FollowRequestMessageHandler.class);
+            bindings.bind(FollowRequestMessage.class, MovementMessageHandlers.FollowRequestMessageHandler.class);
             bindings.bind(FriendAddMessage.class, CommunicationMessageHandlers.FriendAddMessageHandler.class);
             bindings.bind(FriendPmMessage.class, CommunicationMessageHandlers.FriendPmMessageHandler.class);
             bindings.bind(FriendRemoveMessage.class, CommunicationMessageHandlers.FriendRemoveMessageHandler.class);
@@ -89,8 +89,8 @@ public final class HandlerLookupService {
             bindings.bind(TradeInformationMessage.class, TradeMessageHandlers.TradeInformationMessageHandler.class);
             bindings.bind(TradeRequestMessage.class, TradeMessageHandlers.TradeRequestMessageHandler.class);
             bindings.bind(TrapMessage.class, TrapMessageHandler.class);
-            bindings.bind(WalkMessage.class, WalkMessageHandler.class);
-            bindings.bind(WalkTargetMessage.class, WalkTargetMessageHandler.class);
+            bindings.bind(WalkMessage.class, MovementMessageHandlers.WalkMessageHandler.class);
+            bindings.bind(WalkTargetMessage.class, MovementMessageHandlers.WalkTargetMessageHandler.class);
             bindings.bind(WallObjectPrimaryActionMessage.class, WallObjectPrimaryActionMessageHandler.class);
             bindings.bind(WallObjectSecondaryActionMessage.class, WallObjectSecondaryActionMessageHandler.class);
 
