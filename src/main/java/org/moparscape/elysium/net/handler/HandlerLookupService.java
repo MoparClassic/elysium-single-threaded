@@ -60,8 +60,8 @@ public final class HandlerLookupService {
             bindings.bind(LogoutMessage.class, LogoutMessageHandler.class);
             bindings.bind(LogoutRequestMessage.class, LogoutRequestMessageHandler.class);
             bindings.bind(MenuActionMessage.class, MenuActionMessageHandler.class);
-            bindings.bind(NpcActionMessage.class, NpcActionMessageHandler.class);
-            bindings.bind(NpcChatMessage.class, NpcChatMessageHandler.class);
+            bindings.bind(NpcActionMessage.class, NpcMessageHandlers.NpcActionMessageHandler.class);
+            bindings.bind(NpcChatMessage.class, NpcMessageHandlers.NpcChatMessageHandler.class);
             bindings.bind(ObjectPrimaryActionMessage.class, ObjectPrimaryActionMessageHandler.class);
             bindings.bind(ObjectSecondaryActionMessage.class, ObjectSecondaryActionMessageHandler.class);
             bindings.bind(PingMessage.class, PingMessageHandler.class);
