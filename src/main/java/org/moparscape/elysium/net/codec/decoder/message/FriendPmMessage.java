@@ -17,5 +17,11 @@ public final class FriendPmMessage extends AbstractMessage {
         this.messageBytes = messageBytes;
     }
 
+    public long getFriendHash() {
+        return friendHash;
+    }
 
+    public byte[] getMessage() {
+        return messageBytes;
+    }
 }

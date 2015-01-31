@@ -66,6 +66,14 @@ public final class World {
         return playerList.get(index);
     }
 
+    public Player getPlayerByUsernameHash(long usernameHash) {
+        for (Player p : playerList) {
+            if (usernameHash == p.getUsernameHash()) return p;
+        }
+
+        return null;
+    }
+
     public EntityList<Player> getPlayers() {
         return playerList;
     }

@@ -277,13 +277,9 @@ public final class Packets {
         pb.finalisePacket();
     }
 
-//    public static ChannelFuture sendPrivateMessage(Player player, long usernameHash, byte[] message) {
-//        PacketBuilder pb = new PacketBuilder(8 + message.length);
-//        pb.setId(170);
-//        pb.writeLong(usernameHash);
-//        pb.writeBytes(message);
-//        return player.getSession().write(pb.toPacket());
-//    }
+    public static ChannelFuture sendPrivacySettings(Player player) {
+        throw new UnsupportedOperationException();
+    }
 
 //    public static ChannelFuture sendScreenshot(Player player) {
 //        PacketBuilder pb = new PacketBuilder(0);
@@ -291,8 +287,12 @@ public final class Packets {
 //        return player.getSession().write(pb.toPacket());
 //    }
 
-    public static ChannelFuture sendPrivacySettings(Player player) {
-        throw new UnsupportedOperationException();
+    public static void sendPrivateMessage(Player player, long usernameHash, byte[] message) {
+        Session s = player.getSession();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 170);
+        pb.writeLong(usernameHash);
+        pb.writeBytes(message);
+        pb.finalisePacket();
     }
 
     public static void sendServerInfo(Player player) {

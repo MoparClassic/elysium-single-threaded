@@ -39,12 +39,12 @@ public final class HandlerLookupService {
             bindings.bind(DummyMessage.class, DummyMessageHandler.class);
             bindings.bind(ExceptionMessage.class, ExceptionMessageHandler.class);
             bindings.bind(FollowRequestMessage.class, FollowRequestMessageHandler.class);
-            bindings.bind(FriendAddMessage.class, FriendAddMessageHandler.class);
-            bindings.bind(FriendPmMessage.class, FriendPmMessageHandler.class);
-            bindings.bind(FriendRemoveMessage.class, FriendRemoveMessageHandler.class);
+            bindings.bind(FriendAddMessage.class, CommunicationMessageHandlers.FriendAddMessageHandler.class);
+            bindings.bind(FriendPmMessage.class, CommunicationMessageHandlers.FriendPmMessageHandler.class);
+            bindings.bind(FriendRemoveMessage.class, CommunicationMessageHandlers.FriendRemoveMessageHandler.class);
             bindings.bind(GameSettingMessage.class, GameSettingMessageHandler.class);
-            bindings.bind(IgnoreAddMessage.class, IgnoreAddMessageHandler.class);
-            bindings.bind(IgnoreRemoveMessage.class, IgnoreRemoveMessageHandler.class);
+            bindings.bind(IgnoreAddMessage.class, CommunicationMessageHandlers.IgnoreAddMessageHandler.class);
+            bindings.bind(IgnoreRemoveMessage.class, CommunicationMessageHandlers.IgnoreRemoveMessageHandler.class);
             bindings.bind(InventoryActionMessage.class, InventoryActionMessageHandler.class);
             bindings.bind(ItemDoorMessage.class, ItemDoorMessageHandler.class);
             bindings.bind(ItemDropMessage.class, ItemDropMessageHandler.class);
@@ -67,8 +67,8 @@ public final class HandlerLookupService {
             bindings.bind(PingMessage.class, PingMessageHandler.class);
             bindings.bind(PrayerActivateMessage.class, CombatMessageHandlers.PrayerActivateMessageHandler.class);
             bindings.bind(PrayerDeactivateMessage.class, CombatMessageHandlers.PrayerDeactivateMessageHandler.class);
-            bindings.bind(PrivacySettingMessage.class, PrivacySettingMessageHandler.class);
-            bindings.bind(PublicChatMessage.class, PublicChatMessageHandler.class);
+            bindings.bind(PrivacySettingMessage.class, CommunicationMessageHandlers.PrivacySettingMessageHandler.class);
+            bindings.bind(PublicChatMessage.class, CommunicationMessageHandlers.PublicChatMessageHandler.class);
             bindings.bind(ReportMessage.class, ReportMessageHandler.class);
             bindings.bind(SessionRequestMessage.class, SessionRequestMessageHandler.class);
             bindings.bind(ShopBuyMessage.class, ShopBuyMessageHandler.class);
