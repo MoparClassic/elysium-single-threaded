@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author lothy
  */
-public final class DefinitionHandler {
+public final class EntityHandler {
 
     private static HashMap<Integer, ItemArrowHeadDef> arrowHeads;
     private static HashMap<Integer, ItemBowStringDef> bowString;

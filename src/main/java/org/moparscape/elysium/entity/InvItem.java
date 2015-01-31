@@ -28,7 +28,7 @@ public final class InvItem {
     }
 
     public ItemDef getDef() {
-        return DefinitionHandler.getItemDef(id);
+        return EntityHandler.getItemDef(id);
     }
 
     public int getItemId() {
@@ -36,7 +36,7 @@ public final class InvItem {
     }
 
     public ItemWieldableDef getWieldableDef() {
-        return DefinitionHandler.getItemWieldableDef(id);
+        return EntityHandler.getItemWieldableDef(id);
     }
 
     @Override
@@ -64,7 +64,7 @@ public final class InvItem {
     }
 
     public boolean isWieldable() {
-        return DefinitionHandler.getItemWieldableDef(id) != null;
+        return EntityHandler.getItemWieldableDef(id) != null;
     }
 
     public boolean isWielded() {

@@ -51,7 +51,7 @@ public final class Item implements Locatable {
     }
 
     public ItemDef getDef() {
-        return DefinitionHandler.getItemDef(itemId);
+        return EntityHandler.getItemDef(itemId);
     }
 
     public int getId() {

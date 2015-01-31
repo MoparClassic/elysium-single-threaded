@@ -15,11 +15,11 @@ import java.util.List;
  */
 public final class Packets {
 
-//    public static ChannelFuture hideBank(Player player) {
-//        PacketBuilder pb = new PacketBuilder(0);
-//        pb.setId(171);
-//        return player.getSession().write(pb.toPacket());
-//    }
+    public static void hideBank(Player player) {
+        Session s = player.getSession();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 171);
+        pb.finalisePacket();
+    }
 
 //    public static ChannelFuture hideMenu(Player player) {
 //        PacketBuilder pb = new PacketBuilder(0);
@@ -447,14 +447,14 @@ public final class Packets {
 //        return player.getSession().write(pb.toPacket());
 //    }
 
-//    public static ChannelFuture updateBankItem(Player player, int slot, int newId, int amount) {
-//        PacketBuilder pb = new PacketBuilder(7);
-//        pb.setId(139);
-//        pb.writeByte(slot);
-//        pb.writeShort(newId);
-//        pb.writeInt(amount);
-//        return player.getSession().write(pb.toPacket());
-//    }
+    public static void updateBankItem(Player player, int slot, int newId, int amount) {
+        Session s = player.getSession();
+        PacketBuilder pb = new PacketBuilder(s.getByteBuf(), 139);
+        pb.writeByte(slot);
+        pb.writeShort(newId);
+        pb.writeInt(amount);
+        pb.finalisePacket();
+    }
 
     public static enum LoginResponse {
 

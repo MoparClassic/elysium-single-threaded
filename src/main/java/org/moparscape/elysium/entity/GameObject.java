@@ -31,11 +31,11 @@ public final class GameObject implements Locatable {
     }
 
     public DoorDef getDoorDef() {
-        return DefinitionHandler.getDoorDef(id);
+        return EntityHandler.getDoorDef(id);
     }
 
     public GameObjectDef getGameObjectDef() {
-        return DefinitionHandler.getGameObjectDef(id);
+        return EntityHandler.getGameObjectDef(id);
     }
 
     public int getId() {

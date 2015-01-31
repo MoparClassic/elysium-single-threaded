@@ -50,6 +50,7 @@ public final class Player extends MobileEntity implements Moveable {
     private final Observer observer = new Observer(this);
     private final Session session;
     private final UpdateProxy updateProxy = new UpdateProxy(movement, observer);
+    private boolean accessingBank = false;
     private int actionCount = 0;
     private boolean[] activatedPrayers = new boolean[14];
     private Appearance appearance = new Appearance();
@@ -96,6 +97,10 @@ public final class Player extends MobileEntity implements Moveable {
         }
     }
 
+    public boolean accessingBank() {
+        return accessingBank;
+    }
+
     public void addChatMessage(ChatMessage message) {
         messages.add(message);
     }
@@ -117,7 +122,7 @@ public final class Player extends MobileEntity implements Moveable {
     }
 
     public void addPrayerDrain(int prayerID) {
-        PrayerDef prayer = DefinitionHandler.getPrayerDef(prayerID);
+        PrayerDef prayer = EntityHandler.getPrayerDef(prayerID);
         drainRate += prayer.getDrainRate();
         drainer.setDelay(240000 / drainRate);
     }
@@ -540,7 +545,7 @@ public final class Player extends MobileEntity implements Moveable {
     }
 
     public void removePrayerDrain(int prayerID) {
-        PrayerDef prayer = DefinitionHandler.getPrayerDef(prayerID);
+        PrayerDef prayer = EntityHandler.getPrayerDef(prayerID);
         drainRate -= prayer.getDrainRate();
         if (drainRate <= 0) {
             drainRate = 0;
@@ -558,6 +563,11 @@ public final class Player extends MobileEntity implements Moveable {
     public void resetAllExceptTrading() {
 //        resetAllExceptTradeOrDuel();
         resetDuel();
+    }
+
+    public void resetBank() {
+        setAccessingBank(false);
+        Packets.hideBank(this);
     }
 
     public void resetDuel() {
@@ -607,6 +617,10 @@ public final class Player extends MobileEntity implements Moveable {
         setTradeOfferAccepted(false);
         setTradeConfirmAccepted(false);
         resetTradeOffer();
+    }
+
+    public void setAccessingBank(boolean b) {
+        accessingBank = b;
     }
 
     public void setDuelSetting(int i, boolean b) {

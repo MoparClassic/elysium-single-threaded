@@ -33,7 +33,7 @@ public final class Npc extends MobileEntity {
     }
 
     public Npc(NPCLoc loc) {
-        def = DefinitionHandler.getNpcDef(loc.getId());
+        def = EntityHandler.getNpcDef(loc.getId());
         hitpoints = def.getHits();
         this.loc = loc;
         this.id = loc.getId();

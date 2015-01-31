@@ -91,6 +91,21 @@ public class Inventory {
         return items.contains(item);
     }
 
+    public final boolean contains(int itemId) {
+        for (InvItem item : items) {
+            if (itemId == item.getItemId()) return true;
+        }
+        return false;
+    }
+
+    public final boolean containsAmount(int itemId, int amount) {
+        for (InvItem item : items) {
+            if (itemId == item.getItemId() &&
+                    amount == item.getAmount()) return true;
+        }
+        return false;
+    }
+
     public final int countById(int id) {
         int count = 0;
         for (InvItem item : items) {
@@ -148,6 +163,8 @@ public class Inventory {
     }
 
     public final InvItem get(int index) {
+        if (index < 0 || index >= items.size()) return null;
+
         return items.get(index);
     }
 
@@ -169,6 +186,15 @@ public class Inventory {
         return null;
     }
 
+    public final int getFirstIndexById(int itemId) {
+        int size = items.size();
+        for (int index = 0; index < size; index++) {
+            InvItem item = items.get(index);
+            if (itemId == item.getItemId()) return index;
+        }
+        return -1;
+    }
+
     public int getFreedSlots(InvItem item) {
         return item.getDef().isStackable() &&
                 countById(item.getItemId()) > item.getAmount() ? 0 : 1;
@@ -184,6 +210,14 @@ public class Inventory {
 
     public List<InvItem> getItems() {
         return items;
+    }
+
+    public InvItem getLast(int itemId) {
+        for (int i = items.size() - 1; i >= 0; i--) {
+            InvItem item = items.get(i);
+            if (itemId == item.getItemId()) return item;
+        }
+        return null;
     }
 
     public int getRequiredSlots(InvItem item) {
@@ -215,14 +249,13 @@ public class Inventory {
     }
 
     public int remove(int itemId, int amount) {
-        InvItem target = null;
         int index = 0;
 
         Iterator<InvItem> it = items.iterator();
         while (it.hasNext()) {
-            target = it.next();
+            InvItem target = it.next();
 
-            if (target.getItemId() == itemId) {
+            if (target.getItemId() == itemId && target.getAmount() >= amount) {
                 if (target.getDef().isStackable() && amount < target.getAmount()) {
                     int newAmount = target.getAmount() - amount;
                     target.setAmount(newAmount);

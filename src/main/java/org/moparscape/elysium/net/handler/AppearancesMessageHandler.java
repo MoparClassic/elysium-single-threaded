@@ -15,7 +15,6 @@ public final class AppearancesMessageHandler extends MessageHandler<AppearancesM
     public boolean handle(Session session, Player player, AppearancesMessage message) {
         Observer o = player.getObserver();
         o.addPlayerAppearanceIds(message.getIndicies(), message.getAppearanceIds());
-        System.out.println(message);
 
         return true;
     }

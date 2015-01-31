@@ -22,12 +22,12 @@ public final class HandlerLookupService {
             // Bind all Message handlers here
             bindings.bind(AppearancesMessage.class, AppearancesMessageHandler.class);
             bindings.bind(AppearanceUpdateMessage.class, AppearanceUpdateMessageHandler.class);
-            bindings.bind(AttackNpcMessage.class, AttackNpcMessageHandler.class);
-            bindings.bind(AttackPlayerMessage.class, AttackPlayerMessageHandler.class);
-            bindings.bind(AttackStyleMessage.class, AttackStyleMessageHandler.class);
-            bindings.bind(BankCloseMessage.class, BankCloseMessageHandler.class);
-            bindings.bind(BankDepositMessage.class, BankDepositMessageHandler.class);
-            bindings.bind(BankWithdrawMessage.class, BankWithdrawMessageHandler.class);
+            bindings.bind(AttackNpcMessage.class, CombatMessageHandlers.AttackNpcMessageHandler.class);
+            bindings.bind(AttackPlayerMessage.class, CombatMessageHandlers.AttackPlayerMessageHandler.class);
+            bindings.bind(AttackStyleMessage.class, CombatMessageHandlers.AttackStyleMessageHandler.class);
+            bindings.bind(BankCloseMessage.class, BankMessageHandlers.BankCloseMessageHandler.class);
+            bindings.bind(BankDepositMessage.class, BankMessageHandlers.BankDepositMessageHandler.class);
+            bindings.bind(BankWithdrawMessage.class, BankMessageHandlers.BankWithdrawMessageHandler.class);
             bindings.bind(BotDetectionMessage.class, BotDetectionMessageHandler.class);
             bindings.bind(CommandMessage.class, CommandMessageHandler.class);
             bindings.bind(DuelAcceptMessage.class, DuelMessageHandlers.DuelAcceptMessageHandler.class);
@@ -65,8 +65,8 @@ public final class HandlerLookupService {
             bindings.bind(ObjectPrimaryActionMessage.class, ObjectPrimaryActionMessageHandler.class);
             bindings.bind(ObjectSecondaryActionMessage.class, ObjectSecondaryActionMessageHandler.class);
             bindings.bind(PingMessage.class, PingMessageHandler.class);
-            bindings.bind(PrayerActivateMessage.class, PrayerActivateMessageHandler.class);
-            bindings.bind(PrayerDeactivateMessage.class, PrayerDeactivateMessageHandler.class);
+            bindings.bind(PrayerActivateMessage.class, CombatMessageHandlers.PrayerActivateMessageHandler.class);
+            bindings.bind(PrayerDeactivateMessage.class, CombatMessageHandlers.PrayerDeactivateMessageHandler.class);
             bindings.bind(PrivacySettingMessage.class, PrivacySettingMessageHandler.class);
             bindings.bind(PublicChatMessage.class, PublicChatMessageHandler.class);
             bindings.bind(ReportMessage.class, ReportMessageHandler.class);
