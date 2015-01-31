@@ -2,10 +2,9 @@ package org.moparscape.elysium.task.timed;
 
 
 import org.moparscape.elysium.entity.Player;
-import org.moparscape.elysium.world.World;
 
 public abstract class DelayedEvent {
-    public static final World world = World.getInstance();
+
     protected int delay = 500;
     protected Player owner;
     protected boolean running = true;

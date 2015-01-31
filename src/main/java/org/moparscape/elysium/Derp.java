@@ -2,9 +2,6 @@ package org.moparscape.elysium;
 
 import org.moparscape.elysium.entity.Heartbeat;
 import org.moparscape.elysium.entity.Indexable;
-import org.moparscape.elysium.entity.InvItem;
-import org.moparscape.elysium.entity.Npc;
-import org.moparscape.elysium.script.ScriptManager;
 import org.moparscape.elysium.world.Point;
 
 /**
@@ -15,57 +12,6 @@ import org.moparscape.elysium.world.Point;
 public class Derp {
 
     public static void main(String[] args) throws Exception {
-        Npc npc = new Npc(5);
-
-        Thread.sleep(5000);
-
-        ScriptManager.registerItemOnItemScript(1000, 1200, ScriptManager.PRIORITY_DEFAULT, (a, b) -> {
-            System.out.printf("Item ID: %d - Amount: %d\n", a.getItemId(), a.getAmount());
-            System.out.printf("Item ID: %d - Amount: %d\n", b.getItemId(), b.getAmount());
-            return true;
-        });
-
-        ScriptManager.registerItemOnItemScript(1000, 1200, 50, (a, b) -> {
-            System.out.println("Middle priority script!");
-            return true;
-        });
-
-        ScriptManager.registerItemOnItemScript(1000, 1200, 999, (a, b) -> {
-            System.out.println("Highest priority script!");
-            return true;
-        });
-
-        ScriptManager.registerItemOnNpcScript(1000, 5, ScriptManager.PRIORITY_DEFAULT, (item, n) -> {
-            System.out.println("Default priority npc script.");
-            return true;
-        });
-
-        ScriptManager.registerItemOnNpcScript(1000, 5, 20, (item, n) -> {
-            System.out.println("Medium priority npc script.");
-            return true;
-        });
-
-        ScriptManager.registerItemOnNpcScript(1000, 5, 200, (item, n) -> {
-            System.out.println("High priority npc script.");
-            return true;
-        });
-
-        InvItem a = new InvItem(1000, 1000);
-        InvItem b = new InvItem(1200, 10);
-
-        ScriptManager.executeDefaultItemOnItemScript(a, b);
-        System.out.println();
-        ScriptManager.executeItemOnItemScripts(a, b);
-
-        System.out.println();
-
-        ScriptManager.executeDefaultItemOnNpcScript(a, npc);
-        System.out.println();
-        ScriptManager.executeItemOnNpcScripts(a, npc);
-
-
-        if (true) return;
-
         Point p1 = new Point(10, 10);
         Point p2 = new Point(14, 6);
 

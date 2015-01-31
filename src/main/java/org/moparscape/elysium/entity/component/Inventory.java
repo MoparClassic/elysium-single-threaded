@@ -10,7 +10,6 @@ import org.moparscape.elysium.net.Session;
 import org.moparscape.elysium.util.ItemByValueComparator;
 import org.moparscape.elysium.world.Point;
 import org.moparscape.elysium.world.Region;
-import org.moparscape.elysium.world.World;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,8 +22,6 @@ import java.util.List;
  * @author lothy
  */
 public class Inventory {
-
-    private static final World world = World.getInstance();
 
     private final int MAX_INVENTORY_ITEMS = 30;
     private final List<InvItem> items = new ArrayList<>();

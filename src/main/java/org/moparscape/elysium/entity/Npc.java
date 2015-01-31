@@ -15,7 +15,6 @@ import org.moparscape.elysium.world.Region;
  */
 public final class Npc extends MobileEntity {
 
-    private static final Server server = Server.getInstance();
     private int appearanceId = 0;
     private boolean appearanceUpdateRequired = false;
     private int combatLevel = 0;
@@ -155,7 +154,7 @@ public final class Npc extends MobileEntity {
     }
 
     public void updatePosition() {
-        long now = server.getHighResolutionTimestamp();
+        long now = Server.getInstance().getHighResolutionTimestamp();
         if (now - lastMoved > 6000) {
             lastMoved = now;
             // Do movement stuff here once it can be implemented

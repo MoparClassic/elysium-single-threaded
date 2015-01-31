@@ -17,25 +17,28 @@ import java.util.List;
 public final class Region {
 
     private static final int REGION_SIZE = 64;
-
     private static final int LOWER_BOUND = (REGION_SIZE / 2) - 1;
-
     private static final int HORIZONTAL_REGIONS = (World.MAX_WIDTH / REGION_SIZE) + 1;
-
     private static final int VERTICAL_REGIONS = (World.MAX_HEIGHT / REGION_SIZE) + 1;
-
     private static final Region[][] regions = new Region[HORIZONTAL_REGIONS][VERTICAL_REGIONS];
     private final List<Item> items = new ArrayList<>();
     private final List<Npc> npcs = new ArrayList<>();
     private final List<GameObject> objects = new ArrayList<>();
     private final List<Player> players = new ArrayList<>();
+    private final int regionX;
+    private final int regionY;
 
     static {
         for (int x = 0; x < HORIZONTAL_REGIONS; x++) {
             for (int y = 0; y < VERTICAL_REGIONS; y++) {
-                regions[x][y] = new Region();
+                regions[x][y] = new Region(x, y);
             }
         }
+    }
+
+    public Region(int x, int y) {
+        this.regionX = x;
+        this.regionY = y;
     }
 
     public static Region getRegion(Point p) {
@@ -230,20 +233,19 @@ public final class Region {
         return Collections.unmodifiableCollection(players);
     }
 
-    public void removeItem(Item item) {
-        items.remove(item);
+    @Override
+    public int hashCode() {
+        return (regionX << 16) | regionY;
     }
 
-    public void removeNpc(Npc npc) {
-        npcs.remove(npc);
-    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
 
-    public void removeObject(GameObject go) {
-        objects.remove(go);
-    }
-
-    public void removePlayer(Player player) {
-        players.remove(player);
+        Region other = (Region) o;
+        return this.regionX == other.regionX &&
+                this.regionY == other.regionY;
     }
 
     public String toString() {
@@ -259,5 +261,21 @@ public final class Region {
         }
 
         return sb.toString();
+    }
+
+    public void removeItem(Item item) {
+        items.remove(item);
+    }
+
+    public void removeNpc(Npc npc) {
+        npcs.remove(npc);
+    }
+
+    public void removeObject(GameObject go) {
+        objects.remove(go);
+    }
+
+    public void removePlayer(Player player) {
+        players.remove(player);
     }
 }

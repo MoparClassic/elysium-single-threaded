@@ -3,7 +3,7 @@ package org.moparscape.elysium.script;
 /**
  * Created by daniel on 31/01/2015.
  */
-public final class ScriptHandle<T extends Script> {
+final class ScriptHandle<T extends Script> {
 
     private final int priority;
     private final T script;

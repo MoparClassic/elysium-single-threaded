@@ -86,6 +86,11 @@ public final class Player extends MobileEntity implements Moveable {
     private Player wishToDuel;
     private Player wishToTrade;
 
+    public Player() {
+        // For unit testing.
+        this.session = null;
+    }
+
     public Player(Session session) {
         this.session = session;
         this.setLocation(new Point(329, 552));
@@ -273,7 +278,7 @@ public final class Player extends MobileEntity implements Moveable {
 
     @Override
     public void updateRegion(Region oldRegion, Region newRegion) {
-        if (oldRegion != newRegion) {
+        if (!oldRegion.equals(newRegion)) {
             if (oldRegion != null) {
                 oldRegion.removePlayer(this);
             }

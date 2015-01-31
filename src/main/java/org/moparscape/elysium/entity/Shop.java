@@ -2,7 +2,6 @@ package org.moparscape.elysium.entity;
 
 import org.moparscape.elysium.util.DataConversions;
 import org.moparscape.elysium.world.Point;
-import org.moparscape.elysium.world.World;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,10 +9,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class Shop {
-    /**
-     * World instance
-     */
-    public static final World world = World.getInstance();
+
     /**
      * The maximum size of a shop
      */

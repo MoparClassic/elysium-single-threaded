@@ -2,6 +2,7 @@ package org.moparscape.elysium.script;
 
 import org.moparscape.elysium.entity.InvItem;
 import org.moparscape.elysium.entity.Npc;
+import org.moparscape.elysium.entity.Player;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -56,27 +57,30 @@ public final class ScriptManager {
         return handle;
     }
 
-    public static void executeDefaultItemOnItemScript(InvItem itemA, InvItem itemB) {
+    public static void executeDefaultItemOnItemScript(Player player, InvItem itemA, InvItem itemB) {
+        if (player == null) throw new NullPointerException("player");
         if (itemA == null) throw new NullPointerException("itemA");
         if (itemB == null) throw new NullPointerException("itemB");
 
         Key key = new ItemOnItemKey(itemA.getItemId(), itemB.getItemId());
         List<ScriptHandle<ItemOnItemScript>> scripts = checkAndGetScriptList(key, itemOnItemScriptMap);
         ScriptHandle<ItemOnItemScript> handle = checkLastIndexForDefaultScript(scripts);
-        handle.getScript().run(itemA, itemB);
+        handle.getScript().run(player, itemA, itemB);
     }
 
-    public static void executeDefaultItemOnNpcScript(InvItem item, Npc npc) {
+    public static void executeDefaultItemOnNpcScript(Player player, InvItem item, Npc npc) {
+        if (player == null) throw new NullPointerException("player");
         if (item == null) throw new NullPointerException("item");
         if (npc == null) throw new NullPointerException("npc");
 
         Key key = new ItemOnNpcKey(item.getItemId(), npc.getId());
         List<ScriptHandle<ItemOnNpcScript>> scripts = checkAndGetScriptList(key, itemOnNpcScriptMap);
         ScriptHandle<ItemOnNpcScript> handle = checkLastIndexForDefaultScript(scripts);
-        handle.getScript().run(item, npc);
+        handle.getScript().run(player, item, npc);
     }
 
-    public static void executeItemOnItemScripts(InvItem itemA, InvItem itemB) {
+    public static void executeItemOnItemScripts(Player player, InvItem itemA, InvItem itemB) {
+        if (player == null) throw new NullPointerException("player");
         if (itemA == null) throw new NullPointerException("itemA");
         if (itemB == null) throw new NullPointerException("itemB");
 
@@ -84,13 +88,14 @@ public final class ScriptManager {
         List<ScriptHandle<ItemOnItemScript>> scripts = checkAndGetScriptList(key, itemOnItemScriptMap);
 
         for (ScriptHandle<ItemOnItemScript> handle : scripts) {
-            boolean continueExecuting = handle.getScript().run(itemA, itemB);
+            boolean continueExecuting = handle.getScript().run(player, itemA, itemB);
 
             if (!continueExecuting) return;
         }
     }
 
-    public static void executeItemOnNpcScripts(InvItem item, Npc npc) {
+    public static void executeItemOnNpcScripts(Player player, InvItem item, Npc npc) {
+        if (player == null) throw new NullPointerException("player");
         if (item == null) throw new NullPointerException("item");
         if (npc == null) throw new NullPointerException("npc");
 
@@ -98,7 +103,7 @@ public final class ScriptManager {
         List<ScriptHandle<ItemOnNpcScript>> scripts = checkAndGetScriptList(key, itemOnNpcScriptMap);
 
         for (ScriptHandle<ItemOnNpcScript> handle : scripts) {
-            boolean continueExecuting = handle.getScript().run(item, npc);
+            boolean continueExecuting = handle.getScript().run(player, item, npc);
 
             if (!continueExecuting) return;
         }

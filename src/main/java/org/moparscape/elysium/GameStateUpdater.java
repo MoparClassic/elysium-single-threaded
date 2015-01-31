@@ -15,13 +15,11 @@ import org.moparscape.elysium.world.World;
  */
 public final class GameStateUpdater {
 
-    private final EntityList<Npc> npcList = World.getInstance().getNpcs();
-
-    private final EntityList<Player> playerList = World.getInstance().getPlayers();
-
     public void updateCollections() throws Exception {
+        World world = World.getInstance();
+
         // Update the player collections, and clear their display lists
-        for (Player p : playerList) {
+        for (Player p : world.getPlayers()) {
             UpdateProxy proxy = p.getUpdateProxy();
 
             proxy.updateEntityLists();
@@ -33,13 +31,15 @@ public final class GameStateUpdater {
         }
 
         // TODO: Reset the npcs
-        for (Npc n : npcList) {
+        for (Npc n : world.getNpcs()) {
             n.resetSpriteChanged();
         }
     }
 
     private void updateNpcPositions() throws Exception {
-        for (Npc n : npcList) {
+        World world = World.getInstance();
+
+        for (Npc n : world.getNpcs()) {
             n.resetMoved();
             n.updatePosition();
             // TODO: Is updating the npc's appearance id necessary here?
@@ -47,6 +47,8 @@ public final class GameStateUpdater {
     }
 
     private void updatePlayers() {
+        EntityList<Player> playerList = World.getInstance().getPlayers();
+
         for (Player p : playerList) {
             UpdateProxy proxy = p.getUpdateProxy();
 

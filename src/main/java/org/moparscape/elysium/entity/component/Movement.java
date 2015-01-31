@@ -14,7 +14,6 @@ import org.moparscape.elysium.world.World;
  */
 public final class Movement {
 
-    private static final World world = World.getInstance();
     private int curWaypoint;
     private boolean hasMoved = false;
     private Point location;
@@ -123,6 +122,7 @@ public final class Movement {
     }
 
     private boolean isBlocking(int x, int y, int bit) {
+        World world = World.getInstance();
         TileValue t = world.getTileValue(x, y);
         return isBlocking(t.mapValue, (byte) bit) || isBlocking(t.objectValue, (byte) bit);
     }
