@@ -92,8 +92,6 @@ public final class Player extends MobileEntity implements Moveable {
         this.session = null;
     }
 
-    public void
-
     public Player(Session session) {
         this.session = session;
         this.setLocation(new Point(329, 552));
@@ -338,6 +336,10 @@ public final class Player extends MobileEntity implements Moveable {
 
     public int getPlayerRights() {
         return playerRights;
+    }
+
+    public void setPlayerRights(int rights) {
+        this.playerRights = rights;
     }
 
     public int getPrayerPoints() {
