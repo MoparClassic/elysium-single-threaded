@@ -72,6 +72,7 @@ public final class Player extends MobileEntity implements Moveable {
     private long lastTradeDuelRequest;
     private boolean loggedIn = false;
     private String password;
+    private int playerRights = 0;
     private PlayerState playerState;
     private boolean[] privacySettings = new boolean[4];
     private Region region = null;
@@ -90,6 +91,8 @@ public final class Player extends MobileEntity implements Moveable {
         // For unit testing.
         this.session = null;
     }
+
+    public void
 
     public Player(Session session) {
         this.session = session;
@@ -278,7 +281,7 @@ public final class Player extends MobileEntity implements Moveable {
 
     @Override
     public void updateRegion(Region oldRegion, Region newRegion) {
-        if (!oldRegion.equals(newRegion)) {
+        if (oldRegion != newRegion) {
             if (oldRegion != null) {
                 oldRegion.removePlayer(this);
             }
@@ -331,6 +334,10 @@ public final class Player extends MobileEntity implements Moveable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getPlayerRights() {
+        return playerRights;
     }
 
     public int getPrayerPoints() {

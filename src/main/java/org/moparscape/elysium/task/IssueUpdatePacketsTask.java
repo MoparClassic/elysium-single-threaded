@@ -256,7 +256,7 @@ public final class IssueUpdatePacketsTask {
                 pb.writeByte(app.getSkinColour());
                 pb.writeByte(p.getCombatLevel());
                 pb.writeByte(p.isSkulled() ? 1 : 0);
-                pb.writeByte(0); // 3: Admin 2: Mod 1; Pmod 0: None
+                pb.writeByte(p.getPlayerRights()); // 3: Admin 2: Mod 1; Pmod 0: None
             }
 
             pb.finalisePacket();
