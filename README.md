@@ -5,8 +5,11 @@ Elysium is a Runescape Classic server emulator. The goal of this project is to m
 feature completeness while providing an improved codebase.
 
 Continuous integration can be found here: https://travis-ci.org/Lothy/elysium-single-threaded
+
 IRC server: irc.moparisthebest.com
-IRC channels: #elysium #elysium-dev
+
+IRC channels: #elysium  and  #elysium-dev
+
 Forum topic: https://www.moparscape.org/smf/index.php/topic,668364.20.html
 
 This server makes use of the RSCDv25 mudclient.
