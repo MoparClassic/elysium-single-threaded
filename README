@@ -17,7 +17,7 @@ This server makes use of the RSCDv25 mudclient.
 * TestNG 6.1.1
 * Xstream 1.4.7
 
-See the Maven pom.xml file for more details.
+See the Maven pom.xml file for more details.d 
 Database access is not yet implemented. However an appropriate JDBC driver is required for use with Hibernate.
 
 
