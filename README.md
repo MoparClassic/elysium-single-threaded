@@ -12,11 +12,9 @@ Forum topic: https://www.moparscape.org/smf/index.php/topic,668364.20.html
 This server makes use of the RSCDv25 mudclient.
 
 
-
 ## Features currently under development
 * Script manager
 * Packet handling code
-
 
 
 ## Dependencies
@@ -25,9 +23,9 @@ This server makes use of the RSCDv25 mudclient.
 * TestNG 6.1.1
 * Xstream 1.4.7
 
-See the Maven pom.xml file for more details.d
-Database access is not yet implemented. However an appropriate JDBC driver is required for use with Hibernate.
+See the Maven pom.xml file for more details.
 
+Database access is not yet implemented. Once implemented an appropriate JDBC driver will be required for use with Hibernate.
 
 
 ## Contributors
