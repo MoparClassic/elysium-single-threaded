@@ -21,6 +21,7 @@ public final class ScriptManager {
 
     private static final Map<Key, List<ScriptHandle<ItemOnItemScript>>> itemOnItemScriptMap = new HashMap<>();
     private static final Map<Key, List<ScriptHandle<ItemOnNpcScript>>> itemOnNpcScriptMap = new HashMap<>();
+    private static final Map<Key, List<ScriptHandle<NpcTalkScript>>> npcTalkScriptMap = new HashMap<>();
 
     private static <S extends Script> List<ScriptHandle<S>> checkAndGetScriptList(
             Key key, Map<Key, List<ScriptHandle<S>>> map) {
@@ -136,6 +137,15 @@ public final class ScriptManager {
         ScriptHandle<ItemOnNpcScript> handle = new ScriptHandle<>(script, priority);
         Key key = new ItemOnNpcKey(itemId, npcId);
         registerScript(key, handle, itemOnNpcScriptMap, priority);
+    }
+
+    public static void registerNpcTalkScript(int npcId, int priority, NpcTalkScript script) {
+        if (script == null) throw new NullPointerException("script");
+        if (priority < 0) throw new IllegalArgumentException("priority");
+
+        ScriptHandle<NpcTalkScript> handle = new ScriptHandle<>(script, priority);
+        Key key = new IntegerKey(npcId);
+        registerScript(key, handle, npcTalkScriptMap, priority);
     }
 
     private static <S extends Script> void registerScript(Key key, ScriptHandle<S> handle,

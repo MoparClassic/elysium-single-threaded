@@ -9,13 +9,12 @@ import org.moparscape.elysium.task.timed.AbstractTimedTask;
  */
 public final class UnregistrableSession extends AbstractTimedTask {
 
-    private static final Server server = Server.getInstance();
     private final Session session;
 
     public UnregistrableSession(Session session, boolean applyPenalty) {
         super(applyPenalty ?
-                        server.getHighResolutionTimestamp() + 30000 :
-                        server.getHighResolutionTimestamp(),
+                        Server.getInstance().getHighResolutionTimestamp() + 30000 :
+                        Server.getInstance().getHighResolutionTimestamp(),
                 0);
 
         if (session == null) throw new IllegalArgumentException("session");

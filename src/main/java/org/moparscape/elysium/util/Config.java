@@ -85,7 +85,7 @@ public final class Config {
 
     private static void loadProperties() throws IOException {
         Properties p = new Properties();
-        p.loadFromXML(new FileInputStream("ElysiumProperties.xml"));
+        p.loadFromXML(new FileInputStream(new File("./conf/ElysiumProperties.xml")));
         for (Object o : p.keySet()) {
             if (!(o instanceof String)) {
                 throw new IllegalStateException(

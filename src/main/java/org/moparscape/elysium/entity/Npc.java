@@ -7,6 +7,7 @@ import org.moparscape.elysium.entity.component.Movement;
 import org.moparscape.elysium.util.Formulae;
 import org.moparscape.elysium.world.Point;
 import org.moparscape.elysium.world.Region;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -151,6 +152,10 @@ public final class Npc extends MobileEntity {
 
     public void resetMoved() {
         movement.resetMoved();
+    }
+
+    public void unblock() {
+        throw new NotImplementedException();
     }
 
     public void updatePosition() {
