@@ -1,5 +1,8 @@
 package org.moparscape.elysium.script.npc;
 
+import org.moparscape.elysium.entity.ChatMessage;
+import org.moparscape.elysium.entity.Npc;
+import org.moparscape.elysium.entity.Player;
 import org.moparscape.elysium.script.NpcTalkScript;
 
 import java.util.ArrayList;
@@ -21,6 +24,17 @@ public final class NpcTalkScriptBuilder {
 
     }
 
+    public OptionHandle addChildOption(OptionHandle parent, String childOption) {
+        if (parent == null) throw new NullPointerException("parent");
+        if (childOption == null) throw new NullPointerException("childOption");
+
+        OptionHandle existing = findOption(parent.getOption());
+        checkOption(existing);
+
+        OptionHandle child = new OptionHandle(childOption, this);
+        return child;
+    }
+
     public NpcTalkScriptBuilder addChildOptions(String baseOption, String... childOptions) {
         if (baseOption == null) throw new NullPointerException("baseOption");
         if (childOptions == null) throw new NullPointerException("childOptions");
@@ -33,6 +47,13 @@ public final class NpcTalkScriptBuilder {
         }
 
         return this;
+    }
+
+    public OptionHandle addOption(String option) {
+        if (option == null) throw new NullPointerException("option");
+
+        OptionHandle handle = new OptionHandle(option, new NpcTalkScriptBuilder());
+        return handle;
     }
 
     public NpcTalkScriptBuilder addOptions(String... options) {
@@ -163,6 +184,66 @@ public final class NpcTalkScriptBuilder {
         }
 
         return allHandles;
+    }
+
+    public NpcTalkScriptBuilder npcSays(String message) {
+        if (message == null) throw new NullPointerException("message");
+
+        ScriptBlockHandle handle = new ScriptBlockHandle((ctx) -> {
+            Player p = ctx.getPlayer();
+            Npc n = ctx.getNpc();
+
+            p.informOfNpcChatMessage(new ChatMessage(n, p, message));
+        });
+
+        scriptBlockHandles.add(handle);
+
+        return this;
+    }
+
+    public NpcTalkScriptBuilder npcSays(PlayerNpcActionScriptBlock block) {
+        if (block == null) throw new NullPointerException("block");
+
+        ScriptBlockHandle handle = new ScriptBlockHandle(block);
+        scriptBlockHandles.add(handle);
+        return this;
+    }
+
+    public NpcTalkScriptBuilder playerAction(PlayerActionScriptBlock block) {
+        if (block == null) throw new NullPointerException("block");
+
+        ScriptBlockHandle handle = new ScriptBlockHandle(block);
+        return this;
+    }
+
+    public NpcTalkScriptBuilder playerBusy(boolean busy) {
+        ScriptBlockHandle handle = new ScriptBlockHandle((ctx) -> {
+            Player p = ctx.getPlayer();
+            p.setBusy(busy);
+        });
+
+        scriptBlockHandles.add(handle);
+
+        return this;
+    }
+
+    public NpcTalkScriptBuilder playerSays(String message) {
+        if (message == null) throw new NullPointerException("message");
+
+        ScriptBlockHandle handle = new ScriptBlockHandle((ctx) -> {
+            Player p = ctx.getPlayer();
+            Npc n = ctx.getNpc();
+
+            p.informOfChatMessage(new ChatMessage(p, n, message));
+        });
+
+        scriptBlockHandles.add(handle);
+
+        return this;
+    }
+
+    public NpcTalkScriptBuilder sleep(long milliseconds) {
+        return this;
     }
 
     public NpcTalkScriptBuilder thenExecuteDelayed(long delay, ScriptBlock block) {

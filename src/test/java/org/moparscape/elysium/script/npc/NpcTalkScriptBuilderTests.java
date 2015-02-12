@@ -27,13 +27,15 @@ public class NpcTalkScriptBuilderTests {
 
         NpcTalkScriptBuilder bankerScriptBuilder = new NpcTalkScriptBuilder();
         bankerScriptBuilder.bindNpcs(95, 224, 268, 485, 540, 617, 792);
-        bankerScriptBuilder.executeImmediately((ctx) -> {
-            Player p = ctx.getPlayer();
-            Npc n = ctx.getNpc();
+        bankerScriptBuilder
+                .playerBusy(true)
+                .playerSays("I'd like to access my bank account please")
+                .sleep(1500)
+//                .npcSays((p, n) -> "Certainly")
+                .sleep(1500)
+                .playerBusy(false)
+                .playerAction((x) -> x.setBusy(false));
 
-            p.setBusy(true);
-            p.informOfChatMessage(new ChatMessage(p, n, "I'd like to access my bank account please"));
-        });
         bankerScriptBuilder.thenExecuteDelayed(1500, (ctx) -> {
             Player p = ctx.getPlayer();
             Npc n = ctx.getNpc();
